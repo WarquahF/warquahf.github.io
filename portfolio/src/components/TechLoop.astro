@@ -1,86 +1,126 @@
 ---
-// Specification sheet, not a marquee: the stack sits still in a calm
-// centered grid, Apple tech-specs style. Logos degrade to name-only
-// if a source ever fails.
-const DEVICON = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
-const tech: { name: string; icon: string }[] = [
-  { name: 'Odin', icon: 'https://cdn.simpleicons.org/odin' },
-  { name: 'Rust', icon: `${DEVICON}/rust/rust-original.svg` },
-  { name: 'C++', icon: `${DEVICON}/cplusplus/cplusplus-original.svg` },
-  { name: 'Python', icon: `${DEVICON}/python/python-original.svg` },
-  { name: 'JavaScript', icon: `${DEVICON}/javascript/javascript-original.svg` },
-  { name: 'TypeScript', icon: `${DEVICON}/typescript/typescript-original.svg` },
-  { name: 'HTML', icon: `${DEVICON}/html5/html5-original.svg` },
-  { name: 'CSS', icon: `${DEVICON}/css3/css3-original.svg` },
-  { name: 'Shell', icon: `${DEVICON}/bash/bash-original.svg` },
-  { name: 'GitHub', icon: `${DEVICON}/github/github-original.svg` },
-  { name: 'Docker', icon: `${DEVICON}/docker/docker-original.svg` },
-  { name: 'Kubernetes', icon: `${DEVICON}/kubernetes/kubernetes-plain.svg` },
+// Continuous editorial marquee of real technologies only — no bars,
+// percentages, ratings, or proficiency labels. Text-only for weight and
+// offline reliability (no icon CDN). Duplicated track loops seamlessly.
+const tech = [
+  'Odin',
+  'Rust',
+  'C++',
+  'Python',
+  'JavaScript',
+  'TypeScript',
+  'HTML',
+  'CSS',
+  'Git',
+  'GitHub',
+  'Docker',
+  'Kubernetes',
 ];
 ---
 
-<section class="stack" aria-label="Languages and tools">
-  <div class="stack-grid">
-    {tech.map((t) => (
-      <span class="stack-item" title={t.name}>
-        <img
-          class="stack-logo"
-          src={t.icon}
-          alt=""
-          width="22"
-          height="22"
-          loading="lazy"
-        />
-        <span class="stack-name mono">{t.name}</span>
-      </span>
-    ))}
+<section class="section stack" id="stack" aria-labelledby="stack-title">
+  <div class="section-inner">
+    <p class="eyebrow"><span class="path">/stack</span></p>
+    <h2 id="stack-title" data-entrance>Tools I actually use.</h2>
+    <p class="stack-lede" data-reveal>No ratings, no bars — just the languages and platforms behind the work above.</p>
   </div>
+
+  <div class="marquee" role="presentation">
+    <div class="marquee-track">
+      <div class="marquee-group" aria-hidden="false">
+        {tech.map((t) => <span class="marquee-item mono">{t}</span>)}
+      </div>
+      <div class="marquee-group" aria-hidden="true">
+        {tech.map((t) => <span class="marquee-item mono">{t}</span>)}
+      </div>
+    </div>
+  </div>
+  <p class="stack-hint mono" data-reveal>Tauri · SQLite · Electron · Ollama · OpenRouter — as used in Blink, Zest-TTY and Nugget.</p>
 </section>
 
-<script>
-  document.querySelectorAll<HTMLImageElement>('.stack-logo').forEach((img) => {
-    img.addEventListener('error', () => img.remove());
-  });
-</script>
-
 <style>
-  .stack {
+  .stack { overflow-x: clip; }
+  .stack-lede { margin-top: var(--space-sm); max-width: 52ch; }
+
+  /* Independent of page scroll: own linear animation, seamless -50% loop. */
+  .marquee {
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.25rem, 5vw, 3.5rem);
-    background: var(--bg);
+    overflow: hidden;
+    max-width: 100%;
   }
 
-  .stack-grid {
-    max-width: var(--wide-w);
-    margin: 0 auto;
+  .marquee-track {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem clamp(1.5rem, 4vw, 2.75rem);
+    width: max-content;
+    animation: marquee 32s linear infinite;
+    will-change: transform;
   }
 
-  .stack-item {
+  .marquee-group {
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem) 1.1rem clamp(1rem, 2.5vw, 1.75rem);
+    flex: none;
+  }
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Hover never pauses the loop — only a subtle item response. */
+  .marquee-item {
+    position: relative;
+    font-size: var(--step-0);
+    letter-spacing: 0.02em;
+    color: var(--ink-dim);
+    white-space: nowrap;
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    transition: opacity 0.2s ease, transform 0.2s var(--ease-out), color 0.2s ease;
   }
 
-  .stack-logo {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    filter: grayscale(1);
-    opacity: 0.6;
+  .marquee-item::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    flex: none;
   }
 
-  [data-theme='dark'] .stack-logo {
-    filter: grayscale(1) invert(1);
+  .marquee-item:hover {
     opacity: 0.75;
+    transform: scale(1.05);
+    color: var(--ink);
   }
 
-  .stack-name {
+  .stack-hint {
+    max-width: var(--wide-w);
+    margin: var(--space-lg) auto 0;
+    padding: 0 clamp(1.25rem, 5vw, 3.5rem);
     font-size: var(--step--1);
     color: var(--ink-faint);
-    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  /* Reduced motion: static, naturally wrapping — still fully readable. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { overflow-x: auto; }
+    .marquee-track { animation: none; width: auto; flex-wrap: wrap; }
+    .marquee-group { flex-wrap: wrap; gap: 0.75rem 1.5rem; }
+    .marquee-item::after { display: none; }
+    .marquee-item {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .marquee-track { animation-duration: 24s; }
   }
 </style>

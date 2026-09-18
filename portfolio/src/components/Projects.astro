@@ -1,74 +1,166 @@
 ---
 import { projects, archive } from '../data/projects';
+
+const profileUrl = 'https://github.com/WarquahF';
+const viewUrl = (href?: string) => href ?? profileUrl;
+
+// File trees are lightweight editorial representations drawn only from the
+// existing portfolio copy — folder names reflect documented concepts.
+const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string }[]> = {
+  blink: [
+    { name: 'src/', kind: 'dir', note: 'interface' },
+    { name: 'src-tauri/', kind: 'dir', note: 'router · Rust' },
+    { name: 'storage/', kind: 'dir', note: 'SQLite · encrypted' },
+    { name: 'docs/', kind: 'dir' },
+    { name: 'README.md', kind: 'file', note: 'local-first' },
+  ],
+  'zest-tty': [
+    { name: 'src/', kind: 'dir', note: 'parser · IR · emitter' },
+    { name: 'tests/', kind: 'dir', note: 'canonical gate' },
+    { name: 'docs/', kind: 'dir', note: 'supported subset' },
+    { name: 'README.md', kind: 'file', note: 'deterministic' },
+  ],
+  nugget: [
+    { name: 'main/', kind: 'dir', note: 'Electron shell' },
+    { name: 'renderer/', kind: 'dir', note: 'client UI' },
+    { name: 'voice/', kind: 'dir', note: 'interaction' },
+    { name: 'README.md', kind: 'file', note: 'proving ground' },
+  ],
+};
 ---
 
-<section class="section work" id="work" data-reveal>
+<section class="section work" id="work" aria-labelledby="work-title">
   <div class="section-inner">
     <p class="eyebrow"><span class="path">/work</span></p>
-    <h2 class="work-title" data-entrance>Two products. One philosophy.</h2>
-    <p class="work-lede" data-fade-late>Desktop software, presented like products — because that's how they're built.</p>
+    <h2 class="work-title" id="work-title" data-entrance>Three projects. One standard.</h2>
+    <p class="work-lede" data-reveal>Desktop software and developer tooling — each one you can open, read, and run. Select a project to read more.</p>
 
-    <div class="stories">
-      {projects.filter((p) => p.featured).map((p, i) => (
-        <article class="story story-feature" data-project={p.slug} tabindex="0" role="button" aria-haspopup="dialog" data-reveal>
-          <div class="story-meta mono">
-            <span>{String(i + 1).padStart(2, '0')}</span>
-            <span class="story-flag">Featured</span>
-            <span class="story-kind">{p.kind}</span>
-          </div>
-          <h3 class="story-name" data-drift="0.02">{p.name}</h3>
-          <p class="story-summary">{p.summary}</p>
-          {p.line && (
-            <p class="story-line" data-trigger-highlight>{p.line}</p>
-          )}
-          <div class="story-visual" data-scale-in>
-            {p.stages ? (
-              <div class="visual-frame visual-frame-pipeline">
-                <div class="visual-pipeline" data-trigger-highlight>
-                  {p.stages.join(' | ')}
+    <div class="work-list">
+      {projects.map((p, i) => (
+        <article class="project" data-project={p.slug} data-active={i === 0 ? 'true' : 'false'}>
+          <div class="project-main">
+            <div class="project-copy">
+              <p class="project-meta mono">
+                <span>{String(i + 1).padStart(2, '0')}</span>
+                <span class="project-kind">{p.kind}</span>
+              </p>
+              <h3 class="project-name">
+                <button
+                  type="button"
+                  class="project-toggle"
+                  aria-expanded={i === 0 ? 'true' : 'false'}
+                  aria-controls={`detail-${p.slug}`}
+                  data-toggle={p.slug}
+                >
+                  <span>{p.name}</span>
+                  <span class="toggle-mark" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <p class="project-summary">{p.summary}</p>
+              <a class="view-link" href={viewUrl(p.href)} target="_blank" rel="noreferrer">
+                View Project <span class="link-arrow" aria-hidden="true">→</span>
+              </a>
+
+              <div
+                class="project-detail"
+                id={`detail-${p.slug}`}
+                data-detail={p.slug}
+                inert={i === 0 ? undefined : true}
+              >
+                <div class="project-detail-inner">
+                  <p class="project-detail-text">{p.detail}</p>
+                  <ul class="project-points">
+                    {p.points.map((pt) => <li>{pt}</li>)}
+                  </ul>
+                  <div class="project-stack mono" aria-label="Technologies">
+                    {p.stack.map((s) => <span>{s}</span>)}
+                  </div>
+                  <a class="view-link view-link-detail" href={viewUrl(p.href)} target="_blank" rel="noreferrer">
+                    View Project <span class="link-arrow" aria-hidden="true">→</span>
+                  </a>
                 </div>
               </div>
-            ) : (
-              <div class="visual-frame visual-frame-lg" data-visual={p.slug}>
-                <span class="visual-glyph"></span>
-                {p.flow && (
-                  <div class="visual-flow mono">
-                    {p.flow.map((row) => (
-                      <span class="vf-row">
-                        {row.map((step) => <span class="vf-node">{step.label}</span>)}
+            </div>
+
+            <div class="project-visual" data-visual={p.slug}>
+              <div class="repo" aria-hidden="true">
+                <div class="repo-head">
+                  <span class="repo-dots"><i></i><i></i><i></i></span>
+                  <span class="repo-url mono">github.com/WarquahF/{p.slug}</span>
+                  <span class="repo-badge mono">Public</span>
+                </div>
+                <div class="repo-nav mono">
+                  <span class="is-on">Code</span><span>Issues</span><span>Pull requests</span>
+                </div>
+                <div class="repo-body">
+                  <div class="repo-files mono">
+                    {(trees[p.slug] ?? [{ name: 'README.md', kind: 'file' }]).map((f) => (
+                      <span class="repo-file">
+                        <span class={f.kind === 'dir' ? 'file-ic file-dir' : 'file-ic file-doc'}></span>
+                        <span>{f.name}</span>
+                        {f.note && <span class="repo-note">{f.note}</span>}
                       </span>
                     ))}
                   </div>
-                )}
-              </div>
-            )}
-          </div>
-          <div class="feature-foot">
-            <p class="story-detail">{p.detail}</p>
-            <div>
-              <div class="story-stack mono">
-                {p.stack.map((s) => <span>{s}</span>)}
-              </div>
-              <span class="record-open mono">Open record <span class="link-arrow">→</span></span>
-            </div>
-          </div>
-        </article>
-      ))}
 
-      {projects.filter((p) => !p.featured).map((p, i) => (
-        <article class="story story-compact" data-project={p.slug} tabindex="0" role="button" aria-haspopup="dialog" data-reveal>
-          <div class="compact-mark" data-mark={p.slug}></div>
-          <div class="compact-copy">
-            <div class="compact-head">
-              <h3 class="compact-name">{p.name}</h3>
-              <span class="mono compact-kind">{p.kind}</span>
-            </div>
-            <p class="compact-summary">{p.summary}</p>
-            <div class="story-stack mono">
-              {p.stack.map((s) => <span>{s}</span>)}
+                  {p.slug === 'blink' && (
+                    <div class="repo-diagram">
+                      <span class="rd-node">Your prompt</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node rd-strong">Provider router · Rust</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-branch">
+                        <span class="rd-node rd-small">OpenRouter</span>
+                        <span class="rd-node rd-small">Ollama · local</span>
+                      </span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node">Response</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node rd-quiet">Encrypted SQLite log</span>
+                    </div>
+                  )}
+
+                  {p.slug === 'zest-tty' && (
+                    <div class="repo-diagram repo-diagram-pipeline">
+                      <span class="rd-kicker mono">SOURCE → ODIN</span>
+                      <span class="rd-node rd-strong">SOURCE</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node">UNDERSTAND</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node">TRANSLATE</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node">VALIDATE</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node rd-strong">ODIN</span>
+                    </div>
+                  )}
+
+                  {p.slug === 'nugget' && (
+                    <div class="repo-diagram">
+                      <span class="rd-branch">
+                        <span class="rd-node rd-small">Text input</span>
+                        <span class="rd-node rd-small">Voice input</span>
+                      </span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node rd-strong">Electron shell</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node">AI service</span>
+                      <span class="rd-arrow">↓</span>
+                      <span class="rd-node rd-quiet">Desktop response</span>
+                    </div>
+                  )}
+
+                  <div class="repo-readme">
+                    <p class="repo-readme-title mono">README.md</p>
+                    <p class="repo-readme-text">{p.summary}</p>
+                  </div>
+                </div>
+                <div class="repo-foot mono">
+                  <span>main</span><span>{p.stack.slice(0, 3).join(' · ')}</span>
+                </div>
+              </div>
             </div>
           </div>
-          <span class="record-open mono compact-open">Open <span class="link-arrow">→</span></span>
         </article>
       ))}
     </div>
@@ -85,425 +177,433 @@ import { projects, archive } from '../data/projects';
 </section>
 
 <script>
-  const cards = document.querySelectorAll<HTMLElement>('[data-project]');
+  // Single-active editorial viewer + restrained cursor lift.
+  // No libraries: class flips + CSS transitions, one rAF per gesture.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(pointer: fine)').matches;
-  cards.forEach((card) => {
-    const open = () => {
-      window.dispatchEvent(new CustomEvent('open-project', { detail: card.dataset.project }));
-    };
-    card.addEventListener('click', open);
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        open();
+
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.project'));
+
+  const setActive = (slug: string | null) => {
+    cards.forEach((card) => {
+      const isOn = slug !== null && card.dataset.project === slug;
+      card.setAttribute('data-active', isOn ? 'true' : 'false');
+      const btn = card.querySelector<HTMLButtonElement>('[data-toggle]');
+      if (btn) btn.setAttribute('aria-expanded', isOn ? 'true' : 'false');
+      // Keep collapsed details out of the tab order: content is duplicated
+      // by the always-visible summary + View Project link above.
+      const detail = card.querySelector<HTMLElement>('[data-detail]');
+      if (detail) {
+        if (isOn) {
+          detail.removeAttribute('inert');
+        } else {
+          detail.setAttribute('inert', '');
+        }
       }
     });
-    // Spotlight: a soft wash of light follows the cursor across the card.
-    if (finePointer) {
-      card.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        card.style.setProperty('--my', `${e.clientY - r.top}px`);
-      });
+  };
+
+  // Initialize inert state to match the server-rendered active card.
+
+  cards.forEach((card) => {
+    const slug = card.dataset.project ?? '';
+    const btn = card.querySelector<HTMLButtonElement>('[data-toggle]');
+    const detail = card.querySelector<HTMLElement>('[data-detail]');
+    // Server renders the first project open; mirror that for AT + keyboard.
+    if (detail && card.getAttribute('data-active') !== 'true') {
+      detail.setAttribute('inert', '');
     }
+    btn?.addEventListener('click', () => {
+      const currently = card.getAttribute('data-active') === 'true';
+      // Only one expanded at a time; clicking the open one collapses it.
+      setActive(currently ? null : slug);
+    });
   });
+
+  // Cursor-reactive lift: slight rise + tiny parallax, springs home.
+  // Disabled for touch + reduced motion. Content never depends on hover.
+  if (!reduceMotion && finePointer) {
+    document.querySelectorAll<HTMLElement>('.project-visual').forEach((zone) => {
+      const repo = zone.querySelector<HTMLElement>('.repo');
+      if (!repo) return;
+      let raf = 0;
+      let tx = 0;
+      let ty = 0;
+
+      const paint = () => {
+        raf = 0;
+        repo.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(1.015)`;
+      };
+
+      zone.addEventListener('pointermove', (e) => {
+        const r = zone.getBoundingClientRect();
+        const px = (e.clientX - r.left) / Math.max(1, r.width) - 0.5;
+        const py = (e.clientY - r.top) / Math.max(1, r.height) - 0.5;
+        // Restrained: max ±7px lateral, gentle upward bias.
+        tx = Math.max(-7, Math.min(7, px * 14));
+        ty = Math.max(-10, Math.min(4, py * 10 - 5));
+        repo.style.transition = 'transform 0.18s ease-out';
+        if (!raf) raf = requestAnimationFrame(paint);
+      });
+
+      zone.addEventListener('pointerleave', () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        repo.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        repo.style.transform = 'translate3d(0, 0, 0) scale(1)';
+      });
+    });
+  }
 </script>
 
 <style>
-  .work-title {
-    max-width: 16ch;
-  }
+  .work-title { max-width: 18ch; }
+  .work-lede { margin-top: var(--space-sm); max-width: 52ch; }
 
-  .work-lede {
-    margin-top: var(--space-xs);
-  }
-
-  .stories {
-    margin-top: var(--space-3xl);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .story {
-    padding: clamp(3rem, 7vw, 5.5rem) 0;
+  .work-list {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
     border-top: 1px solid var(--line);
-    cursor: pointer;
-    position: relative;
   }
 
-  /* Spotlight wash follows the cursor (wired in the script below). */
-  .story::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-    background: radial-gradient(
-      28rem circle at var(--mx, 50%) var(--my, 50%),
-      rgba(150, 105, 15, 0.07),
-      transparent 65%
-    );
-  }
-
-  .story:hover::before {
-    opacity: 1;
-  }
-
-  [data-theme='dark'] .story::before {
-    background: radial-gradient(
-      28rem circle at var(--mx, 50%) var(--my, 50%),
-      rgba(217, 166, 72, 0.1),
-      transparent 65%
-    );
-  }
-
-  .story:last-of-type {
+  /* Editorial viewer: text column + protruding repo visual. Alternating
+     sides give the asymmetry; geometry is a plain offset, no 3D. */
+  .project {
+    padding: clamp(2.75rem, 6vw, 4.75rem) 0;
     border-bottom: 1px solid var(--line);
   }
 
-  .story-meta {
+  .project-main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .project:nth-child(even) .project-copy { order: 2; }
+  .project:nth-child(even) .project-visual { order: 1; }
+
+  .project-meta {
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
     font-size: var(--step--2);
+    letter-spacing: 0.08em;
     color: var(--ink-faint);
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-lg);
+    margin: 0 0 var(--space-md);
   }
 
-  .story-flag {
-    color: var(--signal);
+  .project-kind { margin-left: auto; text-align: right; }
+
+  .project-name { margin: 0; font-size: clamp(2.4rem, 5.5vw, 4rem); letter-spacing: -0.032em; line-height: 0.98; }
+
+  .project-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0;
+    font: inherit;
+    color: var(--ink);
+    letter-spacing: inherit;
+    text-align: left;
+    border-radius: var(--radius-sm);
   }
 
-  .story-kind {
-    margin-left: auto;
+  .toggle-mark {
+    position: relative;
+    width: 1.7rem;
+    height: 1.7rem;
+    flex: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    transition: transform 0.35s var(--ease), border-color 0.25s ease, background-color 0.25s ease;
   }
 
-  /* Featured: editorial product moment */
-  .story-feature .story-name {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 8vw, 5.5rem);
-    font-weight: 750;
-    letter-spacing: -0.035em;
-    line-height: 0.96;
-    margin: 0;
+  .toggle-mark::before,
+  .toggle-mark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: var(--ink-dim);
+    transition: transform 0.35s var(--ease), opacity 0.25s ease;
   }
 
-  .story-feature .story-summary {
+  .toggle-mark::before { width: 9px; height: 1.4px; transform: translate(-50%, -50%); }
+  .toggle-mark::after { width: 1.4px; height: 9px; transform: translate(-50%, -50%); }
+
+  .project[data-active='true'] .toggle-mark { transform: rotate(135deg); border-color: var(--ink); }
+  .project-toggle:hover .toggle-mark { border-color: var(--ink); }
+
+  .project-summary {
     margin-top: var(--space-md);
     font-size: var(--step-1);
+    line-height: 1.45;
     color: var(--ink);
     max-width: 34ch;
-    line-height: 1.45;
   }
 
-  .story-line {
-    margin-top: var(--space-md);
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    max-width: 30ch;
-  }
-
-  .story-feature .story-visual {
-    margin-top: var(--space-xl);
-  }
-
-  .visual-frame-lg {
-    min-height: 26rem;
-  }
-
-  /* Pipeline typography visual: the stages are the graphic. */
-  .visual-frame-pipeline {
-    min-height: 30rem;
-  }
-
-  .visual-pipeline {
-    display: flex;
-    flex-direction: column;
+  .view-link {
+    display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    text-align: center;
-    padding: 2rem 1rem;
+    margin-top: var(--space-md);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease, opacity 0.2s ease;
   }
 
-  .visual-pipeline .tph {
+  .view-link:hover { text-decoration-color: var(--ink); opacity: 0.85; }
+
+  /* Expandable detail: smooth grid-rows transition, not an accordion card.
+     Collapsed panels are visibility-hidden (with inert in JS) so keyboard
+     users never tab into hidden View Project duplicates. */
+  .project-detail {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition: grid-template-rows 0.55s var(--ease), opacity 0.45s ease, margin 0.45s var(--ease), visibility 0s linear 0.55s;
+    margin-top: 0;
+  }
+
+  .project[data-active='true'] .project-detail {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition: grid-template-rows 0.55s var(--ease), opacity 0.45s ease, margin 0.45s var(--ease), visibility 0s;
+    margin-top: var(--space-lg);
+  }
+
+  .project-detail-inner {
+    overflow: hidden;
+    min-height: 0;
+    border-top: 1px solid transparent;
+  }
+
+  .project[data-active='true'] .project-detail-inner {
+    border-top-color: var(--line);
+    padding-top: var(--space-lg);
+  }
+
+  .project-detail-text { margin: 0; line-height: 1.65; max-width: 52ch; }
+
+  .project-points {
+    margin-top: var(--space-md);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 0.45rem;
   }
 
-  .visual-pipeline .tph::after {
-    content: '↓';
-    font-weight: 400;
-    font-size: 0.55em;
-    color: var(--ink-faint);
-    margin-top: 0.35rem;
-  }
-
-  .visual-pipeline .tph:last-child::after {
-    content: none;
-  }
-
-  .visual-pipeline .tph.lit .tw {
-    font-weight: 800;
-  }
-
-  .feature-foot {
-    margin-top: var(--space-lg);
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: start;
-  }
-
-  @media (max-width: 820px) {
-    .feature-foot {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Compact: quiet index row for secondary work */
-  .story-compact {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    gap: var(--space-lg);
-    align-items: start;
-    padding: var(--space-xl) 0;
-  }
-
-  @media (max-width: 640px) {
-    .story-compact {
-      grid-template-columns: 1fr;
-      gap: var(--space-md);
-    }
-    .compact-open {
-      margin-top: 0;
-    }
-  }
-
-  .compact-mark {
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
+  .project-points li {
     position: relative;
-    transition: border-color 0.25s ease, transform 0.25s var(--cinematic, ease);
+    padding-left: 1rem;
+    color: var(--ink-dim);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    max-width: 52ch;
   }
 
-  .story-compact:hover .compact-mark {
-    border-color: var(--signal);
-    transform: scale(1.05);
-  }
-
-  [data-mark='nugget']::before {
-    content: '';
+  .project-points li::before {
+    content: '—';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 7px;
-    height: 7px;
-    border: 1.5px solid var(--signal);
-  }
-
-  [data-mark='blink']::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--signal);
-  }
-
-  .compact-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .compact-name {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin: 0;
-  }
-
-  .compact-kind {
-    font-size: var(--step--2);
+    left: 0;
     color: var(--ink-faint);
   }
 
-  .compact-summary {
-    margin-top: var(--space-xs);
-    max-width: 52ch;
-  }
-
-  .compact-open {
-    margin-top: 0.25rem;
-  }
-
-  .story-summary {
-    margin-top: var(--space-md);
-    font-size: var(--step-1);
-    color: var(--ink);
-    max-width: 36ch;
-    line-height: 1.45;
-  }
-
-  .story-detail {
-    margin-top: var(--space-sm);
-    font-size: var(--step-0);
-    max-width: 52ch;
-    line-height: 1.6;
-  }
-
-  .story-stack {
+  .project-stack {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
     margin-top: var(--space-md);
   }
 
-  .story-stack span {
+  .project-stack span {
     font-size: var(--step--2);
     color: var(--ink-faint);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.2rem 0.5rem;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .story:hover .story-stack span {
-    border-color: var(--line-strong);
-    color: var(--ink-dim);
-  }
-
-  .record-open {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-top: var(--space-lg);
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-    transition: color 0.2s ease;
-  }
-
-  .story:hover .record-open {
-    color: var(--link);
-  }
-
-  /* Visual: quiet product frame, no gradients, no glow */
-  .visual-frame {
-    position: relative;
     border: 1px solid var(--line);
     background: var(--bg-raised);
-    min-height: 22rem;
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.55rem;
+    letter-spacing: 0.02em;
+  }
+
+  .view-link-detail { margin-top: var(--space-lg); }
+
+  /* ---- Repo-style visual: lightweight imagery, monochrome, warm -------- */
+
+  .project-visual {
+    position: relative;
+    min-width: 0;
+    padding-top: 0.6rem;
+  }
+
+  .repo {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(28, 25, 18, 0.08);
+    will-change: transform;
+    /* Asymmetric protrusion: the frame escapes the text column to the
+       outer edge. Even rows mirror to the opposite edge. */
+    margin-right: clamp(-3.5rem, -4vw, -1rem);
+  }
+
+  .project:nth-child(even) .repo {
+    margin-right: 0;
+    margin-left: clamp(-3.5rem, -4vw, -1rem);
+  }
+
+  .repo-head {
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: transform 0.5s var(--cinematic, ease), border-color 0.3s ease;
+    gap: 0.7rem;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 55%, var(--bg-raised));
   }
 
-  .story:hover .visual-frame {
-    transform: scale(1.01);
-    border-color: var(--line-strong);
-  }
-
-  .visual-glyph {
-    width: 3.5rem;
-    height: 3.5rem;
+  .repo-dots { display: inline-flex; gap: 5px; }
+  .repo-dots i {
+    width: 8px; height: 8px; border-radius: 50%;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    position: relative;
+    background: var(--bg);
+    display: block;
   }
 
-  [data-visual='blink'] .visual-glyph::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--signal);
-  }
-
-  [data-visual='nugget'] .visual-glyph::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 9px;
-    height: 9px;
-    border: 1.5px solid var(--signal);
-  }
-
-  .visual-flow {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.9rem 1rem;
-    border-top: 1px solid var(--line);
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-  }
-
-  .vf-row {
-    display: flex;
-    gap: 0.3rem;
-    flex-wrap: wrap;
-  }
-
-  .vf-node {
-    font-size: var(--step--2);
+  .repo-url { font-size: 0.72rem; color: var(--ink-dim); letter-spacing: 0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .repo-badge {
+    margin-left: auto;
+    font-size: 0.66rem;
     color: var(--ink-faint);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+    flex: none;
   }
 
-  .archive {
-    margin-top: var(--space-2xl);
-  }
-
-  .archive-list {
-    border-top: 1px solid var(--line);
-  }
-
-  .archive-list li {
+  .repo-nav {
     display: flex;
-    gap: 0.75rem;
-    align-items: baseline;
-    padding: 0.6rem 0;
+    gap: 1rem;
+    padding: 0.55rem 0.9rem;
     border-bottom: 1px solid var(--line);
-    font-size: var(--step--1);
+    font-size: 0.7rem;
+    color: var(--ink-faint);
+  }
+
+  .repo-nav .is-on { color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--ink); padding-bottom: 0.1rem; }
+
+  .repo-body { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.9rem; }
+
+  .repo-files {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .repo-file {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.72rem;
     color: var(--ink-dim);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-raised);
   }
 
-  .archive-index {
-    color: var(--ink-faint);
+  .repo-file:last-child { border-bottom: none; }
+
+  .file-ic { width: 11px; height: 11px; flex: none; border: 1px solid var(--line-strong); }
+  .file-dir { border-radius: 2px 5px 2px 2px; background: var(--bg-sunken); }
+  .file-doc { border-radius: 2px; background: var(--bg); }
+
+  .repo-note { margin-left: auto; color: var(--ink-faint); font-size: 0.66rem; }
+
+  .repo-diagram {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
+    padding: 0.9rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
   }
 
-  .archive-note {
-    margin-left: auto;
+  .rd-kicker { font-size: 0.64rem; letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.3rem; }
+
+  .rd-node {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    background: var(--bg-raised);
+    border-radius: 5px;
+    padding: 0.35rem 0.65rem;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .rd-strong { font-weight: 700; border-color: var(--ink-faint); }
+  .rd-small { font-size: 0.66rem; }
+  .rd-quiet { color: var(--ink-dim); }
+
+  .repo-diagram-pipeline .rd-node { min-width: 11rem; text-align: center; letter-spacing: 0.06em; }
+
+  .rd-branch { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; }
+  .rd-arrow { color: var(--ink-faint); font-size: 0.8rem; line-height: 1; }
+
+  .repo-readme {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 0.7rem 0.8rem;
+    background: var(--bg-raised);
+  }
+
+  .repo-readme-title { margin: 0; font-size: 0.66rem; letter-spacing: 0.08em; color: var(--ink-faint); }
+  .repo-readme-text { margin: 0.35rem 0 0; font-size: 0.8rem; line-height: 1.55; color: var(--ink-dim); max-width: 100%; }
+
+  .repo-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.9rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.66rem;
     color: var(--ink-faint);
+    background: color-mix(in srgb, var(--bg) 55%, var(--bg-raised));
+  }
+
+  .archive { margin-top: var(--space-2xl); }
+  .archive-list { border-top: 1px solid var(--line); }
+  .archive-list li {
+    display: flex; gap: 0.75rem; align-items: baseline;
+    padding: 0.6rem 0; border-bottom: 1px solid var(--line);
+    font-size: var(--step--1); color: var(--ink-dim);
+  }
+  .archive-index { color: var(--ink-faint); }
+  .archive-note { margin-left: auto; color: var(--ink-faint); }
+
+  /* Intentional mobile design: visual becomes a full-width sheet below
+     the copy, without outer protrusion or horizontal overflow. */
+  @media (max-width: 900px) {
+    .project-main { grid-template-columns: 1fr; }
+    .project:nth-child(even) .project-copy { order: 1; }
+    .project:nth-child(even) .project-visual { order: 2; }
+    .repo,
+    .project:nth-child(even) .repo { margin: 0; }
+    .project-kind { margin-left: 0; }
+    .project-meta { flex-wrap: wrap; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-detail { transition: none; }
+    .repo { box-shadow: none; }
   }
 </style>

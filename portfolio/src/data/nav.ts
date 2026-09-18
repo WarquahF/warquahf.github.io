@@ -13,4 +13,7 @@ export const social = {
   github: 'https://github.com/WarquahF',
   email: 'warquah.dev@proton.me',
   x: 'https://x.com/warquah35',
-};
+  // No LinkedIn URL exists in the codebase — omitted deliberately rather
+  // than inventing a personal link. Add `linkedin:` here if one exists and
+  // the hero will pick it up automatically.
+} as { github: string; email: string; x: string; linkedin?: string };

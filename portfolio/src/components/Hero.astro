@@ -1,169 +1,331 @@
 ---
 import { social } from '../data/nav';
+
+// Rotating phrases are grounded in existing work only — no invented claims.
+const rotating = [
+  'local-first desktop software',
+  'developer tools that explain themselves',
+  'deterministic transpiler pipelines',
+  'fast, private, simple systems',
+];
+
+const socials = [
+  {
+    label: 'Email Warquah Faiz via Gmail',
+    href: `mailto:${social.email}`,
+    key: 'gmail',
+    text: 'Gmail',
+  },
+  {
+    label: 'Warquah Faiz on GitHub',
+    href: social.github,
+    key: 'github',
+    text: 'GitHub',
+  },
+  {
+    label: 'Warquah Faiz on LinkedIn',
+    href: social.linkedin,
+    key: 'linkedin',
+    text: 'LinkedIn',
+  },
+  {
+    label: 'Warquah Faiz on X',
+    href: social.x,
+    key: 'x',
+    text: 'X',
+  },
+].filter((s) => Boolean(s.href));
 ---
 
-<section class="hero" data-reveal>
+<section class="hero" aria-labelledby="hero-title">
   <div class="hero-inner">
-    <p class="hero-kicker mono" data-fade-late>Warquah Faiz — Student Developer</p>
+    <div class="hero-identity" data-fade-late>
+      <div class="hero-avatar" role="img" aria-label="Warquah Faiz — initials portrait">
+        <span aria-hidden="true">WF</span>
+        <span class="hero-avatar-dot" aria-hidden="true"></span>
+      </div>
+      <div class="hero-who">
+        <p class="hero-name">Warquah Faiz</p>
+        <p class="hero-place mono">Odisha, India · Open to projects</p>
+      </div>
+    </div>
 
-    <h1 class="hero-title" data-entrance data-entrance-step="60">
+    <h1 class="hero-title" id="hero-title" data-entrance>
       Software that respects your machine.
     </h1>
 
-    <p class="hero-sub" data-fade-late>
+    <p class="hero-permanent" data-fade-late>
       I build desktop software and developer tools — local-first, fast,
       and simple. Currently deep in the Blink Tauri migration.
     </p>
 
-    <div class="hero-actions" data-fade-late>
-      <a class="btn btn-primary mono" href="#work">View the work <span class="link-arrow">→</span></a>
-      <a class="btn mono" href={social.github} target="_blank" rel="noreferrer">GitHub</a>
-      <a class="btn mono" href="#contact">Contact</a>
+    <p class="hero-rotating" data-fade-late>
+      <span class="hero-rotating-label">Focused on</span>
+      <span
+        class="rotator"
+        role="status"
+        aria-live="polite"
+        aria-label={`Currently focused on: ${rotating[0]}`}
+        data-rotator
+        data-phrases={JSON.stringify(rotating)}
+      >
+        {rotating.map((phrase, i) => (
+          <span class="rotator-phrase" data-active={i === 0 ? 'true' : 'false'} aria-hidden={i === 0 ? 'false' : 'true'}>
+            {phrase}
+          </span>
+        ))}
+      </span>
+    </p>
+
+    <div class="hero-social" data-fade-late>
+      {socials.map((s) => (
+        <a class="social-link" href={s.href} target={s.key === 'gmail' ? undefined : '_blank'} rel={s.key === 'gmail' ? undefined : 'noreferrer'} aria-label={s.label}>
+          {s.key === 'gmail' && (
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+          )}
+          {s.key === 'github' && (
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.72-1.53-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .3.21.67.8.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" /></svg>
+          )}
+          {s.key === 'linkedin' && (
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.55V9h3.57v11.45Z" /></svg>
+          )}
+          {s.key === 'x' && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93Zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41Z" /></svg>
+          )}
+          <span class="social-text">{s.text}</span>
+        </a>
+      ))}
     </div>
 
-    <div class="hero-foot" data-fade-late>
-      <p class="status-pill mono"><span class="pulse" aria-hidden="true"></span>Open to projects · Odisha, India</p>
+    <div class="hero-actions" data-fade-late>
+      <a class="btn btn-primary" href="#work">View the work <span class="link-arrow" aria-hidden="true">→</span></a>
+      <a class="btn" href="#contact">Contact</a>
     </div>
   </div>
 </section>
+
+<script>
+  // Stable-dimension rotator: phrases share one grid cell, so the box sizes
+  // to the longest phrase once and never jumps. Crossfade only.
+  const rotator = document.querySelector<HTMLElement>('[data-rotator]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (rotator && !reduce) {
+    const phrases = Array.from(rotator.querySelectorAll<HTMLElement>('.rotator-phrase'));
+    let list: string[] = [];
+    try {
+      list = JSON.parse(rotator.dataset.phrases || '[]');
+    } catch {
+      list = [];
+    }
+    let i = 0;
+    const show = (next: number) => {
+      i = next % phrases.length;
+      phrases.forEach((p, idx) => {
+        const active = idx === i;
+        p.setAttribute('data-active', active ? 'true' : 'false');
+        p.setAttribute('aria-hidden', active ? 'false' : 'true');
+      });
+      if (list[i]) rotator.setAttribute('aria-label', `Currently focused on: ${list[i]}`);
+    };
+    if (phrases.length > 1) {
+      window.setInterval(() => show(i + 1), 3200);
+    }
+  } else if (rotator) {
+    // Reduced motion: first phrase stays, rest hidden from AT.
+    const phrases = Array.from(rotator.querySelectorAll<HTMLElement>('.rotator-phrase'));
+    phrases.forEach((p, idx) => {
+      p.setAttribute('data-active', idx === 0 ? 'true' : 'false');
+      p.setAttribute('aria-hidden', idx === 0 ? 'false' : 'true');
+    });
+  }
+</script>
 
 <style>
   .hero {
     min-height: 96svh;
     display: flex;
     align-items: flex-end;
-    padding: clamp(6rem, 12vw, 9rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
+    padding: clamp(5.5rem, 11vw, 8.5rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2.75rem, 5vw, 4rem);
     border-bottom: 1px solid var(--line);
-    max-width: var(--wide-w);
+    background: var(--bg);
+    overflow-x: clip;
   }
 
-  .hero-inner {
-    max-width: 60rem;
-    width: 100%;
+  .hero-inner { max-width: 62rem; width: 100%; min-width: 0; }
+
+  .hero-identity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
   }
 
-  .hero-kicker {
-    font-size: var(--step--2);
+  /* Typographic DP — no photo asset exists in the repo, so initials set in
+     a warm ring stand in. No stock imagery, no AI graphics. */
+  .hero-avatar {
+    position: relative;
+    width: 3.5rem;
+    height: 3.5rem;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--bg-raised);
+    border: 1px solid var(--line-strong);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .hero-avatar-dot {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--go);
+    border: 2px solid var(--bg);
+  }
+
+  .hero-name {
+    margin: 0;
+    font-size: var(--step-0);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .hero-place {
+    margin: 0.15rem 0 0;
+    font-size: var(--step--1);
     color: var(--ink-faint);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0 0 var(--space-xl);
+    letter-spacing: 0.02em;
   }
 
   .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(3.25rem, 10vw, 7.5rem);
-    font-weight: 700;
-    line-height: 1.0;
-    letter-spacing: -0.032em;
-    max-width: 11ch;
+    font-size: clamp(3rem, 9.5vw, 7rem);
+    font-weight: 720;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    max-width: 12ch;
     color: var(--ink);
-    margin: 0;
-    text-wrap: balance;
   }
 
-  .hero-sub {
-    max-width: 40ch;
-    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-    color: var(--ink-dim);
+  .hero-permanent {
     margin-top: var(--space-xl);
+    max-width: 42ch;
+    font-size: clamp(1.02rem, 1.5vw, 1.22rem);
     line-height: 1.55;
+    color: var(--ink-dim);
   }
+
+  .hero-rotating {
+    margin-top: var(--space-md);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-size: var(--step-0);
+    color: var(--ink-faint);
+  }
+
+  .hero-rotating-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    flex: none;
+  }
+
+  /* Stable dimensions: all phrases share grid-area 1/1, so the container
+     sizes to the longest phrase once. Opacity crossfade only. */
+  .rotator {
+    display: grid;
+    min-height: 1.7em;
+    min-width: min(22ch, 100%);
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .rotator-phrase {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+    pointer-events: none;
+  }
+
+  .rotator-phrase[data-active='true'] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .hero-social {
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem 0.5rem 0.7rem;
+    font-size: var(--step--1);
+    transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out), border-color 0.22s var(--ease-out), color 0.22s var(--ease-out);
+  }
+
+  .social-link:hover {
+    opacity: 0.88;
+    transform: translateY(-1px) scale(1.03);
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+
+  .social-link:active { transform: scale(0.98); }
+
+  .social-text { letter-spacing: 0.01em; }
 
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
-    margin-top: var(--space-2xl);
+    margin-top: var(--space-lg);
   }
 
   .btn {
     font-size: var(--step--1);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     text-decoration: none;
     color: var(--ink-dim);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius);
-    padding: 0.6rem 1.1rem;
-    /* No transform transition: Motion owns button movement (magnetic pull). */
-    transition:
-      color 0.25s var(--cinematic, ease),
-      border-color 0.25s var(--cinematic, ease),
-      background-color 0.25s var(--cinematic, ease);
+    padding: 0.65rem 1.15rem;
+    background: transparent;
+    transition: color 0.22s var(--ease-out), border-color 0.22s var(--ease-out), background-color 0.22s var(--ease-out), transform 0.15s ease;
   }
 
-  .btn:hover {
-    color: var(--ink);
-    border-color: var(--ink-faint);
-  }
+  .btn:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .btn-primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .btn-primary:hover { color: var(--bg); opacity: 0.9; border-color: var(--ink); }
 
-  .btn-primary {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--bg);
-  }
-
-  .btn-primary:hover {
-    color: var(--bg);
-    border-color: #000;
-    background: #000;
-  }
-
-  .hero-foot {
-    margin-top: var(--space-2xl);
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: var(--step--1);
-    color: var(--ink-dim);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.45rem 0.95rem 0.45rem 0.75rem;
-    margin: 0;
-    background: color-mix(in srgb, var(--bg-raised) 60%, transparent);
-  }
-
-  .pulse {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--go);
-    animation: pulse 2.4s ease-out infinite;
-  }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--go) 55%, transparent);
-    }
-    70% {
-      box-shadow: 0 0 0 9px transparent;
-    }
-    100% {
-      box-shadow: 0 0 0 0 transparent;
-    }
+  @media (max-width: 640px) {
+    .hero { min-height: 88svh; }
+    .hero-title { letter-spacing: -0.025em; }
+    .rotator { min-width: 100%; }
+    .social-link { padding: 0.55rem 0.85rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pulse {
-      animation: none;
-    }
-  }
-
-  /* Scroll cue removed — premium pages never say "scroll". */
-
-  @media (max-width: 640px) {
-    .hero {
-      min-height: 86svh;
-    }
-    .hero-title {
-      letter-spacing: -0.02em;
-    }
+    .rotator-phrase { transition: none; }
   }
 </style>

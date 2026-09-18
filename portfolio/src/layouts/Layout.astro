@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import { sections } from '../data/nav';
 import CommandPalette from '../components/svelte/CommandPalette.svelte';
 
 interface Props {
@@ -9,9 +8,18 @@ interface Props {
 }
 
 const {
-  title = 'Warquah Faiz — Student Developer',
-  description = 'Warquah Faiz — student developer exploring how software works. Building software, studying systems, documenting what I learn.',
+  title = 'Warquah Faiz — Software Developer',
+  description = 'Warquah Faiz — building local-first desktop software and developer tools. Blink, Zest-TTY, Nugget.',
 } = Astro.props;
+
+// Left rail: exactly the four editorial sections. Top nav + palette keep
+// their own fuller lists (incl. Notes) from data/nav.
+const rail = [
+  { label: 'ABOUT', href: '#about' },
+  { label: 'WORK', href: '#work' },
+  { label: 'STACK', href: '#stack' },
+  { label: 'CONTACT', href: '#contact' },
+];
 ---
 
 <!doctype html>
@@ -19,13 +27,13 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#0d0d10" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#faf8f3" />
     <script is:inline>
       try {
-        document.documentElement.dataset.theme = localStorage.getItem('wf-theme') || 'dark';
+        document.documentElement.dataset.theme = localStorage.getItem('wf-theme') || 'light';
       } catch {
-        document.documentElement.dataset.theme = 'dark';
+        document.documentElement.dataset.theme = 'light';
       }
     </script>
     <meta name="description" content={description} />
@@ -45,24 +53,24 @@ const {
     )}
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <div class="progress" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <div class="gutter-shell" id="home">
-      <aside class="gutter" aria-label="Section index">
-        <span class="mono gutter-side-label">W</span>
-        <div class="gutter-line">
-          <div class="gutter-ticks" id="gutter-ticks">
-            {sections.slice(1).filter((s) => s.href.startsWith('#')).map((s) => (
-              <div class="gutter-tick" data-target={s.href}>
-                <div class="gutter-mark"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <span class="mono gutter-side-label">2026</span>
+      <aside class="rail" aria-label="Section index">
+        <p class="rail-label">Index</p>
+        <nav class="rail-nav" aria-label="Sections">
+          {rail.map((s) => (
+            <a class="rail-link" href={s.href} data-target={s.href} data-active="false">
+              <span class="rail-dot" aria-hidden="true"></span>
+              <span>{s.label}</span>
+            </a>
+          ))}
+        </nav>
+        <p class="rail-foot">WF — 2026</p>
       </aside>
 
-      <main>
+      <main id="main">
         <slot />
       </main>
     </div>
@@ -70,195 +78,106 @@ const {
     <CommandPalette client:idle />
 
     <script>
-      import { animate, inView, scroll, stagger } from 'motion';
-
-      // Motion engine: one calm language — transform + opacity only,
-      // hardware-accelerated at 60fps. Discrete class flips remain solely
-      // for scroll-scrubbed word lighting.
-      const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const ticks = Array.from(document.querySelectorAll<HTMLElement>('.gutter-tick'));
-      const targets = ticks
-        .map((tick) => {
-          const id = tick.dataset.target?.replace('#', '');
+      // ---- Left rail: active section via IntersectionObserver. Discrete,
+      // ---- no percentages, no numeric indicators.
+      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.rail-link'));
+      const targets = links
+        .map((link) => {
+          const id = link.dataset.target?.replace('#', '');
           const el = id ? document.getElementById(id) : null;
-          return el ? { tick, el } : null;
+          return el ? { link, el } : null;
         })
-        .filter((v): v is { tick: HTMLElement; el: HTMLElement } => v !== null);
+        .filter((v): v is { link: HTMLAnchorElement; el: HTMLElement } => v !== null);
 
-      if (targets.length) {
+      if (targets.length && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               const match = targets.find((t) => t.el === entry.target);
               if (!match) return;
-              match.tick.dataset.active = entry.isIntersecting ? 'true' : 'false';
+              if (entry.isIntersecting) {
+                targets.forEach((t) => t.link.setAttribute('data-active', t === match ? 'true' : 'false'));
+              }
             });
           },
-          { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+          { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
         );
         targets.forEach((t) => observer.observe(t.el));
+      } else if (targets.length) {
+        targets[0]?.link.setAttribute('data-active', 'true');
       }
 
-      // Word-mask prep for display entrances (one-time DOM work; Motion
-      // drives the animation, CSS only holds the pre-state + end state).
-      document.querySelectorAll<HTMLElement>('[data-entrance]').forEach((el) => {
-        const words = el.textContent?.split(/\s+/).filter(Boolean) ?? [];
-        const label = words.join(' ');
-        el.innerHTML = words
-          .map((w) => `<span class="w"><span>${w}</span></span>`)
-          .join(' ');
-        el.setAttribute('aria-label', label);
-        if (reduceMotion) el.classList.add('is-in');
+      // Smooth scroll from the rail (native, motion-safe).
+      links.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const id = link.getAttribute('href');
+          if (!id?.startsWith('#')) return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+          history.replaceState(null, '', id);
+          (target as HTMLElement).setAttribute('tabindex', '-1');
+        });
       });
 
-      if (!reduceMotion) {
-        // Hero intro timeline: page rises, headline staggers in word by word.
-        if (document.querySelector('.hero')) {
-          animate('.hero[data-reveal]', { opacity: [0, 1], y: [18, 0] }, { duration: 0.9, ease: EASE });
-        }
-        const heroWords = document.querySelectorAll('.hero [data-entrance] .w > span');
-        if (heroWords.length) {
-          animate(
-            heroWords,
-            { y: ['110%', '0%'], opacity: [0, 1] },
-            { duration: 1, ease: EASE, delay: stagger(0.06, { startDelay: 0.2 }) }
-          );
-        }
-        const heroFades = document.querySelectorAll('.hero [data-fade-late]');
-        if (heroFades.length) {
-          animate(
-            heroFades,
-            { opacity: [0, 1], y: [14, 0] },
-            { duration: 0.8, ease: EASE, delay: stagger(0.09, { startDelay: 0.5 }) }
-          );
-        }
-
-        // Calm scroll reveals: everything below the hero fades up once.
-        // Initial states are set in JS so no-JS visitors still see content.
-        const batch = Array.from(
-          document.querySelectorAll<HTMLElement>(
-            '[data-reveal], [data-fade-late], [data-scale-in], [data-text-reveal]'
-          )
-        ).filter((el) => !el.closest('.hero'));
-        batch.forEach((el) => {
-          if (el.hasAttribute('data-scale-in')) {
-            animate(el, { opacity: 0, scale: 0.97 }, { duration: 0 });
-          } else {
-            animate(el, { opacity: 0, y: 16 }, { duration: 0 });
-          }
-        });
-        if (batch.length) {
-          inView(
-            batch,
-            (el) => {
-              if ((el as HTMLElement).hasAttribute('data-scale-in')) {
-                animate(el, { opacity: 1, scale: 1 }, { duration: 0.9, ease: EASE });
-              } else {
-                animate(el, { opacity: 1, y: 0 }, { duration: 0.8, ease: EASE });
+      // ---- One calm reveal language: fade + rise once, then stay. --------
+      const revealEls = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-reveal], [data-scale-in]')
+      );
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealEls.forEach((el) => el.classList.add('is-in'));
+      } else if (revealEls.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
               }
-            },
-            { amount: 0.2, margin: '0px 0px -6% 0px' }
-          );
-        }
-
-        // Display entrances below the fold stagger in on first view.
-        document.querySelectorAll<HTMLElement>('[data-entrance]').forEach((el) => {
-          if (el.closest('.hero')) return;
-          const words = el.querySelectorAll('.w > span');
-          if (!words.length) return;
-          const step = Number(el.dataset.entranceStep ?? 55) / 1000;
-          inView(
-            el,
-            () => {
-              animate(
-                words,
-                { y: ['110%', '0%'], opacity: [0, 1] },
-                { duration: 0.9, ease: EASE, delay: stagger(step) }
-              );
-            },
-            { amount: 0.4 }
-          );
-        });
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
+        );
+        revealEls.forEach((el) => io.observe(el));
       }
 
-      // Scroll progress hairline: bound straight to page scroll.
-      const progress = document.querySelector('.progress');
-      if (progress) {
-        scroll(animate(progress, { scaleX: [0, 1] }, { ease: 'linear' }));
-      }
-
-      if (!reduceMotion && window.matchMedia('(pointer: fine)').matches) {
-        // Magnetic primary buttons: drift toward the cursor, spring home.
-        document.querySelectorAll<HTMLElement>('.btn-primary').forEach((btn) => {
-          btn.addEventListener('pointermove', (e) => {
-            const r = btn.getBoundingClientRect();
-            animate(
-              btn,
-              {
-                x: (e.clientX - r.left - r.width / 2) * 0.14,
-                y: (e.clientY - r.top - r.height / 2) * 0.22,
-              },
-              { duration: 0.25, ease: 'easeOut' }
-            );
-          });
-          btn.addEventListener('pointerleave', () => {
-            animate(btn, { x: 0, y: 0 }, { type: 'spring', stiffness: 320, damping: 20 });
-          });
-        });
-      }
-
-      // Word-split prep for scroll-scrubbed statements (one-time DOM work).
-      document.querySelectorAll<HTMLElement>('[data-highlight]').forEach((el) => {
+      // Word-mask entrances: split once, reveal with stagger via CSS delay.
+      document.querySelectorAll<HTMLElement>('[data-entrance]').forEach((el) => {
+        if (el.dataset.split === 'done') return;
         const words = el.textContent?.split(/\s+/).filter(Boolean) ?? [];
         const label = words.join(' ');
-        el.innerHTML = words.map((w) => `<span class="hw">${w}</span>`).join(' ');
         el.setAttribute('aria-label', label);
+        el.innerHTML = words
+          .map((w, i) => `<span class="w"><span style="transition-delay:${Math.min(i * 45, 500)}ms">${w}</span></span>`)
+          .join(' ');
+        el.dataset.split = 'done';
       });
 
-      if (reduceMotion) {
-        document.querySelectorAll('[data-highlight] .hw').forEach((w) => w.classList.add('lit'));
-      } else {
-        // Pinned statement moments: the section holds still (sticky CSS)
-        // while Motion binds word emphasis to scroll progress — no scroll
-        // listeners, ScrollTimeline-accelerated where supported.
-        document.querySelectorAll<HTMLElement>('[data-highlight]').forEach((el) => {
-          const words = Array.from(el.querySelectorAll('.hw'));
-          if (!words.length) return;
-          const section = el.closest('section') ?? el;
-          let lit = -1;
-          const paint = (progress: number) => {
-            // Ease the ends: first word lights shortly after pin, last
-            // word completes just before release.
-            const eased = Math.min(1, Math.max(0, (progress - 0.08) / 0.84));
-            const count = Math.floor(eased * (words.length + 1));
-            if (count === lit) return;
-            lit = count;
-            words.forEach((w, i) => w.classList.toggle('lit', i < count));
-          };
-          paint(0);
-          scroll((progress) => paint(typeof progress === 'number' ? progress : 0), {
-            target: section,
-            offset: ['start start', 'end end'],
-          });
-        });
-
-        // Gentle parallax drift (transform-only, scroll-bound).
-        document.querySelectorAll<HTMLElement>('[data-drift]').forEach((el) => {
-          const speed = Number(el.dataset.drift ?? 0.06);
-          const amp = Math.min(48, speed * 500);
-          scroll(animate(el, { y: [amp, -amp] }, { ease: 'linear' }), {
-            target: el.closest('section') ?? el,
-            offset: ['start end', 'end start'],
-          });
-        });
+      const entranceEls = Array.from(document.querySelectorAll<HTMLElement>('[data-entrance]'));
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        entranceEls.forEach((el) => el.classList.add('is-in'));
+      } else if (entranceEls.length) {
+        const eio = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                eio.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.4 }
+        );
+        entranceEls.forEach((el) => eio.observe(el));
       }
 
-      // Viewport-triggered phrase highlighting: author phrases with
-      // `|` separators; each phrase lights fully when it enters view
-      // and stays lit. Discrete events.
+      // Viewport-triggered phrase emphasis: muted until the phrase crosses
+      // the middle band, then stays emphasized. Discrete events only.
       document.querySelectorAll<HTMLElement>('[data-trigger-highlight]').forEach((el) => {
+        if (el.dataset.split === 'done') return;
         const full = el.textContent ?? '';
         el.setAttribute('aria-label', full.split('|').join(' ').replace(/\s+/g, ' ').trim());
         el.innerHTML = full
@@ -273,26 +192,126 @@ const {
                 .join(' ')}</span>`
           )
           .join(' ');
+        el.dataset.split = 'done';
       });
 
-      if (reduceMotion) {
-        document.querySelectorAll('[data-trigger-highlight] .tph').forEach((p) => p.classList.add('lit'));
+      const phrases = Array.from(document.querySelectorAll<HTMLElement>('.tph'));
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        phrases.forEach((p) => p.classList.add('lit'));
+        document.querySelectorAll('[data-highlight] .hw').forEach((w) => w.classList.add('lit'));
+      } else if (phrases.length) {
+        const pio = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('lit');
+                pio.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '-42% 0px -42% 0px', threshold: 0 }
+        );
+        phrases.forEach((p) => pio.observe(p));
+      }
+
+      // Legacy scroll-lit statements: keep readable without a library —
+      // light words progressively on scroll with rAF-throttled checks.
+      const highlightBlocks = Array.from(document.querySelectorAll<HTMLElement>('[data-highlight]'));
+      highlightBlocks.forEach((el) => {
+        if (el.dataset.split === 'done') return;
+        const words = el.textContent?.split(/\s+/).filter(Boolean) ?? [];
+        const label = words.join(' ');
+        el.innerHTML = words.map((w) => `<span class="hw">${w}</span>`).join(' ');
+        el.setAttribute('aria-label', label);
+        el.dataset.split = 'done';
+      });
+      if (!reduceMotion && highlightBlocks.length) {
+        let ticking = false;
+        const paint = () => {
+          ticking = false;
+          highlightBlocks.forEach((el) => {
+            const spans = Array.from(el.querySelectorAll('.hw'));
+            if (!spans.length) return;
+            const r = el.getBoundingClientRect();
+            const vh = window.innerHeight || 800;
+            // Progress of the block through the viewport, eased at ends.
+            const total = r.height + vh;
+            const passed = vh - r.top;
+            const raw = Math.min(1, Math.max(0, passed / total));
+            const eased = Math.min(1, Math.max(0, (raw - 0.25) / 0.5));
+            const count = Math.floor(eased * (spans.length + 1));
+            spans.forEach((s, i) => s.classList.toggle('lit', i < count));
+          });
+        };
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(paint);
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        paint();
       } else {
-        document.querySelectorAll('.tph').forEach((p) => {
-          inView(p, () => p.classList.add('lit'), { amount: 0.6 });
-        });
+        document.querySelectorAll('[data-highlight] .hw').forEach((w) => w.classList.add('lit'));
+      }
+
+      // Scroll progress hairline: single rAF-throttled listener.
+      const progress = document.querySelector<HTMLElement>('.progress');
+      if (progress) {
+        let pticking = false;
+        const paintProgress = () => {
+          pticking = false;
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+          progress.style.transform = `scaleX(${p})`;
+        };
+        const onPScroll = () => {
+          if (!pticking) {
+            pticking = true;
+            requestAnimationFrame(paintProgress);
+          }
+        };
+        window.addEventListener('scroll', onPScroll, { passive: true });
+        paintProgress();
       }
 
       // Nav: transparent at top, solid once scrolling.
       const nav = document.querySelector('.nav');
-      const paintNav = () => nav?.classList.toggle('is-solid', window.scrollY > 24);
-      window.addEventListener('scroll', paintNav, { passive: true });
+      let nticking = false;
+      const paintNav = () => {
+        nticking = false;
+        nav?.classList.toggle('is-solid', window.scrollY > 24);
+      };
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (!nticking) {
+            nticking = true;
+            requestAnimationFrame(paintNav);
+          }
+        },
+        { passive: true }
+      );
       paintNav();
     </script>
 
     <style is:global>
-      /* Reveal + entrance states are driven by Motion (see script above).
-         No CSS-hidden defaults: no-JS visitors still see full content. */
+      .skip {
+        position: fixed;
+        top: -4rem;
+        left: 1rem;
+        z-index: 200;
+        background: var(--ink);
+        color: var(--bg);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: top 0.2s ease;
+      }
+      .skip:focus { top: 1rem; }
     </style>
   </body>
 </html>

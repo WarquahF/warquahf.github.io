@@ -1,71 +1,46 @@
 /* ==========================================================================
-   Warquah Faiz — design tokens
-   Palette: near-black workspace, off-white text, one restrained amber
-   signal color borrowed from CRT/phosphor terminals — used only for
-   status, focus and the smallest points of emphasis.
-   Type: San Francisco (system stack everywhere) with Inter and
-   IBM Plex Mono as quality fallbacks on platforms without SF.
+   Warquah Faiz — premium personal portfolio
+   Direction: Apple system type, Linear/Raycast restraint, editorial layout.
+   Warm off-white paper, near-black ink, warm-gray hairlines.
+   Type: system stack only. No Inter, no webfonts, no gradients, no glow.
    ========================================================================== */
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-variable.woff2') format('woff2-variations');
-  font-weight: 400 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  src: url('/fonts/plex-mono-regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  src: url('/fonts/plex-mono-medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   /* color — warm paper light system */
-  --bg: #f5f5f2;
+  --bg: #faf8f3;
   --bg-raised: #ffffff;
-  --line: #e2e2de;
-  --line-strong: #cfcfc9;
-  --ink: #111111;
-  --ink-dim: #666666;
-  --ink-faint: #999999;
-  --signal: #96690f;
-  --signal-dim: #c9a86a;
-  --signal-ghost: rgba(150, 105, 15, 0.08);
+  --bg-sunken: #f3efe6;
+  --line: #e7e0d2;
+  --line-strong: #d5ccb8;
+  --ink: #1b1a16;
+  --ink-dim: #5f5b53;
+  --ink-faint: #a19a8a;
+  --signal: #7c5e10;
+  --signal-dim: #b99b5e;
+  --signal-ghost: rgba(124, 94, 16, 0.08);
   --go: #177245;
-  --link: #0066cc;
+  --link: #1b1a16;
 
-  /* type — San Francisco first everywhere, quality fallbacks after */
+  /* type — required Apple system stack */
   --font-display:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
-    'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
   --font-body:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text',
-    'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
   --font-mono:
-    ui-monospace, 'SFMono-Regular', 'SF Mono', 'IBM Plex Mono',
-    'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
+    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
 
-  /* type scale — deliberate, editorial */
+  /* type scale — editorial, deliberate */
   --step--2: clamp(0.69rem, 0.67rem + 0.08vw, 0.75rem);
-  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
-  --step-0: clamp(0.93rem, 0.9rem + 0.14vw, 1rem);
-  --step-1: clamp(1.1rem, 1.05rem + 0.25vw, 1.25rem);
-  --step-2: clamp(1.35rem, 1.25rem + 0.45vw, 1.65rem);
-  --step-3: clamp(1.8rem, 1.5rem + 1.1vw, 2.4rem);
-  --step-4: clamp(2.5rem, 2rem + 2vw, 3.9rem);
-  --step-5: clamp(3.25rem, 2.4rem + 2.8vw, 5.25rem);
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.88rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.14vw, 1.02rem);
+  --step-1: clamp(1.12rem, 1.06rem + 0.25vw, 1.28rem);
+  --step-2: clamp(1.38rem, 1.26rem + 0.45vw, 1.7rem);
+  --step-3: clamp(1.85rem, 1.55rem + 1.1vw, 2.5rem);
+  --step-4: clamp(2.6rem, 2.05rem + 2vw, 4rem);
+  --step-5: clamp(3.3rem, 2.4rem + 2.8vw, 5.4rem);
 
   /* spacing */
   --space-2xs: 0.25rem;
@@ -78,94 +53,50 @@
   --space-3xl: 6rem;
 
   /* layout */
-  --gutter-w: 3rem;
+  --gutter-w: 11.5rem;
   --content-w: 42rem;
-  --wide-w: 60rem;
-  --radius: 3px;
+  --wide-w: 68rem;
+  --radius: 6px;
+  --radius-sm: 4px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --lift: cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: light;
 }
 
-/* Midnight studio: the new default look. Every surface on the site
-   reads from these tokens, so one attribute flips the whole page. */
+/* Optional dark studio — kept for the existing theme toggle.
+   Light warm paper remains the default experience. */
 [data-theme='dark'] {
-  --bg: #0d0d10;
-  --bg-raised: #16161b;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.17);
-  --ink: #f2efe8;
-  --ink-dim: #a8a6a0;
-  --ink-faint: #6f6e69;
+  --bg: #101012;
+  --bg-raised: #17171a;
+  --bg-sunken: #141416;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --ink: #f2eee5;
+  --ink-dim: #a9a59b;
+  --ink-faint: #6f6c64;
   --signal: #d9a648;
   --signal-dim: #8a6a2a;
   --signal-ghost: rgba(217, 166, 72, 0.14);
   --go: #4cc38a;
-  --link: #2997ff;
-
+  --link: #f2eee5;
   color-scheme: dark;
 }
 
 [data-theme='dark'] ::selection {
   background: #3a3324;
-  color: #f2efe8;
+  color: #f2eee5;
 }
 
-/* Film grain: one fixed overlay, ultra-subtle editorial texture. */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-}
-
-[data-theme='dark'] .grain {
-  opacity: 0.09;
-}
-
-/* Scroll progress hairline. */
-.progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  z-index: 100;
-  background: var(--signal);
-  transform-origin: 0 50%;
-  transform: scaleX(0);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   background: var(--bg);
   scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -177,146 +108,153 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 ::selection {
-  background: #b9e7c5;
-  color: #111111;
+  background: #e9dfc6;
+  color: #1b1a16;
 }
 
-a {
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
 :focus-visible {
   outline: 1.5px solid var(--signal);
   outline-offset: 3px;
+  border-radius: 2px;
 }
 
-/* ---- structure -------------------------------------------------------- */
+/* ---- shell ------------------------------------------------------------ */
 
 .gutter-shell {
   display: grid;
-  grid-template-columns: var(--gutter-w) 1fr;
+  grid-template-columns: var(--gutter-w) minmax(0, 1fr);
+  align-items: start;
 }
 
-@media (max-width: 780px) {
-  .gutter-shell {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 900px) {
+  .gutter-shell { grid-template-columns: 1fr; }
 }
 
-.gutter {
+main {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* ---- left section rail — original minimal dot + label design ----------- */
+
+.rail {
   position: sticky;
   top: 0;
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 0;
+  justify-content: center;
+  padding: 1.5rem 1.5rem 1.5rem 2rem;
   border-right: 1px solid var(--line);
+  background: var(--bg);
+  z-index: 20;
 }
 
-@media (max-width: 780px) {
-  .gutter {
-    display: none;
-  }
+@media (max-width: 900px) {
+  .rail { display: none; }
 }
 
-.gutter-line {
-  flex: 1;
-  width: 1px;
-  background: var(--line-strong);
-  margin: 1rem 0;
+.rail-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  margin: 0 0 1.25rem;
+  text-transform: uppercase;
+}
+
+.rail-nav {
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 
-.gutter-ticks {
+/* continuous hairline the dots sit on */
+.rail-nav::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  left: 5px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: var(--line);
 }
 
-.gutter-tick {
-  width: 100%;
+.rail-link {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-
-.gutter-tick a {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  gap: 0.85rem;
+  padding: 0.55rem 0.4rem 0.55rem 0;
   text-decoration: none;
-  padding: 0.6rem 0.35rem;
-  border-radius: var(--radius);
-  transition: color 0.2s var(--ease-out);
-}
-
-.gutter-tick a:hover {
-  color: var(--ink);
-}
-
-.gutter-tick[data-active='true'] a {
-  color: var(--signal);
-}
-
-.gutter-mark {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ink-faint);
-  transition: background 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
-}
-
-.gutter-tick[data-active='true'] .gutter-mark {
-  background: var(--signal);
-  box-shadow: 0 0 0 3px var(--signal-ghost);
-}
-
-.gutter-side-label {
-  font-size: var(--step--2);
   color: var(--ink-faint);
-  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  transition: color 0.25s var(--ease-out);
+  border-radius: var(--radius-sm);
 }
 
-main {
-  min-width: 0;
+.rail-dot {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  transition:
+    background-color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
+}
+
+.rail-link:hover { color: var(--ink); }
+.rail-link:hover .rail-dot {
+  border-color: var(--ink-faint);
+  transform: scale(1.12);
+}
+
+.rail-link[data-active='true'] { color: var(--ink); }
+.rail-link[data-active='true'] .rail-dot {
+  background: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px var(--signal-ghost);
+  transform: scale(1.05);
+}
+
+.rail-foot {
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
 }
 
 /* ---- sections ---------------------------------------------------------- */
 
 .section {
-  padding: clamp(4.5rem, 10vw, 8.5rem) clamp(1.25rem, 5vw, 3.5rem);
+  padding: clamp(4.5rem, 9vw, 8rem) clamp(1.25rem, 5vw, 3.5rem);
   border-bottom: 1px solid var(--line);
+  overflow-x: clip;
 }
 
 .section-inner {
   max-width: var(--wide-w);
   margin: 0 auto;
+  min-width: 0;
 }
-
-/* ---- eyebrows ---------------------------------------------------------- */
 
 .eyebrow {
   display: flex;
@@ -325,217 +263,147 @@ main {
   font-family: var(--font-mono);
   font-size: var(--step--2);
   color: var(--ink-faint);
-  letter-spacing: 0.04em;
-  margin-bottom: var(--space-lg);
+  letter-spacing: 0.06em;
+  margin: 0 0 var(--space-lg);
 }
 
-.eyebrow .path {
-  color: var(--signal);
-}
+.eyebrow .path { color: var(--signal); }
 
 .eyebrow::before {
   content: '';
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--ink-faint);
+  flex: none;
+  transform: translateY(-1px);
 }
 
-/* ---- headings ---------------------------------------------------------- */
-
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
   margin: 0;
   text-wrap: balance;
 }
 
-h2 {
-  font-size: var(--step-3);
-  max-width: 20ch;
+h2 { font-size: var(--step-3); max-width: 22ch; }
+h3 { font-size: var(--step-1); font-weight: 650; }
+
+p { color: var(--ink-dim); max-width: 56ch; margin: 0.75rem 0 0; }
+
+.mono { font-family: var(--font-mono); }
+.container { max-width: var(--content-w); }
+.text-ink { color: var(--ink); }
+
+/* ---- grain + progress (preserved, subdued) ------------------------------ */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
 }
 
-h3 {
-  font-size: var(--step-1);
-  font-weight: 600;
-}
+[data-theme='dark'] .grain { opacity: 0.07; }
 
-p {
-  color: var(--ink-dim);
-  max-width: 55ch;
-  margin: 0.75rem 0 0;
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 100;
+  background: var(--signal);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
 }
-
-.mono {
-  font-family: var(--font-mono);
-}
-
-.container {
-  max-width: var(--content-w);
-}
-
-.text-ink {
-  color: var(--ink);
-}
-
-/* ---- glass --------------------------------------------------------------
-   Used only on the sticky nav — floating surfaces (palette, panel) get
-   their own lighter treatment. */
 
 .glass {
-  background: color-mix(in srgb, var(--bg-raised) 78%, transparent);
+  background: color-mix(in srgb, var(--bg-raised) 82%, transparent);
   backdrop-filter: blur(16px) saturate(130%);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
   border: 1px solid var(--line);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 12px 32px rgba(26, 26, 24, 0.08);
+  box-shadow: 0 12px 32px rgba(28, 26, 20, 0.08);
 }
 
-/* ---- scroll reveals: driven by Motion, see Layout.astro ---------------- */
+/* ---- reveal system: CSS + IntersectionObserver, no library ------------- */
 
-/* ---- flow diagram ------------------------------------------------------ */
-
-.flow {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
 
-.flow-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
 }
 
+[data-scale-in] {
+  opacity: 0;
+  transform: scale(0.985) translateY(8px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+[data-scale-in].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Word entrance pre-state (JS splits words, adds .is-in once) */
+[data-entrance] .w { display: inline-block; overflow: hidden; vertical-align: bottom; }
+[data-entrance] .w > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.9s var(--ease), opacity 0.6s ease;
+}
+[data-entrance].is-in .w > span { transform: translateY(0); opacity: 1; }
+
+/* Scroll-scrub highlight (legacy statement) */
+[data-highlight] .hw {
+  color: var(--ink-faint);
+  opacity: 0.55;
+  transition: color 0.45s ease, opacity 0.45s ease;
+}
+[data-highlight] .hw.lit { color: var(--ink); opacity: 1; }
+
+/* Viewport-triggered phrase emphasis: muted → ink, stays lit. Discrete. */
+[data-trigger-highlight] .tph { display: inline; }
+[data-trigger-highlight] .tw { color: var(--ink-faint); transition: color 0.45s ease; }
+[data-trigger-highlight] .tph.lit .tw { color: var(--ink); font-weight: 600; }
+
+/* ---- flow diagram (shared) ---------------------------------------------- */
+
+.flow { display: flex; flex-direction: column; gap: 0; }
+.flow-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 .flow-node {
   font-family: var(--font-mono);
   font-size: var(--step--1);
   color: var(--ink);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   padding: 0.45rem 0.7rem;
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  background: var(--bg-raised);
   white-space: nowrap;
 }
+.flow-node[data-branch='true'] { color: var(--signal); border-color: var(--signal-dim); }
+.flow-connector { position: relative; width: 100%; height: 18px; margin-left: 1rem; }
+.flow-connector svg { width: 5px; height: 100%; overflow: visible; }
+.flow-connector line { stroke: var(--line-strong); stroke-width: 1; }
+.flow-connector circle { fill: var(--signal); }
 
-.flow-node[data-branch='true'] {
-  color: var(--signal);
-  border-color: var(--signal-dim);
-}
+/* ---- stage statements (preserved) --------------------------------------- */
 
-.flow-connector {
-  position: relative;
-  width: 100%;
-  height: 20px;
-  margin-left: 1rem;
-}
-
-.flow-connector svg {
-  width: 5px;
-  height: 100%;
-  overflow: visible;
-}
-
-.flow-connector line {
-  stroke: var(--line-strong);
-  stroke-width: 1;
-}
-
-.flow-connector circle {
-  fill: var(--signal);
-  offset-path: path('M 2.5 0 L 2.5 20');
-  animation: flow-dot 2.2s ease-in-out infinite;
-}
-
-@keyframes flow-dot {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  85% {
-    opacity: 1;
-  }
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flow-connector circle {
-    animation: none;
-    opacity: 0;
-  }
-}
-
-/* ---- list resets ------------------------------------------------------- */
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* ---- cinematic motion system -------------------------------------------
-   One language: transform + opacity only. Staged reveals, scroll
-   highlighting, parallax, full-screen statements. GPU-friendly. */
-
-:root {
-  --cinematic: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Staged entrance: words rise with clip. Motion drives the animation;
-   CSS holds the pre-state (and the reduced-motion end state). */
-[data-entrance] .w {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-[data-entrance] .w > span {
-  display: inline-block;
-  transform: translateY(110%);
-  opacity: 0;
-}
-[data-entrance].is-in .w > span {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-/* Scroll-highlight storytelling: muted -> ink word by word */
-[data-highlight] .hw {
-  color: var(--ink-faint);
-  opacity: 0.55;
-  transition:
-    color 0.45s ease,
-    opacity 0.45s ease;
-}
-[data-highlight] .hw.lit {
-  color: var(--ink);
-  opacity: 1;
-}
-
-/* Layered scroll choreography */
-[data-drift] {
-  will-change: transform, opacity;
-}
-[data-scale-in] {
-  will-change: transform, opacity;
-}
-
-/* Full-screen statement moments — pinned: the statement holds still
-   in the viewport while scroll progress lights its words. */
 .stage {
-  min-height: 190svh;
+  min-height: 150svh;
   padding: 0 clamp(1.25rem, 5vw, 3.5rem);
   border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  overflow-x: clip;
 }
 .stage-inner {
   max-width: var(--wide-w);
@@ -549,11 +417,7 @@ ul {
   top: 0;
   padding: clamp(3rem, 8vw, 5rem) 0;
 }
-@media (max-width: 640px) {
-  .stage {
-    min-height: 150svh;
-  }
-}
+@media (max-width: 640px) { .stage { min-height: 130svh; } }
 .stage-label {
   font-family: var(--font-mono);
   font-size: var(--step--2);
@@ -563,7 +427,7 @@ ul {
 }
 .stage-statement {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5.2vw, 3.75rem);
+  font-size: clamp(2rem, 5.2vw, 3.6rem);
   font-weight: 700;
   line-height: 1.06;
   letter-spacing: -0.025em;
@@ -572,80 +436,41 @@ ul {
   margin: 0;
   text-wrap: balance;
 }
-.stage-sub {
-  margin-top: var(--space-lg);
-  max-width: 46ch;
-  font-size: var(--step-0);
-  line-height: 1.65;
-}
+.stage-sub { margin-top: var(--space-lg); max-width: 46ch; font-size: var(--step-0); line-height: 1.65; }
 
-/* Tactile buttons + alive links */
-.btn, .nav-links a, .contact-links a, .record-open, .panel-link {
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active {
-  transform: scale(0.97);
-}
-.link-arrow {
-  display: inline-block;
-  transition: transform 0.25s var(--cinematic, ease);
-}
-a:hover .link-arrow {
-  transform: translateX(4px);
-}
+/* ---- tactile links ------------------------------------------------------- */
 
-/* Nav scroll state */
-.nav {
-  transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease,
-    backdrop-filter 0.35s ease;
-}
+.link-arrow { display: inline-block; transition: transform 0.25s var(--ease); }
+a:hover .link-arrow { transform: translateX(4px); }
+
+.btn:active { transform: scale(0.97); }
+
+.nav { transition: background-color 0.35s ease, border-color 0.35s ease; }
 .nav.is-solid {
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(14px) saturate(120%);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   border-bottom-color: var(--line);
 }
 
-/* Subtle tonal rhythm between sections */
-#about,
-#status {
-  background: var(--bg-raised);
-}
-#work,
-#contact {
-  background: var(--bg);
-}
-.stage {
-  background: var(--bg);
-}
-#closing {
-  background: #fafaf7;
-}
+#about, #status { background: var(--bg-raised); }
+#work, #contact { background: var(--bg); }
+#closing { background: #f6f2e9; }
+[data-theme='dark'] #closing { background: #111114; }
 
-[data-theme='dark'] #closing {
-  background: #111114;
-}
+ul { list-style: none; margin: 0; padding: 0; }
 
-/* Viewport-triggered phrase highlighting: phrases sit muted until
-   they cross the trigger band (~middle viewport), then snap to full
-   emphasis and stay there. Discrete events, not scroll scrubbing. */
-[data-trigger-highlight] .tph {
-  display: inline;
-}
-[data-trigger-highlight] .tw {
-  color: var(--ink-faint);
-  transition: color 0.4s ease;
-}
-[data-trigger-highlight] .tph.lit .tw {
-  color: var(--ink);
-  font-weight: 600;
-}
+/* ---- reduced motion: functionality preserved, decoration off ------------ */
 
 @media (prefers-reduced-motion: reduce) {
-  [data-entrance] .w > span {
-    transform: none;
-    opacity: 1;
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
+  [data-reveal], [data-scale-in] { opacity: 1; transform: none; }
+  [data-entrance] .w > span { transform: none; opacity: 1; }
+  [data-highlight] .hw { opacity: 1; color: var(--ink); }
+  .marquee-track { animation: none !important; }
 }

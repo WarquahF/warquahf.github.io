@@ -1,173 +1,103 @@
 ---
-const focus = [
-  'Computer Systems',
-  'Desktop Applications',
-  'Frontend Engineering',
-  'Backend Development',
-  'Rust',
-  'TypeScript',
-  'Cybersecurity',
-  'Open Source',
-];
 ---
 
-<section class="section" id="about" data-reveal>
+<section class="section" id="about" aria-labelledby="about-title">
   <div class="section-inner">
     <p class="eyebrow"><span class="path">/about</span></p>
-    <h2 data-text-reveal>Fast, private, simple.</h2>
+    <h2 id="about-title" data-entrance>Fast, private, simple.</h2>
 
-    <div class="about-grid">
-      <div class="about-files mono" role="tablist" aria-label="About files">
-        <button class="file-tab" role="tab" aria-selected="true" data-tab="profile">profile</button>
-        <button class="file-tab" role="tab" aria-selected="false" data-tab="notes">notes.txt</button>
-        <button class="file-tab" role="tab" aria-selected="false" data-tab="stack">stack.config</button>
-      </div>
+    <div class="about-editorial">
+      <p class="about-lede text-ink" data-reveal>
+        I build software that respects your machine and your data.
+      </p>
 
-      <div class="about-panels">
-        <div class="about-panel" data-panel="profile" data-active="true">
-          <p class="text-ink" style="font-size: var(--step-1); max-width: 42ch; line-height: 1.45;">
-            I build software that respects your machine and your data.
-          </p>
-          <p>
-            I don't just use technology. I like understanding how it works
-            underneath, building my own mental model of it, and documenting
-            what I learn.
-          </p>
-        </div>
+      <p class="about-body" data-reveal>
+        I don't just use technology. I like understanding how it works
+        underneath, building my own mental model of it, and documenting
+        what I learn.
+      </p>
 
-        <div class="about-panel" data-panel="notes">
-          <ul class="notes-list">
-            <li><strong class="text-ink">Performance.</strong> Every millisecond matters. I profile, measure and cut what isn't needed.</li>
-            <li><strong class="text-ink">Privacy.</strong> Local-first by default. Your data stays on your device, not in a cloud dashboard.</li>
-            <li><strong class="text-ink">Simplicity.</strong> Fewer moving parts. Interfaces that don't need a manual to understand.</li>
-          </ul>
-        </div>
+      <p class="about-emphasis" data-trigger-highlight data-reveal>
+        Every millisecond matters, | local-first by default, | fewer moving parts.
+      </p>
 
-        <div class="about-panel" data-panel="stack">
-          <ul class="focus-list mono">
-            {focus.map((f) => <li>{f}</li>)}
-          </ul>
-        </div>
-      </div>
+      <ul class="about-principles" data-reveal>
+        <li>
+          <span class="principle-name text-ink">Performance.</span>
+          <span>Every millisecond matters. I profile, measure and cut what isn't needed.</span>
+        </li>
+        <li>
+          <span class="principle-name text-ink">Privacy.</span>
+          <span>Local-first by default. Your data stays on your device, not in a cloud dashboard.</span>
+        </li>
+        <li>
+          <span class="principle-name text-ink">Simplicity.</span>
+          <span>Fewer moving parts. Interfaces that don't need a manual to understand.</span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
-<script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>('.file-tab');
-  const panels = document.querySelectorAll<HTMLElement>('.about-panel');
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach((t) => t.setAttribute('aria-selected', 'false'));
-      panels.forEach((p) => p.removeAttribute('data-active'));
-      tab.setAttribute('aria-selected', 'true');
-      const target = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
-      target?.setAttribute('data-active', 'true');
-    });
-  });
-</script>
-
 <style>
-  .about-grid {
-    display: grid;
-    grid-template-columns: 9rem 1fr;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
+  .about-editorial {
     margin-top: var(--space-xl);
+    max-width: 44rem;
   }
 
-  @media (max-width: 640px) {
-    .about-grid {
-      grid-template-columns: 1fr;
-    }
+  .about-lede {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    font-weight: 650;
+    max-width: 28ch;
+    margin: 0;
   }
 
-  .about-files {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-2xs);
-    height: fit-content;
+  .about-body {
+    margin-top: var(--space-lg);
+    font-size: var(--step-0);
+    line-height: 1.7;
+    max-width: 52ch;
   }
 
-  @media (min-width: 641px) {
-    .about-files {
-      flex-direction: column;
-      border-right: 1px solid var(--line);
-      padding-right: var(--space-sm);
-    }
+  /* Subtle viewport-triggered emphasis: three short phrases sit muted,
+     each locks to full ink as it crosses the middle band. Stays lit. */
+  .about-emphasis {
+    margin-top: var(--space-xl);
+    font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    max-width: 32ch;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--line);
   }
 
-  .file-tab {
-    text-align: left;
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-    padding: 0.4rem 0.55rem;
-    border-radius: var(--radius);
-    transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out);
-  }
-
-  .file-tab[aria-selected='true'] {
-    color: var(--signal);
-    background: var(--signal-ghost);
-  }
-
-  .file-tab:hover {
-    color: var(--ink);
-  }
-
-  .about-panels {
-    min-width: 0;
-  }
-
-  .about-panel {
-    display: none;
-  }
-
-  .about-panel[data-active='true'] {
-    display: block;
-    animation: fade-in 0.25s var(--ease, ease);
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(3px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .notes-list {
+  .about-principles {
+    margin-top: var(--space-xl);
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    border-top: 1px solid var(--line);
   }
 
-  .notes-list li {
+  .about-principles li {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
     color: var(--ink-dim);
-    max-width: 50ch;
-    line-height: 1.55;
+    line-height: 1.6;
+    font-size: var(--step-0);
   }
 
-  .focus-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
+  .principle-name { font-weight: 650; }
 
-  .focus-list li {
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.35rem 0.6rem;
-    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
-  }
-
-  .focus-list li:hover {
-    border-color: var(--line-strong);
-    color: var(--ink-dim);
+  @media (max-width: 640px) {
+    .about-principles li {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+    .about-lede { max-width: 100%; }
   }
 </style>

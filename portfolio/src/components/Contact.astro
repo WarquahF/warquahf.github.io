@@ -2,11 +2,11 @@
 import { social } from '../data/nav';
 ---
 
-<section class="section" id="contact" data-reveal style="border-bottom: none;">
-  <div class="section-inner">
+<section class="section" id="contact" aria-labelledby="contact-title" data-reveal style="border-bottom: none;">
+  <div class="section-inner container">
     <p class="eyebrow"><span class="path">/contact</span></p>
-    <h2 data-text-reveal>Get in touch</h2>
-    <p style="margin-top: 0.5rem;">
+    <h2 id="contact-title" data-entrance>Get in touch</h2>
+    <p style="margin-top: 0.75rem;">
       Open to projects, collaborations and conversations about software
       and systems.
     </p>
@@ -23,12 +23,6 @@ import { social } from '../data/nav';
       <a href={social.x} target="_blank" rel="noreferrer">
         <span class="contact-label">X</span>
         <span class="contact-value">@warquah35</span>
-      </a>
-      <!-- TODO(placeholder): no résumé file yet — this row points at email.
-           Swap the href for a real file/URL (e.g. /resume.pdf) once one exists. -->
-      <a href={`mailto:${social.email}`}>
-        <span class="contact-label">Résumé — email for now</span>
-        <span class="contact-value">{social.email}</span>
       </a>
     </div>
 
@@ -48,7 +42,8 @@ import { social } from '../data/nav';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.9rem var(--space-2xs);
+    gap: 1rem;
+    padding: 0.95rem var(--space-2xs);
     border-bottom: 1px solid var(--line);
     text-decoration: none;
     transition: padding-left 0.25s var(--ease-out), color 0.2s var(--ease-out);
@@ -63,15 +58,18 @@ import { social } from '../data/nav';
   .contact-label {
     font-size: var(--step--1);
     color: var(--ink-faint);
+    flex: none;
   }
 
   .contact-value {
     font-size: var(--step--1);
+    text-align: right;
+    overflow-wrap: anywhere;
     transition: color 0.2s var(--ease-out);
   }
 
   .contact-links a:hover .contact-value {
-    color: var(--link);
+    color: var(--ink);
   }
 
   .contact-note {
