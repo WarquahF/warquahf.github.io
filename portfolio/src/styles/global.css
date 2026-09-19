@@ -474,3 +474,78 @@ ul { list-style: none; margin: 0; padding: 0; }
   [data-highlight] .hw { opacity: 1; color: var(--ink); }
   .marquee-track { animation: none !important; }
 }
+
+/* ---- print: readable document, no chrome -------------------------------- */
+
+@media print {
+  @page { margin: 1.8cm; }
+
+  .nav,
+  .rail,
+  .progress,
+  .grain,
+  .skip,
+  .hero-actions,
+  .hero-social,
+  .copy-btn,
+  .project-visual,
+  .footer-signoff,
+  .footer-links,
+  .marquee-group[aria-hidden='true'],
+  [data-command-trigger] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .section,
+  .stage {
+    padding: 1.2rem 0;
+    border-bottom: 1px solid #ccc;
+    min-height: 0;
+  }
+
+  .stage-inner { min-height: 0; display: block; padding: 0; }
+
+  [data-reveal],
+  [data-scale-in] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-entrance] .w > span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-highlight] .hw,
+  [data-trigger-highlight] .tw {
+    opacity: 1 !important;
+    color: #000 !important;
+  }
+
+  .marquee { overflow: visible; }
+  .marquee-track { animation: none; }
+
+  /* Expanded project content must print even when collapsed on screen. */
+  .project-detail {
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin-top: 1rem !important;
+  }
+
+  p, li { color: #000; max-width: 100%; }
+  h1, h2, h3 { color: #000; }
+
+  a { text-decoration: underline; }
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    word-break: break-all;
+  }
+}

@@ -1,13 +1,16 @@
 ---
 import { social } from '../data/nav';
-const year = new Date().getFullYear();
+const now = new Date();
+const year = now.getFullYear();
+// Build-time date = last deployed update. Automatic — no manual upkeep.
+const updated = now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 const homeHref = Astro.url.pathname === '/' ? '#home' : '/#home';
 ---
 
 <footer class="footer mono">
   <div class="mega" aria-hidden="true">Warquah</div>
   <div class="footer-row">
-    <p>Warquah Faiz © {year} — Designed and built by Warquah Faiz.</p>
+    <p>Warquah Faiz © {year} · Updated {updated} — Designed and built by Warquah Faiz.</p>
     <div class="footer-links">
       <a href={social.github} target="_blank" rel="noreferrer">GitHub</a>
       <a href={social.x} target="_blank" rel="noreferrer">X</a>
