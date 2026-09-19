@@ -1,6 +1,7 @@
 ---
 import { social } from '../data/nav';
 import { existsSync } from 'node:fs';
+import ShaderField from './svelte/ShaderField.svelte';
 
 // Optional profile photo: drop ONE file at `public/profile.jpg`
 // (.jpg / .jpeg / .png / .webp / .avif all work). If no file exists,
@@ -58,6 +59,7 @@ const socials = [
     <span class="atmos-a"></span>
     <span class="atmos-b"></span>
   </div>
+  <ShaderField client:visible />
   <div class="hero-inner">
     <div class="hero-identity" data-fade-late>
       {profileSrc && (
@@ -241,6 +243,12 @@ const socials = [
   /* Paused the moment the hero leaves the viewport (JS toggles data-calm). */
   .hero[data-calm='true'] .hero-atmos span {
     animation-play-state: paused;
+  }
+
+  /* When the micro-shader initializes, it retires the CSS drift so only
+     one field ever renders. Without WebGL/JS this rule never applies. */
+  .hero[data-shader='true'] .hero-atmos {
+    display: none;
   }
 
   .hero-inner { max-width: 62rem; width: 100%; min-width: 0; position: relative; z-index: 1; }
