@@ -53,7 +53,11 @@ const socials = [
 ].filter((s) => Boolean(s.href));
 ---
 
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero-atmos" aria-hidden="true">
+    <span class="atmos-a"></span>
+    <span class="atmos-b"></span>
+  </div>
   <div class="hero-inner">
     <div class="hero-identity" data-fade-late>
       {profileSrc && (
@@ -159,20 +163,87 @@ const socials = [
       p.setAttribute('aria-hidden', idx === 0 ? 'false' : 'true');
     });
   }
+
+  // Park the atmosphere when the hero scrolls away: one observer, no loops.
+  const heroSection = document.querySelector<HTMLElement>('[data-hero]');
+  if (heroSection && !reduce && 'IntersectionObserver' in window) {
+    const calm = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          heroSection.setAttribute('data-calm', entry.isIntersecting ? 'false' : 'true');
+        });
+      },
+      { threshold: 0 }
+    );
+    calm.observe(heroSection);
+  }
 </script>
 
 <style>
   .hero {
+    position: relative;
     min-height: 96svh;
     display: flex;
     align-items: flex-end;
     padding: clamp(5.5rem, 11vw, 8.5rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2.75rem, 5vw, 4rem);
     border-bottom: 1px solid var(--line);
     background: var(--bg);
-    overflow-x: clip;
+    overflow: clip;
   }
 
-  .hero-inner { max-width: 62rem; width: 100%; min-width: 0; }
+  /* Atmospheric material: two whisper-soft warm fields drifting almost
+     imperceptibly behind the type. Living material, not animation —
+     paused offscreen, static on mobile, gone on reduced motion. */
+  .hero-atmos {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
+
+  .hero-atmos span {
+    position: absolute;
+    display: block;
+    will-change: transform;
+  }
+
+  .atmos-a {
+    width: 44rem;
+    height: 30rem;
+    right: -10rem;
+    top: -8rem;
+    background: radial-gradient(closest-side, rgba(150, 105, 15, 0.075), transparent 72%);
+    animation: atmos-drift 26s ease-in-out infinite alternate;
+  }
+
+  .atmos-b {
+    width: 36rem;
+    height: 26rem;
+    left: -12rem;
+    bottom: -10rem;
+    background: radial-gradient(closest-side, rgba(120, 110, 95, 0.09), transparent 72%);
+    animation: atmos-drift 32s ease-in-out infinite alternate-reverse;
+  }
+
+  [data-theme='dark'] .atmos-a {
+    background: radial-gradient(closest-side, rgba(217, 166, 72, 0.08), transparent 72%);
+  }
+
+  [data-theme='dark'] .atmos-b {
+    background: radial-gradient(closest-side, rgba(120, 118, 112, 0.1), transparent 72%);
+  }
+
+  @keyframes atmos-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-26px, 22px, 0); }
+  }
+
+  /* Paused the moment the hero leaves the viewport (JS toggles data-calm). */
+  .hero[data-calm='true'] .hero-atmos span {
+    animation-play-state: paused;
+  }
+
+  .hero-inner { max-width: 62rem; width: 100%; min-width: 0; position: relative; z-index: 1; }
 
   .hero-identity {
     display: flex;
@@ -327,9 +398,13 @@ const socials = [
     .hero-title { letter-spacing: -0.025em; }
     .rotator { min-width: 100%; }
     .social-link { padding: 0.55rem 0.85rem; }
+    /* Mobile: one static field, no drift — intentional, cheaper. */
+    .atmos-a { animation: none; opacity: 0.7; }
+    .atmos-b { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .rotator-phrase { transition: none; }
+    .hero-atmos { display: none; }
   }
 </style>
