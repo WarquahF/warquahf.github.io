@@ -53,7 +53,7 @@
   --space-3xl: 6rem;
 
   /* layout */
-  --gutter-w: 9rem;
+  --gutter-w: 7rem;
   --content-w: 42rem;
   --wide-w: 68rem;
   --radius: 6px;
@@ -172,83 +172,63 @@ main {
   text-transform: uppercase;
 }
 
-/* ---- left scroll scale: a slim track with a fill that tracks page ----
-   ---- progress, and stops pinned where their sections actually live. -- */
+/* ---- left tick ruler: compact rows of ticks that extend and brighten --
+   ---- around the scroll playhead. Major ticks are the section links. --- */
 
 .rail-scale {
-  position: relative;
-  flex: 1;
-  min-height: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: flex-start;
   margin: 0.4rem 0;
 }
 
-.scale-track {
-  position: absolute;
-  left: 4px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line);
+.tick {
   display: block;
+  height: 1px;
+  width: 22px;
+  background: var(--line-strong);
+  transform-origin: 0 50%;
+  /* JS drives transform/opacity per scroll frame (no transition: the value
+     is positional, so it stays glued to the playhead at 60fps). */
 }
 
-.scale-fill {
-  position: absolute;
-  inset: 0;
-  display: block;
-  background: var(--ink);
-  transform-origin: 50% 0;
-  transform: scaleY(0);
-}
-
-.scale-stop {
-  position: absolute;
-  top: var(--pos, 50%);
-  left: 0;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.3rem 0.4rem 0.3rem 0;
-  text-decoration: none;
-  color: var(--ink-faint);
-  background: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
-  transition: color 0.3s var(--ease-out);
-  border-radius: var(--radius-sm);
-}
-
-.rail-dot {
+.tick-major {
   position: relative;
-  z-index: 1;
-  width: 11px;
-  height: 11px;
-  flex: none;
-  border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  background: var(--bg);
-  transition:
-    background-color 0.25s var(--ease-out),
-    border-color 0.25s var(--ease-out),
-    transform 0.25s var(--ease-out),
-    box-shadow 0.25s var(--ease-out);
+  width: 38px;
+  background: var(--ink-faint);
+  border-radius: 1px;
+  text-decoration: none;
 }
 
-.scale-stop:hover { color: var(--ink); }
-.scale-stop:hover .rail-dot {
-  border-color: var(--ink-faint);
-  transform: scale(1.15);
-}
+.tick-major:hover { background: var(--ink); }
 
-.scale-stop[data-active='true'] { color: var(--ink); }
-.scale-stop[data-active='true'] .rail-dot {
+.tick-major[data-active='true'] {
   background: var(--ink);
-  border-color: var(--ink);
-  box-shadow: 0 0 0 4px var(--signal-ghost);
-  transform: scale(1.1);
+}
+
+/* Section name appears only while hovering/focusing its tick — the ruler
+   itself stays label-free. */
+.tick-label {
+  position: absolute;
+  left: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+  background: var(--bg);
+  padding-left: 0.35rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.tick-major:hover .tick-label,
+.tick-major:focus-visible .tick-label {
+  opacity: 1;
 }
 
 .rail-foot {

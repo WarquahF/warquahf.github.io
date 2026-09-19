@@ -12,8 +12,9 @@ const {
   description = 'Warquah Faiz — building local-first desktop software and developer tools. Blink, Zest-TTY, Nugget.',
 } = Astro.props;
 
-// Left rail: exactly the four editorial sections. Top nav + palette keep
-// their own fuller lists (incl. Notes) from data/nav.
+// Rail ruler: 19 ticks, the 4 majors double as section links.
+const TICK_COUNT = 19;
+const majorTickFor = [0, 6, 12, 18];
 const rail = [
   { label: 'ABOUT', href: '#about' },
   { label: 'WORK', href: '#work' },
@@ -58,23 +59,28 @@ const rail = [
     <div class="grain" aria-hidden="true"></div>
     <div class="gutter-shell" id="home">
       <aside class="rail" aria-label="Section index">
-        <p class="rail-label">Index</p>
+        <p class="rail-label" aria-hidden="true">Index</p>
         <nav class="rail-scale" aria-label="Sections">
-          <span class="scale-track" aria-hidden="true"><span class="scale-fill" data-scale-fill></span></span>
-          {rail.map((s, i) => (
-            <a
-              class="scale-stop"
-              href={s.href}
-              data-target={s.href}
-              data-active="false"
-              style={`--pos: ${[12, 40, 63, 88][i] ?? 50}%`}
-            >
-              <span class="rail-dot" aria-hidden="true"></span>
-              <span>{s.label}</span>
-            </a>
-          ))}
+          {Array.from({ length: TICK_COUNT }, (_, i) => {
+            const si = majorTickFor.indexOf(i);
+            return si === -1 ? (
+              <span class="tick" data-tick={i} aria-hidden="true"></span>
+            ) : (
+              <a
+                class="tick tick-major"
+                href={rail[si].href}
+                data-target={rail[si].href}
+                data-active="false"
+                data-tick={i}
+                aria-label={rail[si].label}
+                data-label={rail[si].label}
+              >
+                <span class="tick-label" aria-hidden="true">{rail[si].label}</span>
+              </a>
+            );
+          })}
         </nav>
-        <p class="rail-foot">WF — 2026</p>
+        <p class="rail-foot" aria-hidden="true">WF — 2026</p>
       </aside>
 
       <main id="main">
@@ -87,11 +93,12 @@ const rail = [
     <script>
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ---- Left rail: a live scroll scale. A slim fill tracks overall
-      // ---- page progress, stops sit where their sections actually live,
-      // ---- and the active stop lights as you cross sections.
-      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.scale-stop'));
-      const scaleFill = document.querySelector<HTMLElement>('[data-scale-fill]');
+      // ---- Left rail: a tick ruler that reacts to scroll. Ticks near the
+      // ---- playhead extend and brighten; the major tick of the section in
+      // ---- view locks to full ink. Majors are real links (see markup).
+      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.tick-major'));
+      const ticks = Array.from(document.querySelectorAll<HTMLElement>('[data-tick]'));
+      const TICK_MAX = Math.max(1, ticks.length - 1);
       const targets = links
         .map((link) => {
           const id = link.dataset.target?.replace('#', '');
@@ -128,21 +135,20 @@ const rail = [
         setActiveStop(targets[0] ?? null);
       }
 
-      // Place each stop at its section's midpoint in the document, so the
-      // scale is a true miniature of the page. Recomputed on load/resize.
-      const placeStops = () => {
-        const doc = document.documentElement.scrollHeight;
-        if (!doc) return;
-        targets.forEach(({ link, el }) => {
-          const top = el.getBoundingClientRect().top + window.scrollY;
-          const mid = top + el.offsetHeight / 2;
-          const pct = Math.min(93, Math.max(7, (mid / doc) * 100));
-          link.style.setProperty('--pos', `${pct.toFixed(2)}%`);
+      // Ticks breathe with the page: passed ticks stay dimly lit, ticks
+      // near the playhead extend to full. Transform + opacity only.
+      const paintTicks = (p: number) => {
+        ticks.forEach((el) => {
+          const t = Number(el.dataset.tick ?? 0) / TICK_MAX;
+          const d = Math.abs(p - t);
+          const near = Math.max(0, 1 - d / 0.14);
+          const passed = p >= t ? 0.55 : 0;
+          const boost = el.getAttribute('data-active') === 'true' ? 0.3 : 0;
+          const v = Math.min(1, 0.3 + 0.7 * Math.max(passed, near) + boost);
+          el.style.transform = `scaleX(${v.toFixed(3)})`;
+          el.style.opacity = `${(0.35 + 0.65 * Math.min(1, Math.max(passed, near) + boost)).toFixed(3)}`;
         });
       };
-      placeStops();
-      window.addEventListener('load', placeStops);
-      window.addEventListener('resize', placeStops);
 
       // Smooth scroll from the rail (native, motion-safe).
       links.forEach((link) => {
@@ -292,17 +298,16 @@ const rail = [
         document.querySelectorAll('[data-highlight] .hw').forEach((w) => w.classList.add('lit'));
       }
 
-      // Scroll progress hairline + rail scale fill: one rAF-throttled
-      // listener drives both, so the left scale breathes with the page.
+      // Scroll progress hairline + rail ticks: one rAF-throttled listener.
       const progress = document.querySelector<HTMLElement>('.progress');
-      if (progress || scaleFill) {
+      if (progress || ticks.length) {
         let pticking = false;
         const paintProgress = () => {
           pticking = false;
           const max = document.documentElement.scrollHeight - window.innerHeight;
           const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
           if (progress) progress.style.transform = `scaleX(${p})`;
-          if (scaleFill) scaleFill.style.transform = `scaleY(${p})`;
+          if (ticks.length) paintTicks(p);
         };
         const onPScroll = () => {
           if (!pticking) {
