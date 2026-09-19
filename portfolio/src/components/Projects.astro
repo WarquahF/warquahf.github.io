@@ -1,8 +1,30 @@
 ---
 import { projects, archive } from '../data/projects';
+import { existsSync } from 'node:fs';
 
 const profileUrl = 'https://github.com/WarquahF';
 const viewUrl = (href?: string) => href ?? profileUrl;
+
+// Optional real screenshots: drop files at
+//   public/projects/blink.png | zest-tty.png | nugget.png
+// (.png / .jpg / .jpeg / .webp / .avif all work). When a screenshot exists
+// it takes the diagram slot inside the repo frame; otherwise the
+// lightweight illustrated diagram renders. Add, swap or delete files
+// anytime without touching code.
+const shotExts = ['png', 'jpg', 'jpeg', 'webp', 'avif'];
+const shotsDir = new URL('../../public/projects/', import.meta.url);
+const shots: Record<string, string | null> = Object.fromEntries(
+  projects.map((p) => {
+    const hit = shotExts.find((ext) => {
+      try {
+        return existsSync(new URL(`${p.slug}.${ext}`, shotsDir));
+      } catch {
+        return false;
+      }
+    });
+    return [p.slug, hit ? `/projects/${p.slug}.${hit}` : null];
+  })
+);
 
 // File trees are lightweight editorial representations drawn only from the
 // existing portfolio copy — folder names reflect documented concepts.
@@ -83,7 +105,12 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
             </div>
 
             <div class="project-visual" data-visual={p.slug}>
-              <div class="repo" aria-hidden="true">
+              <div
+                class="repo"
+                aria-hidden={shots[p.slug] ? undefined : true}
+                role={shots[p.slug] ? 'img' : undefined}
+                aria-label={shots[p.slug] ? `Preview of the ${p.name} GitHub repository` : undefined}
+              >
                 <div class="repo-head">
                   <span class="repo-dots"><i></i><i></i><i></i></span>
                   <span class="repo-url mono">github.com/WarquahF/{p.slug}</span>
@@ -103,6 +130,15 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                     ))}
                   </div>
 
+                  {shots[p.slug] ? (
+                    <img
+                      class="repo-shot"
+                      src={shots[p.slug]}
+                      alt={`Screenshot of the ${p.name} GitHub repository`}
+                      loading="lazy"
+                    />
+                  ) : (
+                  <>
                   {p.slug === 'blink' && (
                     <div class="repo-diagram">
                       <span class="rd-node">Your prompt</span>
@@ -148,6 +184,8 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                       <span class="rd-arrow">↓</span>
                       <span class="rd-node rd-quiet">Desktop response</span>
                     </div>
+                  )}
+                  </>
                   )}
 
                   <div class="repo-readme">
@@ -564,6 +602,16 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
     border-radius: 7px;
     padding: 0.7rem 0.8rem;
     background: var(--bg-raised);
+  }
+
+  /* Real user screenshot in the diagram slot — same frame, same lift. */
+  .repo-shot {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
   }
 
   .repo-readme-title { margin: 0; font-size: 0.66rem; letter-spacing: 0.08em; color: var(--ink-faint); }

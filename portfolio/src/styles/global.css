@@ -53,7 +53,7 @@
   --space-3xl: 6rem;
 
   /* layout */
-  --gutter-w: 11.5rem;
+  --gutter-w: 9rem;
   --content-w: 42rem;
   --wide-w: 68rem;
   --radius: 6px;
@@ -153,7 +153,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1.5rem 1.5rem 1.5rem 2rem;
+  padding: 1rem 1rem 1rem 1.5rem;
   border-right: 1px solid var(--line);
   background: var(--bg);
   z-index: 20;
@@ -168,39 +168,56 @@ main {
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   color: var(--ink-faint);
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.7rem;
   text-transform: uppercase;
 }
 
-.rail-nav {
-  display: flex;
-  flex-direction: column;
+/* ---- left scroll scale: a slim track with a fill that tracks page ----
+   ---- progress, and stops pinned where their sections actually live. -- */
+
+.rail-scale {
   position: relative;
+  flex: 1;
+  min-height: 12rem;
+  margin: 0.4rem 0;
 }
 
-/* continuous hairline the dots sit on */
-.rail-nav::before {
-  content: '';
+.scale-track {
   position: absolute;
-  left: 5px;
-  top: 10px;
-  bottom: 10px;
+  left: 4px;
+  top: 0;
+  bottom: 0;
   width: 1px;
   background: var(--line);
+  display: block;
 }
 
-.rail-link {
-  position: relative;
+.scale-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--ink);
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+}
+
+.scale-stop {
+  position: absolute;
+  top: var(--pos, 50%);
+  left: 0;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.55rem 0.4rem 0.55rem 0;
+  gap: 0.65rem;
+  padding: 0.3rem 0.4rem 0.3rem 0;
   text-decoration: none;
   color: var(--ink-faint);
+  background: var(--bg);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  transition: color 0.25s var(--ease-out);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-out);
   border-radius: var(--radius-sm);
 }
 
@@ -220,22 +237,22 @@ main {
     box-shadow 0.25s var(--ease-out);
 }
 
-.rail-link:hover { color: var(--ink); }
-.rail-link:hover .rail-dot {
+.scale-stop:hover { color: var(--ink); }
+.scale-stop:hover .rail-dot {
   border-color: var(--ink-faint);
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
-.rail-link[data-active='true'] { color: var(--ink); }
-.rail-link[data-active='true'] .rail-dot {
+.scale-stop[data-active='true'] { color: var(--ink); }
+.scale-stop[data-active='true'] .rail-dot {
   background: var(--ink);
   border-color: var(--ink);
   box-shadow: 0 0 0 4px var(--signal-ghost);
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .rail-foot {
-  margin-top: 2rem;
+  margin-top: 1.1rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
@@ -353,13 +370,16 @@ p { color: var(--ink-dim); max-width: 56ch; margin: 0.75rem 0 0; }
   transform: none;
 }
 
-/* Word entrance pre-state (JS splits words, adds .is-in once) */
+/* Heading entrances: masked word rise, transform + opacity only (compositor
+   thread, 60fps). One-shot via IntersectionObserver — never scroll-scrubbed.
+   No-JS safe: without splitting there are no .w spans, so headings render
+   as plain readable text. */
 [data-entrance] .w { display: inline-block; overflow: hidden; vertical-align: bottom; }
 [data-entrance] .w > span {
   display: inline-block;
   transform: translateY(110%);
   opacity: 0;
-  transition: transform 0.9s var(--ease), opacity 0.6s ease;
+  transition: transform 0.65s var(--ease-out), opacity 0.5s ease;
 }
 [data-entrance].is-in .w > span { transform: translateY(0); opacity: 1; }
 

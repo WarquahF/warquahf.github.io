@@ -1,5 +1,21 @@
 ---
 import { social } from '../data/nav';
+import { existsSync } from 'node:fs';
+
+// Optional profile photo: drop ONE file at `public/profile.jpg`
+// (.jpg / .jpeg / .png / .webp / .avif all work). If no file exists,
+// no avatar renders at all — add, swap or delete the file anytime to
+// control the DP without touching code.
+const profileCandidates = ['profile.jpg', 'profile.jpeg', 'profile.png', 'profile.webp', 'profile.avif'];
+const publicDir = new URL('../../public/', import.meta.url);
+const profileFile = profileCandidates.find((f) => {
+  try {
+    return existsSync(new URL(f, publicDir));
+  } catch {
+    return false;
+  }
+});
+const profileSrc = profileFile ? `/${profileFile}` : null;
 
 // Rotating phrases are grounded in existing work only — no invented claims.
 const rotating = [
@@ -40,10 +56,15 @@ const socials = [
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-inner">
     <div class="hero-identity" data-fade-late>
-      <div class="hero-avatar" role="img" aria-label="Warquah Faiz — initials portrait">
-        <span aria-hidden="true">WF</span>
-        <span class="hero-avatar-dot" aria-hidden="true"></span>
-      </div>
+      {profileSrc && (
+        <img
+          class="hero-avatar-img"
+          src={profileSrc}
+          alt="Portrait of Warquah Faiz"
+          width="112"
+          height="112"
+        />
+      )}
       <div class="hero-who">
         <p class="hero-name">Warquah Faiz</p>
         <p class="hero-place mono">Odisha, India · Open to projects</p>
@@ -56,7 +77,7 @@ const socials = [
 
     <p class="hero-permanent" data-fade-late>
       I build desktop software and developer tools — local-first, fast,
-      and simple. Currently deep in the Blink Tauri migration.
+      and simple. The work below is where that thinking currently lives.
     </p>
 
     <p class="hero-rotating" data-fade-late>
@@ -160,33 +181,16 @@ const socials = [
     margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
   }
 
-  /* Typographic DP — no photo asset exists in the repo, so initials set in
-     a warm ring stand in. No stock imagery, no AI graphics. */
-  .hero-avatar {
-    position: relative;
+  /* Real photo only — no placeholder, no initials. The whole rule is
+     dormant until a public/profile.* file exists. */
+  .hero-avatar-img {
     width: 3.5rem;
     height: 3.5rem;
     flex: none;
-    display: grid;
-    place-items: center;
     border-radius: 50%;
-    background: var(--bg-raised);
+    object-fit: cover;
     border: 1px solid var(--line-strong);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-
-  .hero-avatar-dot {
-    position: absolute;
-    right: 2px;
-    bottom: 2px;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    background: var(--go);
-    border: 2px solid var(--bg);
+    background: var(--bg-raised);
   }
 
   .hero-name {

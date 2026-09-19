@@ -59,9 +59,16 @@ const rail = [
     <div class="gutter-shell" id="home">
       <aside class="rail" aria-label="Section index">
         <p class="rail-label">Index</p>
-        <nav class="rail-nav" aria-label="Sections">
-          {rail.map((s) => (
-            <a class="rail-link" href={s.href} data-target={s.href} data-active="false">
+        <nav class="rail-scale" aria-label="Sections">
+          <span class="scale-track" aria-hidden="true"><span class="scale-fill" data-scale-fill></span></span>
+          {rail.map((s, i) => (
+            <a
+              class="scale-stop"
+              href={s.href}
+              data-target={s.href}
+              data-active="false"
+              style={`--pos: ${[12, 40, 63, 88][i] ?? 50}%`}
+            >
               <span class="rail-dot" aria-hidden="true"></span>
               <span>{s.label}</span>
             </a>
@@ -80,9 +87,11 @@ const rail = [
     <script>
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ---- Left rail: active section via IntersectionObserver. Discrete,
-      // ---- no percentages, no numeric indicators.
-      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.rail-link'));
+      // ---- Left rail: a live scroll scale. A slim fill tracks overall
+      // ---- page progress, stops sit where their sections actually live,
+      // ---- and the active stop lights as you cross sections.
+      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.scale-stop'));
+      const scaleFill = document.querySelector<HTMLElement>('[data-scale-fill]');
       const targets = links
         .map((link) => {
           const id = link.dataset.target?.replace('#', '');
@@ -91,23 +100,49 @@ const rail = [
         })
         .filter((v): v is { link: HTMLAnchorElement; el: HTMLElement } => v !== null);
 
+      const setActiveStop = (active: { link: HTMLAnchorElement; el: HTMLElement } | null) => {
+        targets.forEach((t) => {
+          const on = t === active;
+          t.link.setAttribute('data-active', on ? 'true' : 'false');
+          if (on) {
+            t.link.setAttribute('aria-current', 'true');
+          } else {
+            t.link.removeAttribute('aria-current');
+          }
+        });
+      };
+
       if (targets.length && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               const match = targets.find((t) => t.el === entry.target);
               if (!match) return;
-              if (entry.isIntersecting) {
-                targets.forEach((t) => t.link.setAttribute('data-active', t === match ? 'true' : 'false'));
-              }
+              if (entry.isIntersecting) setActiveStop(match);
             });
           },
           { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
         );
         targets.forEach((t) => observer.observe(t.el));
       } else if (targets.length) {
-        targets[0]?.link.setAttribute('data-active', 'true');
+        setActiveStop(targets[0] ?? null);
       }
+
+      // Place each stop at its section's midpoint in the document, so the
+      // scale is a true miniature of the page. Recomputed on load/resize.
+      const placeStops = () => {
+        const doc = document.documentElement.scrollHeight;
+        if (!doc) return;
+        targets.forEach(({ link, el }) => {
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          const mid = top + el.offsetHeight / 2;
+          const pct = Math.min(93, Math.max(7, (mid / doc) * 100));
+          link.style.setProperty('--pos', `${pct.toFixed(2)}%`);
+        });
+      };
+      placeStops();
+      window.addEventListener('load', placeStops);
+      window.addEventListener('resize', placeStops);
 
       // Smooth scroll from the rail (native, motion-safe).
       links.forEach((link) => {
@@ -144,14 +179,15 @@ const rail = [
         revealEls.forEach((el) => io.observe(el));
       }
 
-      // Word-mask entrances: split once, reveal with stagger via CSS delay.
+      // Word-mask entrances: split once, reveal with a short understated
+      // stagger via per-word CSS delay (35ms each, capped at 280ms).
       document.querySelectorAll<HTMLElement>('[data-entrance]').forEach((el) => {
         if (el.dataset.split === 'done') return;
         const words = el.textContent?.split(/\s+/).filter(Boolean) ?? [];
         const label = words.join(' ');
         el.setAttribute('aria-label', label);
         el.innerHTML = words
-          .map((w, i) => `<span class="w"><span style="transition-delay:${Math.min(i * 45, 500)}ms">${w}</span></span>`)
+          .map((w, i) => `<span class="w"><span style="transition-delay:${Math.min(i * 35, 280)}ms">${w}</span></span>`)
           .join(' ');
         el.dataset.split = 'done';
       });
@@ -256,15 +292,17 @@ const rail = [
         document.querySelectorAll('[data-highlight] .hw').forEach((w) => w.classList.add('lit'));
       }
 
-      // Scroll progress hairline: single rAF-throttled listener.
+      // Scroll progress hairline + rail scale fill: one rAF-throttled
+      // listener drives both, so the left scale breathes with the page.
       const progress = document.querySelector<HTMLElement>('.progress');
-      if (progress) {
+      if (progress || scaleFill) {
         let pticking = false;
         const paintProgress = () => {
           pticking = false;
           const max = document.documentElement.scrollHeight - window.innerHeight;
           const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-          progress.style.transform = `scaleX(${p})`;
+          if (progress) progress.style.transform = `scaleX(${p})`;
+          if (scaleFill) scaleFill.style.transform = `scaleY(${p})`;
         };
         const onPScroll = () => {
           if (!pticking) {
