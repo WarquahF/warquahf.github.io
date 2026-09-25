@@ -104,13 +104,17 @@ const linkFor = (href: string) =>
     max-width: min(var(--wide-w), calc(100% - 1.5rem));
     margin: 0.75rem auto 0;
     padding: 0.55rem 0.6rem 0.55rem 0.9rem;
-    border: 1px solid var(--line-strong);
+    /* Visible outline in BOTH themes: light gets a warm hairline, dark a
+       brighter glass edge. Text colors track the theme via --ink vars with a
+       smooth transition (see .nav-links / .nav-github / .nav-kbd below). */
+    border: 1px solid color-mix(in srgb, var(--ink) 32%, var(--line-strong));
     border-radius: 14px;
     background: color-mix(in srgb, var(--bg-raised) 74%, transparent);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 0 0 0.5px color-mix(in srgb, var(--ink) 12%, transparent),
       0 10px 28px rgba(28, 25, 18, 0.09);
     transition:
       background-color 0.35s ease,
@@ -119,10 +123,29 @@ const linkFor = (href: string) =>
   }
 
   [data-theme='dark'] .nav {
+    border-color: color-mix(in srgb, var(--ink) 30%, var(--line-strong));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 0 0 0.5px color-mix(in srgb, var(--ink) 16%, transparent),
       0 10px 28px rgba(0, 0, 0, 0.35);
   }
+
+  .nav-links a,
+  .nav-mark-name,
+  .nav-github,
+  .nav-kbd,
+  .nav-theme {
+    transition:
+      color 0.35s ease,
+      opacity 0.35s ease,
+      border-color 0.35s ease;
+  }
+  /* theme-aware text strength inside the glass bar */
+  [data-theme='light'] .nav { color: var(--ink); }
+  [data-theme='dark'] .nav { color: var(--ink); }
+  [data-theme='light'] .nav-links a { color: var(--ink-dim); }
+  [data-theme='dark'] .nav-links a { color: var(--ink-dim); }
+  .nav-links a[data-active='true'] { color: var(--ink); }
 
   .nav.is-solid {
     background: color-mix(in srgb, var(--bg-raised) 88%, transparent);
