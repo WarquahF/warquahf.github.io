@@ -2,8 +2,8 @@
 import { projects, archive } from '../data/projects';
 import { existsSync } from 'node:fs';
 
-const profileUrl = 'https://github.com/WarquahF';
-const viewUrl = (href?: string) => href ?? profileUrl;
+// Project repos are currently private; no fake "View Project" links.
+// Drop a real public URL into a project's `href` and it renders again.
 
 // Optional real screenshots: drop files at
 //   public/projects/blink.png | zest-tty.png | nugget.png
@@ -55,7 +55,7 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
   <div class="section-inner">
     <p class="eyebrow"><span class="path">/work</span></p>
     <h2 class="work-title" id="work-title" data-entrance>Three projects. One standard.</h2>
-    <p class="work-lede" data-reveal>Desktop software and developer tooling — each one you can open, read, and run. Select a project to read more.</p>
+    <p class="work-lede" data-reveal>Desktop software and developer tooling. The source is private while it's in progress — the write-ups, decisions and notes below are public. Select a project to read more.</p>
 
     <div class="work-list">
       {projects.map((p, i) => (
@@ -79,9 +79,7 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                 </button>
               </h3>
               <p class="project-summary">{p.summary}</p>
-              <a class="view-link" href={viewUrl(p.href)} target="_blank" rel="noreferrer">
-                View Project <span class="link-arrow" aria-hidden="true">→</span>
-              </a>
+              <p class="source-note mono">source repo private · write-ups and notes are public</p>
 
               <div
                 class="project-detail"
@@ -97,9 +95,6 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                   <div class="project-stack mono" aria-label="Technologies">
                     {p.stack.map((s) => <span>{s}</span>)}
                   </div>
-                  <a class="view-link view-link-detail" href={viewUrl(p.href)} target="_blank" rel="noreferrer">
-                    View Project <span class="link-arrow" aria-hidden="true">→</span>
-                  </a>
                 </div>
               </div>
             </div>
@@ -297,6 +292,7 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
 <style>
   .work-title { max-width: 18ch; }
   .work-lede { margin-top: var(--space-sm); max-width: 52ch; }
+  .source-note { margin-top: var(--space-sm); font-size: 0.78rem; opacity: 0.55; }
 
   .work-list {
     margin-top: clamp(2.5rem, 6vw, 4.5rem);

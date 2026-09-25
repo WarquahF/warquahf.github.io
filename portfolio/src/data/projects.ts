@@ -41,7 +41,6 @@ export const projects: Project[] = [
       'Connectors and plugins planned',
     ],
     stack: ['Tauri', 'Rust', 'TypeScript', 'SQLite'],
-    href: 'https://github.com/WarquahF',
     featured: true,
     flow: [
       [{ label: 'Your prompt' }],
@@ -82,20 +81,9 @@ export const projects: Project[] = [
       [{ label: 'Validation', branch: true }],
     ],
   },
-  {
-    slug: 'nugget',
-    name: 'Nugget',
-    kind: 'Desktop AI assistant',
-    summary:
-      'A desktop AI assistant built with Electron, AI services and voice interaction.',
-    detail:
-      'Nugget was the proving ground before Blink — a focused, lightweight client wrapping AI services and voice interaction in a single desktop app.',
-    points: ['Electron shell', 'Voice interaction', 'AI service integration'],
-    stack: ['Electron', 'AI', 'Voice'],
-    href: 'https://github.com/WarquahF',
-  },
 ];
 
 export const archive: { name: string; note: string }[] = [
   { name: 'QuickBlink', note: 'Shipped' },
+  { name: 'Nugget', note: 'Electron + voice assistant — the proving ground before Blink' },
 ];

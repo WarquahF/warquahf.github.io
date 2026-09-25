@@ -1,20 +1,10 @@
 ---
-// Continuous editorial marquee of real technologies only — no bars,
-// percentages, ratings, or proficiency labels. Text-only for weight and
-// offline reliability (no icon CDN). Duplicated track loops seamlessly.
-const tech = [
-  'Odin',
-  'Rust',
-  'C++',
-  'Python',
-  'JavaScript',
-  'TypeScript',
-  'HTML',
-  'CSS',
-  'Git',
-  'GitHub',
-  'Docker',
-  'Kubernetes',
+// Static tool list, honest and plain: no looping marquee, no ratings.
+// Same list as before, just not animated.
+const groups: { label: string; items: string[] }[] = [
+  { label: 'Languages', items: ['Odin', 'Rust', 'C++', 'Python', 'JavaScript', 'TypeScript'] },
+  { label: 'Web', items: ['HTML', 'CSS'] },
+  { label: 'Tooling', items: ['Git', 'GitHub', 'Docker', 'Kubernetes'] },
 ];
 ---
 
@@ -23,104 +13,23 @@ const tech = [
     <p class="eyebrow"><span class="path">/stack</span></p>
     <h2 id="stack-title" data-entrance>Tools I actually use.</h2>
     <p class="stack-lede" data-reveal>No ratings, no bars — just the languages and platforms behind the work above.</p>
-  </div>
-
-  <div class="marquee" role="presentation">
-    <div class="marquee-track">
-      <div class="marquee-group" aria-hidden="false">
-        {tech.map((t) => <span class="marquee-item mono">{t}</span>)}
-      </div>
-      <div class="marquee-group" aria-hidden="true">
-        {tech.map((t) => <span class="marquee-item mono">{t}</span>)}
-      </div>
+    <div class="stack-groups" data-reveal>
+      {groups.map((g) => (
+        <div class="stack-group">
+          <p class="stack-label mono">{g.label}</p>
+          <p class="stack-items mono">{g.items.join(' · ')}</p>
+        </div>
+      ))}
     </div>
+    <p class="stack-hint mono" data-reveal>Tauri · SQLite · Electron · Ollama · OpenRouter — as used in Blink and Zest-TTY.</p>
   </div>
-  <p class="stack-hint mono" data-reveal>Tauri · SQLite · Electron · Ollama · OpenRouter — as used in Blink, Zest-TTY and Nugget.</p>
 </section>
 
 <style>
-  .stack { overflow-x: clip; }
+  .stack-title { max-width: 18ch; }
   .stack-lede { margin-top: var(--space-sm); max-width: 52ch; }
-
-  /* Independent of page scroll: own linear animation, seamless -50% loop. */
-  .marquee {
-    margin-top: var(--space-2xl);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    overflow: hidden;
-    max-width: 100%;
-  }
-
-  .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee 32s linear infinite;
-    will-change: transform;
-  }
-
-  .marquee-group {
-    display: flex;
-    align-items: center;
-    gap: clamp(2rem, 5vw, 3.5rem);
-    padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem) 1.1rem clamp(1rem, 2.5vw, 1.75rem);
-    flex: none;
-  }
-
-  @keyframes marquee {
-    to { transform: translateX(-50%); }
-  }
-
-  /* Hover never pauses the loop — only a subtle item response. */
-  .marquee-item {
-    position: relative;
-    font-size: var(--step-0);
-    letter-spacing: 0.02em;
-    color: var(--ink-dim);
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: clamp(2rem, 5vw, 3.5rem);
-    transition: opacity 0.2s ease, transform 0.2s var(--ease-out), color 0.2s ease;
-  }
-
-  .marquee-item::after {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--line-strong);
-    flex: none;
-  }
-
-  .marquee-item:hover {
-    opacity: 0.75;
-    transform: scale(1.05);
-    color: var(--ink);
-  }
-
-  .stack-hint {
-    max-width: var(--wide-w);
-    margin: var(--space-lg) auto 0;
-    padding: 0 clamp(1.25rem, 5vw, 3.5rem);
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-    text-align: center;
-  }
-
-  /* Reduced motion: static, naturally wrapping — still fully readable. */
-  @media (prefers-reduced-motion: reduce) {
-    .marquee { overflow-x: auto; }
-    .marquee-track { animation: none; width: auto; flex-wrap: wrap; }
-    .marquee-group { flex-wrap: wrap; gap: 0.75rem 1.5rem; }
-    .marquee-item::after { display: none; }
-    .marquee-item {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.35rem 0.8rem;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .marquee-track { animation-duration: 24s; }
-  }
+  .stack-groups { margin-top: var(--space-lg); display: grid; gap: var(--space-sm); }
+  .stack-group { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; align-items: baseline; }
+  .stack-label { font-size: 0.78rem; opacity: 0.55; min-width: 7ch; }
+  .stack-items { font-size: 0.92rem; }
 </style>
