@@ -549,3 +549,20 @@ ul { list-style: none; margin: 0; padding: 0; }
     word-break: break-all;
   }
 }
+
+/* ---- Scroll zoom: sections scale gently as they enter and settle at 1 ----
+   Driven per-frame in Layout.astro's rAF; disabled for reduced motion and
+   touch-heavy widths via media queries. Purely presentational. */
+[data-zoom] {
+  will-change: transform, opacity;
+  transform-origin: 50% 0;
+  /* JS sets --zoom (0..1 progress). Nothing animates without JS. */
+  transform: scale(calc(0.94 + 0.06 * var(--zoom, 1)));
+  opacity: calc(0.4 + 0.6 * var(--zoom, 1));
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-zoom] { transform: none; opacity: 1; }
+}
+@media (hover: none) and (pointer: coarse) {
+  [data-zoom] { transform: none; opacity: 1; }
+}
