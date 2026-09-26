@@ -48,6 +48,10 @@ jobs:
       - name: Build
         # SITE_URL defaults to https://warquahf.github.io in astro.config.mjs,
         # so no env override is needed for the Pages build.
+        # GH_CONTRIB_TOKEN (optional repo secret) feeds the build-time GitHub
+        # GraphQL call in Overview.astro; without it the calendar renders empty.
+        env:
+          GH_CONTRIB_TOKEN: ${{ secrets.GH_CONTRIB_TOKEN }}
         run: npm run build
 
       - name: Setup Pages
