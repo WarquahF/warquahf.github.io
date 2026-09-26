@@ -1,0 +1,146 @@
+---
+// All-in-one About: pulled-together summary of what's scattered across the
+// portfolio, a compact projects subsection, and this year's GitHub
+// contributions. Contribution data is fetched at build time — the number
+// shown is real, and the calendar is a lightweight inline SVG grid, no
+// external embeds.
+import { projects, archive } from '../data/projects';
+
+const ghUser = 'WarquahF';
+interface Day { date: string; contributionCount: number }
+interface Week { contributionDays: Day[] }
+let total = 0;
+let weeks: Day[][] = [];
+
+try {
+  const token = import.meta.env.GH_CONTRIB_TOKEN;
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({
+      query: `{ user(login:"${ghUser}"){ contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } } } } }`,
+    }),
+  });
+  const json: any = await res.json();
+  const cal = json?.data?.user?.contributionsCollection?.contributionCalendar;
+  if (cal) {
+    total = cal.totalContributions;
+    weeks = cal.weeks.map((w: Week) => w.contributionDays);
+  }
+} catch {
+  // build offline or no token: section renders without the number
+}
+
+// Intensity buckets (0-4), same palette as the site's ink scale.
+const level = (n: number) => (n === 0 ? 0 : n <= 2 ? 1 : n <= 4 ? 2 : n <= 7 ? 3 : 4);
+
+const featured = projects.filter((p) => p.featured);
+---
+
+<section class="section" id="overview" aria-labelledby="overview-title">
+  <div class="section-inner">
+    <p class="eyebrow"><span class="path">/overview</span></p>
+    <h2 id="overview-title" data-entrance>The whole picture.</h2>
+    <p class="ov-lede" data-reveal>
+      One page, gathered. Who I am, what I'm building, and what the last year
+      of making things actually looked like.
+    </p>
+
+    <div class="ov-grid">
+      <div class="ov-col">
+        <h3 class="ov-h mono" data-reveal>01 · Who I am</h3>
+        <p class="ov-text" data-reveal>
+          Warquah Faiz — developer in Odisha, India. I build desktop software
+          and developer tools: local-first, fast, few moving parts. I don't
+          just use technology — I take it apart, build my own model of how it
+          works, and write down what I learn.
+        </p>
+      </div>
+
+      <div class="ov-col">
+        <h3 class="ov-h mono" data-reveal>02 · What I'm building</h3>
+        <ul class="ov-projects" data-reveal>
+          {featured.map((p) => (
+            <li>
+              <span class="ov-pname text-ink">{p.name}</span>
+              <span class="ov-pkind mono">{p.kind}</span>
+              <p class="ov-ptext">{p.summary}</p>
+            </li>
+          ))}
+          <li class="ov-arch">
+            <span class="ov-pname text-ink">Also shipped</span>
+            <p class="ov-ptext">{archive.map((a) => a.name).join(' · ')}</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ov-col">
+        <h3 class="ov-h mono" data-reveal>03 · This year on GitHub</h3>
+        {total > 0 && (
+          <p class="ov-total" data-reveal>
+            <strong class="text-ink">{total}</strong> contributions in the last year
+          </p>
+        )}
+        {weeks.length > 0 && (
+          <div class="ov-cal" data-reveal aria-label={`GitHub contribution calendar, ${total} contributions in the last year`} role="img">
+            {weeks.map((week, wi) => (
+              <div class="ov-col-row">
+                {week.map((d) => (
+                  <span class={`ov-cell l${level(d.contributionCount)}`} title={`${d.date}: ${d.contributionCount} contribution${d.contributionCount === 1 ? '' : 's'}`}></span>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+        <p class="ov-cal-foot mono" data-reveal>
+          <a class="ov-ghlink" href={`https://github.com/${ghUser}`} target="_blank" rel="noreferrer">github.com/{ghUser}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ov-lede { margin-top: var(--space-sm); max-width: 48ch; color: var(--ink-dim); }
+  .ov-grid {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.3fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  .ov-h { font-size: var(--step--1); color: var(--ink-faint); letter-spacing: 0.08em; }
+  .ov-col > :global(*):not(.ov-h) { margin-top: var(--space-md); }
+  .ov-text { color: var(--ink-dim); line-height: 1.7; font-size: var(--step-0); }
+  .ov-projects { display: flex; flex-direction: column; gap: var(--space-md); }
+  .ov-pname { font-weight: 650; font-size: var(--step-1); }
+  .ov-pkind { display: block; font-size: var(--step--2); color: var(--ink-faint); margin-top: 0.1rem; }
+  .ov-ptext { margin-top: 0.35rem; color: var(--ink-dim); line-height: 1.6; font-size: var(--step--1); }
+  .ov-arch .ov-ptext { font-size: var(--step-0); }
+  .ov-total { font-size: var(--step-1); color: var(--ink-dim); }
+  .ov-total strong { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; }
+  .ov-cal {
+    margin-top: var(--space-md);
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+  .ov-col-row { display: flex; flex-direction: column; gap: 3px; }
+  .ov-cell {
+    width: 10px; height: 10px; border-radius: 2px;
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .ov-cell.l1 { background: color-mix(in srgb, var(--ink) 26%, transparent); }
+  .ov-cell.l2 { background: color-mix(in srgb, var(--ink) 46%, transparent); }
+  .ov-cell.l3 { background: color-mix(in srgb, var(--ink) 68%, transparent); }
+  .ov-cell.l4 { background: var(--ink); }
+  .ov-cal-foot { margin-top: var(--space-sm); font-size: var(--step--1); }
+  .ov-ghlink { color: var(--ink-dim); text-decoration-color: var(--line-strong); }
+  .ov-ghlink:hover { color: var(--ink); }
+  @media (max-width: 900px) {
+    .ov-grid { grid-template-columns: 1fr; }
+  }
+</style>
