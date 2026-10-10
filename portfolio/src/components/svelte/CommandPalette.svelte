@@ -31,7 +31,7 @@
     // TODO(placeholder): no résumé file yet — opens the visitor's mail
     // client. Swap for a real link (e.g. window.open('/resume.pdf','_blank'))
     // once one exists.
-    { label: 'Résumé — email for now', hint: 'link', action: () => (window.location.href = `mailto:${social.email}`) },
+    { label: 'Résumé: email for now', hint: 'link', action: () => (window.location.href = `mailto:${social.email}`) },
   ];
 
   $: filtered = query

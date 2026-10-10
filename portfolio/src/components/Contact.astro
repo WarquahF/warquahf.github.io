@@ -64,7 +64,7 @@ import { social } from '../data/nav';
     window.clearTimeout(timer);
     btn.setAttribute('data-done', ok ? 'true' : 'false');
     label.textContent = ok ? 'Copied' : 'Copy';
-    status.textContent = ok ? 'Copied' : 'Copy failed — use the link';
+    status.textContent = ok ? 'Copied' : 'Copy failed: use the link';
     timer = window.setTimeout(() => {
       btn.setAttribute('data-done', 'false');
       if (label) label.textContent = 'Copy';

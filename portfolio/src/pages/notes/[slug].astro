@@ -16,7 +16,7 @@ const note = Astro.props.note;
 const { Content } = await note.render();
 ---
 
-<Layout title={`${note.data.title} — Notes`} description={note.data.summary}>
+<Layout title={`${note.data.title} · Notes`} description={note.data.summary}>
   <Nav />
   <article class="section">
     <div class="section-inner container">

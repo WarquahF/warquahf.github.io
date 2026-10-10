@@ -8,7 +8,7 @@ tags: [sqlite, security]
 <!-- PLACEHOLDER — replace with real content before publishing. -->
 
 Blink stores chat history in SQLite, locally. Encrypting it is not about
-hiding from anyone in particular — it's about making "the data lives on
+hiding from anyone in particular. It's about making "the data lives on
 your machine" mean something if that machine changes hands.
 
 The short version of the options being compared:

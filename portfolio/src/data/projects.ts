@@ -57,7 +57,7 @@ export const projects: Project[] = [
     summary:
       'Source-to-Odin transpiler that converts supported code into validated Odin code.',
     detail:
-      'Zest-TTY is deterministic — no AI layer. Supported source goes through a typed intermediate representation and expression passes, and the Odin emitter output goes through validation. The MVP covers a documented subset on purpose: unsupported constructs degrade honestly into warnings and TODO-style output instead of pretending to work.',
+      'Zest-TTY is deterministic. No AI layer. Supported source goes through a typed intermediate representation and expression passes, and the Odin emitter output goes through validation. The MVP covers a documented subset on purpose: unsupported constructs degrade honestly into warnings and TODO-style output instead of pretending to work.',
     points: [
       'Understand → Translate → Validate pipeline',
       'Line/parser processing into a typed intermediate representation',
@@ -66,7 +66,6 @@ export const projects: Project[] = [
       'Deterministic tests with a canonical test gate',
       'Cross-platform releases: Linux x86_64, macOS x86_64/ARM64, Windows x86_64',
       'Version stamping, SHA256 checksums, SBOMs and installers',
-      'Deterministic by design — no AI layer',
     ],
     stack: ['Odin', 'CLI', 'Transpiler', 'Cross-platform'],
     featured: true,
@@ -85,5 +84,5 @@ export const projects: Project[] = [
 
 export const archive: { name: string; note: string }[] = [
   { name: 'QuickBlink', note: 'Shipped' },
-  { name: 'Nugget', note: 'Electron + voice assistant — the proving ground before Blink' },
+  { name: 'Nugget', note: 'Electron + voice assistant, the proving ground before Blink' },
 ];
