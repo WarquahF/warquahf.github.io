@@ -1,39 +1,5 @@
 ---
 const focus = ['Systems', 'Rust', 'Desktop Applications', 'Frontend Engineering'];
-
-let lastCommit: { when: string; message: string } | null = null;
-try {
-  const res = await fetch('https://api.github.com/repos/WarquahF/Blink/commits/main', {
-    headers: { Accept: 'application/vnd.github+json' },
-  });
-  if (res.ok) {
-    const data = await res.json();
-    const date = new Date(data.commit.author.date);
-    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-    const units: [number, string][] = [
-      [60, 'second'],
-      [60, 'minute'],
-      [24, 'hour'],
-      [30, 'day'],
-      [12, 'month'],
-    ];
-    let value = seconds;
-    let unit = 'second';
-    for (const [size, name] of units) {
-      if (Math.abs(value) < size) break;
-      value = Math.round(value / size);
-      unit = name;
-    }
-    lastCommit = {
-      when: `${value} ${unit}${Math.abs(value) === 1 ? '' : 's'} ago`,
-      message:
-        data.commit.message.split('\n')[0].slice(0, 60) +
-        (data.commit.message.length > 60 ? '…' : ''),
-    };
-  }
-} catch {
-  // Network failure, rate limit, unknown repo — render nothing.
-}
 ---
 
 <section class="section" id="status" data-reveal>
@@ -46,9 +12,7 @@ try {
         <p class="mono status-label">Building</p>
         <p class="text-ink status-value">Blink</p>
         <p class="status-sub">Local-first AI assistant · Tauri migration</p>
-        {lastCommit && (
-          <p class="mono status-commit">Last commit — {lastCommit.when} — {lastCommit.message}</p>
-        )}
+        <p class="mono status-commit">Source is private while it's in progress — write-ups and notes are public</p>
       </div>
 
       <div class="status-block">

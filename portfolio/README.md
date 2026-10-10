@@ -15,28 +15,27 @@ npm run preview   # preview the build
 
 ## Fonts
 
-Self-hosted fonts live in `public/fonts/`:
+Site CSS uses system stacks only — no webfonts, no downloads. Display
+and body use the Apple system stack (`SF Pro Display/Text`,
+Helvetica/Arial fallback); labels, data and structure use the system
+mono stack (`ui-monospace`, `SF Mono`, Menlo/Consolas fallback). See
+`--font-display`, `--font-body` and `--font-mono` in `src/styles/global.css`.
 
-- `/public/fonts/fraunces-variable.woff2` — [Fraunces](https://fonts.google.com/specimen/Fraunces), variable, weights 300–700
-- `/public/fonts/inter-variable.woff2` — [Inter](https://fonts.google.com/specimen/Inter), variable, weights 400–600
-- `/public/fonts/plex-mono-regular.woff2` + `/public/fonts/plex-mono-medium.woff2` — [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), regular + medium (static weights; no variable woff2 available)
-
-Google Webfonts Helper (gwfh.mranftl.com) is the fastest way to grab
-self-hostable woff2 files for all three. Drop them in `public/fonts/` and
-the `@font-face` rules in `global.css` will pick them up — no other changes
-needed. Swap in system fallbacks in the meantime if you want to preview
-without fonts first.
+The woff2 files in `public/fonts/` (Fraunces, Inter, IBM Plex Mono) are
+not loaded by the site. They exist for `npm run og`
+(`scripts/generate-og.mjs`), which embeds them into `public/og-image.png`
+via resvg — no system fonts needed for the social card.
 
 ## Design notes
 
-- **Palette:** near-black (`#0b0b0d`) background, off-white ink, muted gray
-  secondary text, and a single restrained amber "signal" color
-  (`#d9a65c`) used only for status dots, active states and the one
-  primary button — a nod to phosphor terminal displays, used sparingly
-  rather than as a cyberpunk motif.
-- **Type:** Fraunces (serif, editorial/notebook voice) for headlines,
-  Inter for body copy, IBM Plex Mono for labels, data and structure —
-  three roles, not one all-mono "hacker" treatment.
+- **Palette:** warm paper (`#faf8f3`) background, near-black ink, warm-gray
+  hairlines, and a single restrained dark-gold "signal" color
+  (`#7c5e10` in light, `#d9a648` in dark) used only for status dots,
+  active states and quiet highlights. A dark studio theme exists for the
+  theme toggle; light warm paper is the default.
+- **Type:** system display stack for headlines, system body stack for copy,
+  system mono for labels, data and structure — three roles, not one
+  all-mono "hacker" treatment.
 - **Signature element:** the left-edge "document gutter" — a fixed rail
   with tick marks per section that brightens as you scroll, via a single
   `IntersectionObserver`. It's meant to make the whole page read like one

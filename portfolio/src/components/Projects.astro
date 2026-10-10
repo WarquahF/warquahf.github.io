@@ -42,19 +42,13 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
     { name: 'docs/', kind: 'dir', note: 'supported subset' },
     { name: 'README.md', kind: 'file', note: 'deterministic' },
   ],
-  nugget: [
-    { name: 'main/', kind: 'dir', note: 'Electron shell' },
-    { name: 'renderer/', kind: 'dir', note: 'client UI' },
-    { name: 'voice/', kind: 'dir', note: 'interaction' },
-    { name: 'README.md', kind: 'file', note: 'proving ground' },
-  ],
 };
 ---
 
 <section class="section work" id="work" aria-labelledby="work-title">
   <div class="section-inner">
     <p class="eyebrow"><span class="path">/work</span></p>
-    <h2 class="work-title" id="work-title" data-entrance>Three projects. One standard.</h2>
+    <h2 class="work-title" id="work-title" data-entrance>Two projects. One standard.</h2>
     <p class="work-lede" data-reveal>Desktop software and developer tooling. The source is private while it's in progress — the write-ups, decisions and notes below are public. Select a project to read more.</p>
 
     <div class="work-list">
@@ -109,7 +103,7 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                 <div class="repo-head">
                   <span class="repo-dots"><i></i><i></i><i></i></span>
                   <span class="repo-url mono">github.com/WarquahF/{p.slug}</span>
-                  <span class="repo-badge mono">Public</span>
+                  <span class="repo-badge mono">Private</span>
                 </div>
                 <div class="repo-nav mono">
                   <span class="is-on">Code</span><span>Issues</span><span>Pull requests</span>
@@ -163,21 +157,6 @@ const trees: Record<string, { name: string; kind: 'dir' | 'file'; note?: string 
                       <span class="rd-node">VALIDATE</span>
                       <span class="rd-arrow">↓</span>
                       <span class="rd-node rd-strong">ODIN</span>
-                    </div>
-                  )}
-
-                  {p.slug === 'nugget' && (
-                    <div class="repo-diagram">
-                      <span class="rd-branch">
-                        <span class="rd-node rd-small">Text input</span>
-                        <span class="rd-node rd-small">Voice input</span>
-                      </span>
-                      <span class="rd-arrow">↓</span>
-                      <span class="rd-node rd-strong">Electron shell</span>
-                      <span class="rd-arrow">↓</span>
-                      <span class="rd-node">AI service</span>
-                      <span class="rd-arrow">↓</span>
-                      <span class="rd-node rd-quiet">Desktop response</span>
                     </div>
                   )}
                   </>

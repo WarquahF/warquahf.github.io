@@ -45,18 +45,18 @@ const featured = projects.filter((p) => p.featured);
     <p class="eyebrow"><span class="path">/overview</span></p>
     <h2 id="overview-title" data-entrance>The whole picture.</h2>
     <p class="ov-lede" data-reveal>
-      One page, gathered. Who I am, what I'm building, and what the last year
+      One page, gathered. How I work, what I'm building, and what the last year
       of making things actually looked like.
     </p>
 
     <div class="ov-grid">
       <div class="ov-col">
-        <h3 class="ov-h mono" data-reveal>01 · Who I am</h3>
+        <h3 class="ov-h mono" data-reveal>01 · How I work</h3>
         <p class="ov-text" data-reveal>
-          Warquah Faiz — developer in Odisha, India. I build desktop software
-          and developer tools: local-first, fast, few moving parts. I don't
-          just use technology — I take it apart, build my own model of how it
-          works, and write down what I learn.
+          Warquah Faiz, in Odisha, India. I take a system apart, build a
+          mental model of it, and write the model down — the notes section
+          is that habit in public. Small surface area, measured changes,
+          no telemetry to hide behind.
         </p>
       </div>
 
@@ -67,7 +67,6 @@ const featured = projects.filter((p) => p.featured);
             <li>
               <span class="ov-pname text-ink">{p.name}</span>
               <span class="ov-pkind mono">{p.kind}</span>
-              <p class="ov-ptext">{p.summary}</p>
             </li>
           ))}
           <li class="ov-arch">
