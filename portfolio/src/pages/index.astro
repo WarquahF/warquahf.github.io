@@ -1,30 +1,241 @@
----
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import Statement from '../components/Statement.astro';
-import About from '../components/About.astro';
-import Overview from '../components/Overview.astro';
-import Projects from '../components/Projects.astro';
-import TechLoop from '../components/TechLoop.astro';
-import Status from '../components/Status.astro';
-import Closing from '../components/Closing.astro';
-import Contact from '../components/Contact.astro';
-import Footer from '../components/Footer.astro';
-import ProjectPanel from '../components/svelte/ProjectPanel.svelte';
----
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="Warquah Faiz. Desktop software, developer tools, and notes from the work. Based in Odisha, India.">
+<title>Warquah Faiz / Software & notes</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style is:global>
+:root{--paper:#f5f6f8;--ink:#191b20;--muted:#616773;--line:#ccd0d8;--blue:#224bea;--serif:Georgia,'Times New Roman',serif;--sans:Arial,Helvetica,sans-serif;--mono:'Courier New',monospace}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button{font:inherit}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:6px}::selection{background:var(--blue);color:white}.wrap{width:min(1280px,100% - 96px);margin:auto}.mono{font:11px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.09em}.skip{position:absolute;top:-100px;left:24px;padding:12px;background:var(--ink);color:white;z-index:10}.skip:focus{top:12px}header{display:flex;justify-content:space-between;align-items:center;padding:25px 0;border-bottom:1px solid var(--ink)}.signature{font:italic 24px var(--serif);letter-spacing:-2px}nav{display:flex;gap:32px;font-size:13px}nav a{padding:10px 0;position:relative}nav a:after{content:'';height:1px;position:absolute;background:var(--blue);left:0;right:100%;bottom:6px;transition:right .25s}nav a:hover:after{right:0}.intro{position:relative;padding:58px 0 46px}.eyebrow{display:flex;justify-content:space-between;color:var(--muted)}.eyebrow span:last-child{color:var(--blue)}h1{font:normal clamp(80px,11.6vw,166px)/.91 var(--serif);letter-spacing:-.075em;margin:47px 0 48px;position:relative;z-index:1}h1 em{font-weight:normal}h1 .line{display:block}.name-second{display:flex;align-items:center;gap:50px}.star{width:90px;height:90px;flex:0 0 90px;color:var(--blue);animation:rotate 32s linear infinite}.intro-bottom{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding-top:30px;border-top:1px solid var(--line)}.intro-bottom p{margin:0;max-width:390px;font-size:20px;line-height:1.45;letter-spacing:-.025em}.intro-bottom .aside{justify-self:end;max-width:290px;color:var(--muted);font-size:14px;letter-spacing:0}.intro-bottom a{border-bottom:1px solid var(--muted)}.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:1px solid var(--ink);padding:22px 0;margin-top:60px}.section-head h2{font:normal 15px var(--sans);margin:0}.section-head span{color:var(--muted)}.project{display:grid;grid-template-columns:1.05fr 1fr;gap:54px;padding:22px 0 48px;border-bottom:1px solid var(--line)}.project+.project{padding-top:48px}.specimen{min-height:340px;display:flex;position:relative;overflow:hidden;align-items:center;justify-content:center;isolation:isolate}.specimen .caption{position:absolute;left:22px;bottom:18px;font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase}.blink-art{background:#1b1d24;color:#f5f6f8}.blink-art:before{content:'';position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse,black,transparent 75%)}.blink-word{font:italic 90px var(--serif);letter-spacing:-8px;position:relative;transform:translateY(-10px)}.cursor{display:inline-block;width:5px;height:71px;margin-left:12px;vertical-align:-10px;background:#a8b7ff;animation:blink 2s steps(1) infinite}.orbit{position:absolute;width:270px;height:270px;border:1px solid #ffffff18;border-radius:50%;transform:rotate(-32deg) scaleX(1.7)}.zest-art{background:#e4e9fd;color:var(--blue)}.zest-art:before,.zest-art:after{content:'';position:absolute;height:1px;width:100%;background:#224bea22;transform:rotate(-35deg)}.zest-art:after{transform:rotate(35deg)}.code-art{font:normal clamp(45px,4.5vw,65px)/1.12 var(--mono);letter-spacing:-.09em;position:relative;text-align:left}.code-art .arrow{font:italic 70px/.8 var(--serif);display:block;text-align:center;margin:10px 0 17px}.project-copy{padding:10px 0;align-self:center}.project-copy .kicker{color:var(--muted);margin:0 0 15px}.project h3{font:normal 56px/1 var(--serif);letter-spacing:-.05em;margin:0 0 20px}.project-copy>p{max-width:420px;font-size:16px;line-height:1.65;margin:0 0 20px}.tags{color:var(--muted);font:11px/1.8 var(--mono);margin-bottom:24px}details{max-width:440px;border-top:1px solid var(--line)}summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:48px;font-size:13px}summary::-webkit-details-marker{display:none}summary:after{content:'+';font:22px var(--mono);color:var(--blue)}details[open] summary:after{content:'−'}details p{font-size:14px;color:var(--muted);margin:6px 0 18px}details a{color:var(--blue);text-decoration:underline;text-underline-offset:4px}.other-work{display:flex;gap:40px;justify-content:space-between;padding:24px 0}.other-work>span{color:var(--muted);flex:0 0 120px}.other-work p{font-size:14px;margin:0;flex:1;max-width:480px}.other-work b{font-weight:normal;border-bottom:1px solid var(--line)}.writing-layout{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px}.writing-intro{font:normal 42px/1.12 var(--serif);letter-spacing:-.045em;margin:20px 0}.note{display:grid;grid-template-columns:1fr 24px;gap:16px;padding:24px 0;border-bottom:1px solid var(--line)}.note:first-child{padding-top:18px}.note h3{font:normal 19px/1.45 var(--sans);letter-spacing:-.03em;margin:7px 0 0}.note .mono{color:var(--muted)}.note .arr{font-size:23px;color:var(--blue);align-self:center;transition:transform .2s}.note:hover .arr{transform:translate(3px,-3px)}.note:hover h3{color:var(--blue)}.toolbox{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px;padding:36px 0 0;margin-top:44px;border-top:1px solid var(--line)}.toolbox p{margin:0;font-size:15px;line-height:1.9}.toolbox .mono{color:var(--muted)}.contact{background:var(--blue);color:#fff;margin-top:96px;padding:32px 0 26px}.contact-top{display:flex;justify-content:space-between;color:#d6dfff}.contact h2{font:normal clamp(74px,10vw,138px)/1 var(--serif);letter-spacing:-.065em;margin:46px 0 32px}.contact h2 em{font-weight:normal}.email-line{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:65px}.email{font-size:clamp(16px,2.4vw,26px);letter-spacing:-.03em;border-bottom:1px solid #ffffff80;padding-bottom:4px}.copy{background:transparent;border:1px solid #ffffff66;color:white;cursor:pointer;padding:9px 14px;min-height:44px;font:11px var(--mono);transition:background .2s}.copy:hover{background:#ffffff1a}.copy[hidden]{display:none}.contact-footer{border-top:1px solid #ffffff55;padding-top:23px;display:flex;justify-content:space-between;gap:28px;align-items:center;font-size:12px}.socials{display:flex;gap:24px}.socials a{padding:10px 0}.contact-footer .back{font:11px var(--mono);padding:10px 0}.status{min-height:24px;color:#fff;font-size:12px;margin:-48px 0 24px}.footer-credit{color:#d6dfff}.fade-in{animation:arrive .85s ease-out both}.intro-bottom{animation-delay:.45s}@keyframes blink{0%,68%{opacity:1}69%,100%{opacity:0}}@keyframes rotate{to{transform:rotate(360deg)}}@keyframes arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-<Layout>
-  <Nav />
-  <Hero />
-  <Statement />
-  <About />
-  <Overview />
-  <Projects />
-  <TechLoop />
-  <Status />
-  <Closing />
-  <Contact />
-  <Footer />
-  <ProjectPanel client:idle />
-</Layout>
+.float-icon{position:absolute;fill:none;stroke:var(--blue);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;animation:floaty 7s ease-in-out infinite}
+.fi-terminal{width:40px;top:118px;right:6px;animation-duration:8.5s}
+.fi-db{width:34px;top:46%;right:2px;animation-delay:-2.6s;animation-duration:7.5s}
+.fi-pen{width:34px;left:2px;bottom:6px;animation-delay:-4.1s;animation-duration:9s}
+.fi-mail{width:38px;top:92px;right:8px;stroke:#fff;animation-delay:-1.3s}
+#work,#writing,.contact,.writing-layout{position:relative}
+#gem{position:fixed;right:34px;bottom:34px;width:110px;height:110px;pointer-events:none;z-index:3;color:var(--blue);transition:opacity .3s;will-change:transform}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* Motion layer: load choreography + scroll reveals. Everything below degrades to fully visible without JS or under reduced motion. */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;z-index:6;will-change:transform;pointer-events:none}
+h1 .line{overflow:hidden;padding:0 .08em .16em 0;margin:0 -.08em -.16em 0}
+h1 .name-second.line{display:flex}
+.line-in{display:block}
+@keyframes rise{from{transform:translateY(118%)}to{transform:translateY(0)}}
+@keyframes star-in{from{opacity:0;scale:.3;rotate:-70deg}to{opacity:1;scale:1;rotate:0deg}}
+@media(prefers-reduced-motion:no-preference){
+ header{animation:arrive .7s ease-out both}
+ .eyebrow{animation:arrive .8s ease-out .05s both}
+ .line-in{animation:rise 1.05s cubic-bezier(.16,1,.3,1) .1s backwards}
+ .name-second .line-in{animation-delay:.26s}
+ .star{animation:rotate 32s linear infinite,star-in 1s cubic-bezier(.16,1,.3,1) .55s backwards}
+ html.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}
+ html.js .reveal.in{opacity:1;transform:none}
+}
+@media(max-width:850px){#gem{width:64px;height:64px;right:16px;bottom:16px}.float-icon{width:28px;height:28px;opacity:.8}.fi-terminal{top:auto;bottom:16px;right:2px}.fi-db{top:auto;bottom:38%;right:2px}.fi-pen{left:auto;right:2px;top:4px;bottom:auto}.fi-mail{top:118px;right:4px}}
+@media(max-width:600px){.fi-terminal{top:23%;bottom:auto;right:0}.fi-mail{top:186px;right:4px}}
+@media(min-width:1500px){.intro{padding-top:75px}}
+@media(max-width:850px){.wrap{width:calc(100% - 48px)}.project{gap:30px;grid-template-columns:1fr 1fr}.specimen{min-height:300px}.blink-word{font-size:72px}.cursor{height:58px}.project h3{font-size:44px}.writing-layout,.toolbox{gap:35px}.writing-intro{font-size:36px}.other-work{gap:20px}.star{width:65px;height:65px;flex-basis:65px}}
+@media(max-width:600px){.wrap{width:calc(100% - 40px)}header{padding:13px 0}.signature{font-size:23px}nav{gap:21px;font-size:12px}nav a{min-height:44px;display:flex;align-items:center}.intro{padding:32px 0 24px}.eyebrow{font-size:9px;letter-spacing:.035em}.eyebrow span:last-child{max-width:115px;text-align:right}h1{font-size:clamp(72px,18vw,108px);margin:45px 0 35px;letter-spacing:-.075em;line-height:.98}.name-second{gap:30px}.star{width:48px;height:48px;flex-basis:48px}.intro-bottom{grid-template-columns:1fr;gap:20px;padding-top:24px}.intro-bottom p{font-size:21px;max-width:290px}.intro-bottom .aside{justify-self:start;max-width:300px;font-size:14px}.section-head{margin-top:38px;padding:17px 0}.section-head span{font-size:9px}.project{grid-template-columns:1fr;gap:24px;padding:12px 0 30px}.project+.project{padding-top:30px}.specimen{min-height:280px}.project-copy{padding:0}.project-copy .kicker{font-size:10px;margin:0 0 12px}.project h3{font-size:46px;margin-bottom:18px}.project-copy>p{font-size:16px}.tags{margin-bottom:18px}.blink-word{font-size:88px}.code-art{font-size:53px}.other-work{display:block;padding:22px 0 0}.other-work>span{display:block;margin-bottom:13px}.other-work p+p{margin-top:10px}.writing-layout,.toolbox{grid-template-columns:1fr;gap:10px}.writing-intro{margin:12px 0 15px;font-size:36px;max-width:260px}.note{padding:22px 0}.note h3{font-size:18px}.toolbox{gap:15px;padding-top:24px;margin-top:30px}.toolbox p{font-size:14px}.contact{margin-top:62px;padding-top:25px}.contact-top{font-size:10px}.contact h2{margin:40px 0 27px;font-size:78px}.email-line{gap:17px;margin-bottom:58px}.email{font-size:19px}.copy{padding:8px 11px}.contact-footer{display:grid;grid-template-columns:1fr auto;gap:16px;padding-top:12px}.footer-credit{grid-column:1/-1;grid-row:2;font-size:10px}.socials{gap:22px}.status{margin-top:-45px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+<div class="wrap">
+<header><a class="signature" href="#top" aria-label="Warquah Faiz, back to top">wf.</a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#contact">Contact ↗</a></nav></header>
+<main id="main">
+<section class="intro" aria-labelledby="name">
+<div class="eyebrow mono"><span>Software / Working notes</span><span>Odisha, India</span></div>
+<h1 id="name"><span class="line"><span class="line-in">Warquah</span></span><span class="name-second line"><span class="line-in"><em>Faiz.</em></span><svg class="star" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="2"><path d="M50 0v100M0 50h100M14.6 14.6l70.8 70.8M14.6 85.4l70.8-70.8M30.9 3.8l38.2 92.4M3.8 30.9l92.4 38.2M3.8 69.1l92.4-38.2M30.9 96.2L69.1 3.8"/></g></svg></span></h1>
+<svg class="float-icon fi-terminal" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="2"/><path d="M12 16.5l6 4.5-6 4.5M20 25.5h8"/></svg>
+<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.</p><p class="aside">Currently working on Blink and Zest-TTY. The code is in progress; <a href="#writing">the notes are public.</a></p></div>
+</section>
+<section id="work" aria-labelledby="work-title">
+<svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
+<div class="section-head reveal"><h2 id="work-title">Selected work</h2><span class="mono">01—02 / In progress</span></div>
+<article class="project reveal">
+<div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / Desktop AI assistant</span></div>
+<div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local SQLite chat history, multiple providers, and optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter desktop app. Blink supports remote providers, including OpenRouter, as well as local models through Ollama. Remote providers receive the prompts sent to them.</p><p>The source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
+</article>
+<article class="project reveal">
+<div class="specimen zest-art" role="img" aria-label="Typographic illustration of source code being translated to Odin, not a product screenshot"><div class="code-art" aria-hidden="true">source<span class="arrow">↓</span>odin</div><span class="caption">02 / Deterministic transpiler</span></div>
+<div class="project-copy"><p class="kicker mono">No AI in the pipeline.</p><h3>Zest-TTY</h3><p>Supported source code, translated into Odin. A typed intermediate representation, expression passes, and validation at the other end.</p><div class="tags">Odin / CLI / Cross-platform</div><details><summary>A closer look</summary><p>The MVP covers a documented subset. Unsupported constructs produce warnings and TODO-style output rather than pretending to work.</p><p>The pipeline is deterministic, with a canonical test gate and releases for Linux, macOS, and Windows. Source is currently private.</p></details></div>
+</article>
+<div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>An Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
+</section>
+<section id="writing" aria-labelledby="writing-title">
+<div class="section-head reveal"><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
+<div class="writing-layout"><svg class="float-icon fi-pen" viewBox="0 0 34 34" aria-hidden="true"><path d="M6 28l2.2-7.6L22 6.6a2.3 2.3 0 013.3 0l2 2a2.3 2.3 0 010 3.3L13.6 25.8 6 28z"/><path d="M20 8.8l5.2 5.2M8.2 20.4l5.4 5.4"/></svg>
+<p class="writing-intro reveal">Decisions,<br>while they're<br><em>still being made.</em></p><div>
+<a class="note reveal" href="/notes/migrating-blink-electron-to-tauri/"><div><span class="mono">18 Aug 2026 / Desktop</span><h3>Starting the Electron → Tauri migration</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+<a class="note reveal" href="/notes/sqlite-encryption-notes/"><div><span class="mono">08 Aug 2026 / Storage</span><h3>Notes on SQLite encryption</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+<a class="note reveal" href="/notes/why-local-first/"><div><span class="mono">28 Jul 2026 / Approach</span><h3>Why local-first</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+</div></div>
+<div class="toolbox reveal"><span class="mono">At the workbench</span><p>Odin, Rust, Python, JavaScript, TypeScript.<br>HTML & CSS. Git & GitHub.<br>Tauri, SQLite, Electron, Ollama & OpenRouter.</p></div>
+</section>
+</main>
+</div>
+<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
+<svg id="gem" viewBox="-60 -60 120 120" aria-hidden="true"></svg>
+<script is:inline>
+/* All core content and navigation work without JavaScript. */
+document.documentElement.classList.add('js');
+(function(){
+ const button=document.getElementById('copy'),status=document.getElementById('copy-status');
+ button.hidden=false;
+ button.addEventListener('click',async function(){
+  const email='warquah.dev@proton.me';let copied=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(email);copied=true;}}catch(e){}
+  if(!copied){const field=document.createElement('textarea');field.value=email;field.style.cssText='position:fixed;left:-9999px;top:0';field.setAttribute('readonly','');document.body.appendChild(field);field.select();try{copied=document.execCommand('copy');}catch(e){}field.remove();button.focus();}
+  status.textContent=copied?'Email copied.':'Copy this address: '+email;
+  button.textContent=copied?'Copied ✓':'Copy email';
+  setTimeout(function(){button.textContent='Copy email';},2500);
+ });
+})();
+
+/* Reveal-on-scroll: entrance polish only. Hidden states apply only with JS + no reduced-motion preference. */
+(function(){
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce||!('IntersectionObserver' in window))return;
+ var items=[].slice.call(document.querySelectorAll('.reveal'));
+ var counts=new Map();
+ items.forEach(function(el){
+  var p=el.parentElement,n=counts.get(p)||0;
+  if(n)el.style.transitionDelay=(n*0.09).toFixed(2)+'s';
+  counts.set(p,n+1);
+ });
+ var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+   if(!en.isIntersecting)return;
+   var el=en.target;
+   el.classList.add('in');
+   io.unobserve(el);
+   setTimeout(function(){el.style.transitionDelay='';},1400);
+  });
+ },{rootMargin:'0px 0px -10% 0px',threshold:0.08});
+ items.forEach(function(el){io.observe(el);});
+})();
+
+/* Scroll-reactive wireframe gem + progress hairline + icon parallax. Purely decorative; the page never depends on it. */
+(function(){
+ var gem=document.getElementById('gem');if(!gem)return;
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ var NS='http://www.w3.org/2000/svg';
+ function octa(r){
+  return {v:[[r,0,0],[-r,0,0],[0,r,0],[0,-r,0],[0,0,r],[0,0,-r]],
+   e:[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]]};
+ }
+ var shapes=[octa(46),octa(24),octa(11)],widths=[1.5,1.5,2.25];
+ shapes.forEach(function(sh,s){
+  sh.lines=sh.e.map(function(){
+   var l=document.createElementNS(NS,'line');
+   l.setAttribute('stroke','currentColor');l.setAttribute('stroke-width',widths[s]);l.setAttribute('stroke-linecap','round');
+   gem.appendChild(l);return l;
+  });
+ });
+ function draw(rot){
+  var params=[[rot,0.35],[-rot*1.35,0.9],[rot*2.1,1.5]];
+  for(var s=0;s<shapes.length;s++){
+   var ry=params[s][0],rx=params[s][1];
+   var cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx);
+   var pts=shapes[s].v.map(function(p){
+    var x=p[0]*cy+p[2]*sy,z=-p[0]*sy+p[2]*cy;
+    var y=p[1]*cx-z*sx;
+    return [x,y];
+   });
+   for(var i=0;i<shapes[s].e.length;i++){
+    var ed=shapes[s].e[i],l=shapes[s].lines[i];
+    l.setAttribute('x1',pts[ed[0]][0].toFixed(1));l.setAttribute('y1',pts[ed[0]][1].toFixed(1));
+    l.setAttribute('x2',pts[ed[1]][0].toFixed(1));l.setAttribute('y2',pts[ed[1]][1].toFixed(1));
+   }
+  }
+ }
+ if(reduce){
+  draw(0.9);
+  var pbm=document.querySelector('.progress');if(pbm)pbm.style.display='none';
+  return;
+ }
+ var root=document.documentElement;
+ var bar=document.querySelector('.progress');
+ var star=document.querySelector('.star');
+ var footer=document.getElementById('contact');
+ var footbar=footer?footer.querySelector('.contact-footer'):null;
+ var obstacles=footer?[].slice.call(footer.querySelectorAll('h2,.email-line,.status,.contact-footer')):[];
+ var icons=[].slice.call(document.querySelectorAll('.float-icon'));
+ function progress(){var max=root.scrollHeight-root.clientHeight;return max>0?(window.scrollY||root.scrollTop)/max:0;}
+ /* Document-space rect via offset chain: unaffected by reveal/float transforms. */
+ function docRect(el){
+  var t=0,l=0,n=el;
+  while(n){t+=n.offsetTop||0;l+=n.offsetLeft||0;n=n.offsetParent;}
+  return {l:l,t:t,r:l+el.offsetWidth,b:t+el.offsetHeight};
+ }
+ var iw=0,ih=0,cache=null;
+ function measure(){
+  iw=window.innerWidth;ih=window.innerHeight;
+  var cs=getComputedStyle(gem);
+  cache={footTop:null,barTop:null,obs:[],icons:[],
+   gem:{w:gem.clientWidth,h:gem.clientHeight,right:parseFloat(cs.right)||0,bottom:parseFloat(cs.bottom)||0}};
+  if(footer){
+   cache.footTop=docRect(footer).t;
+   cache.obs=obstacles.map(docRect);
+   if(footbar)cache.barTop=docRect(footbar).t;
+  }
+  cache.icons=icons.map(function(ic){
+   var r=docRect(ic);
+   return {el:ic,cy:r.t+(r.b-r.t)/2};
+  });
+ }
+ measure();
+ window.addEventListener('resize',measure,{passive:true});
+ window.addEventListener('orientationchange',measure,{passive:true});
+ window.addEventListener('load',measure);
+ document.querySelectorAll('details').forEach(function(d){d.addEventListener('toggle',function(){setTimeout(measure,80);});});
+ if(document.fonts&&document.fonts.ready){document.fonts.ready.then(measure);}
+ var shown=progress(),idle=0,spin=0,last=performance.now(),lastScroll=window.scrollY||0;
+ function frame(now){
+  var dt=(now-last)/1000;last=now;
+  if(dt>0.08)dt=0.08;if(dt<=0)dt=0.001;
+  var target=progress();
+  shown+=(target-shown)*(1-Math.exp(-dt*7.5));
+  var sc=window.scrollY||0;
+  var vel=(sc-lastScroll)/dt;lastScroll=sc;
+  spin+=vel*dt*0.0016;
+  spin*=Math.exp(-dt*2.4);
+  if(spin>3)spin=3;else if(spin<-3)spin=-3;
+  idle+=dt*0.07;
+  draw(0.6+shown*Math.PI*3+spin+idle);
+  if(bar)bar.style.transform='scaleX('+shown.toFixed(4)+')';
+  if(star)star.style.rotate=(shown*160).toFixed(1)+'deg';
+  var bob=Math.sin(now*0.0011)*4;
+  var lift=0,hit=false;
+  if(cache.footTop!=null){
+   var ft=cache.footTop-sc;
+   gem.style.color=(ft<ih*0.72)?'#ffffff':'';
+   if(iw<850){
+    var gl=iw-cache.gem.right-cache.gem.w,gt=ih-cache.gem.bottom-cache.gem.h,gr=gl+cache.gem.w,gb=gt+cache.gem.h;
+    for(var i=0;i<cache.obs.length;i++){
+     var o=cache.obs[i],ot=o.t-sc,ob=o.b-sc;
+     if(!(gr<o.l||gl>o.r||gb<ot||gt>ob)){hit=true;break;}
+    }
+   }else if(cache.barTop!=null){
+    lift=Math.max(0,ih-(cache.barTop-sc)+18);
+   }
+  }
+  gem.style.opacity=hit?'0':'1';
+  gem.style.transform='translateY('+(-(lift+bob)).toFixed(1)+'px)';
+  for(var j=0;j<cache.icons.length;j++){
+   var it=cache.icons[j];
+   it.el.style.translate='0 '+(((it.cy-sc-ih*0.5)*0.045)).toFixed(1)+'px';
+  }
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
