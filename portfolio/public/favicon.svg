@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#0b0b0d"/>
-  <text x="16" y="22" font-family="monospace" font-size="18" fill="#d9a65c" text-anchor="middle">W</text>
+  <style>
+    rect{fill:#f5f6f8}g{stroke:#224bea}
+    @media (prefers-color-scheme: dark){rect{fill:#101114}g{stroke:#8aa0ff}}
+  </style>
+  <rect width="32" height="32" rx="7"/>
+  <g fill="none" stroke-width="9" stroke-linecap="round" transform="translate(4 4) scale(0.24)">
+    <path d="M50 0v100M0 50h100M14.6 14.6l70.8 70.8M14.6 85.4l70.8-70.8M30.9 3.8l38.2 92.4M3.8 30.9l92.4 38.2M3.8 69.1l92.4-38.2M30.9 96.2L69.1 3.8"/>
+  </g>
 </svg>
