@@ -91,6 +91,17 @@ header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-
 .ltr{display:inline-block}
 .caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
 .colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
+.section-head{flex-wrap:wrap}
+.dir{flex:0 0 100%;margin-bottom:9px;font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.mug{width:16px;height:16px;margin-right:9px;vertical-align:-3px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.steam{animation:steam 2.6s ease-in-out infinite}
+.mug .s2{animation-delay:1.3s}
+@keyframes steam{0%,100%{opacity:.2;transform:translateY(1px)}50%{opacity:1;transform:translateY(-1px)}}
+html{scrollbar-width:thin;scrollbar-color:var(--line) var(--paper)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper)}
+::-webkit-scrollbar-thumb{background:var(--line);border:3px solid var(--paper);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:var(--blue)}
 body:after{content:'';position:fixed;inset:-2%;z-index:4;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
 @media(prefers-reduced-motion:no-preference){
  html.js .line-in{animation:none}
@@ -153,19 +164,19 @@ html.js .theme-toggle{display:flex}
 </section>
 <section id="work" aria-labelledby="work-title">
 <svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
-<div class="section-head reveal"><h2 id="work-title">Selected work</h2><span class="mono">01—02 / In progress</span></div>
+<div class="section-head reveal"><span class="dir">~/work</span><h2 id="work-title">Selected work</h2><span class="mono">01—02 / In progress</span></div>
 <article class="project reveal">
-<div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / Desktop AI assistant</span></div>
+<div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / blink.md</span></div>
 <div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local SQLite chat history, multiple providers, and optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter desktop app. Blink supports remote providers, including OpenRouter, as well as local models through Ollama. Remote providers receive the prompts sent to them.</p><p>The source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
 </article>
 <article class="project reveal">
-<div class="specimen zest-art" role="img" aria-label="Typographic illustration of a wildlife photo being matched to a species, not a product screenshot"><div class="code-art" aria-hidden="true">photo<span class="arrow">↓</span>species</div><span class="caption">02 / Wildlife field journal</span></div>
+<div class="specimen zest-art" role="img" aria-label="Typographic illustration of a wildlife photo being matched to a species, not a product screenshot"><div class="code-art" aria-hidden="true">photo<span class="arrow">↓</span>species</div><span class="caption">02 / ecoquest.md</span></div>
 <div class="project-copy"><p class="kicker mono">AI suggests. You confirm.</p><h3>Ecoquest</h3><p>A real-life Pokédex for wildlife. Photograph an animal, and a model suggests up to three species; you confirm one and save the sighting to your collection.</p><div class="tags">Expo / React Native / Android + iOS + Web</div><details><summary>A closer look</summary><p>Species names are checked against iNaturalist, and suggestions are leads, not guaranteed identifications. Photos go through your own OpenRouter key.</p><p>A group project, in progress. Source is currently private.</p></details></div>
 </article>
 <div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>An Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
 </section>
 <section id="writing" aria-labelledby="writing-title">
-<div class="section-head reveal"><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
+<div class="section-head reveal"><span class="dir">~/notes</span><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
 <div class="writing-layout"><svg class="float-icon fi-pen" viewBox="0 0 34 34" aria-hidden="true"><path d="M6 28l2.2-7.6L22 6.6a2.3 2.3 0 013.3 0l2 2a2.3 2.3 0 010 3.3L13.6 25.8 6 28z"/><path d="M20 8.8l5.2 5.2M8.2 20.4l5.4 5.4"/></svg>
 <p class="writing-intro reveal">Decisions,<br>while they're<br><em>still being made.</em></p><div>
 <a class="note reveal" href="/notes/migrating-blink-electron-to-tauri/"><div><span class="mono">18 Aug 2026 / Desktop</span><h3>Starting the Electron → Tauri migration</h3></div><span class="arr" aria-hidden="true">↗</span></a>
@@ -175,7 +186,7 @@ html.js .theme-toggle{display:flex}
 <div class="toolbox reveal"><span class="mono">At the workbench</span><p>Odin, Rust, Python, JavaScript, TypeScript.<br>HTML & CSS. Git & GitHub.<br>Tauri, SQLite, Electron, Ollama & OpenRouter.</p></div>
 </section>
 <section id="activity" aria-labelledby="activity-title">
-<div class="section-head reveal"><h2 id="activity-title">GitHub activity</h2><span class="mono">Public data, fetched at build</span></div>
+<div class="section-head reveal"><span class="dir">~/activity</span><h2 id="activity-title">GitHub activity</h2><span class="mono">Public data, fetched at build</span></div>
 <div class="activity reveal">
 <span class="mono">Last 12 months</span>
 <div>
@@ -201,7 +212,7 @@ html.js .theme-toggle{display:flex}
 </section>
 </main>
 </div>
-<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><p class="colophon">~/warquahf.github.io &middot; astro, css and vanilla js &middot; deploys on git push &middot; assembled during coffee breaks &middot; press d to flip the lights</p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
+<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><p class="colophon"><svg class="mug" viewBox="0 0 24 24" aria-hidden="true"><path class="steam" d="M8 6c0-1.3.9-1.7.9-3"/><path class="steam s2" d="M12.2 6c0-1.3.9-1.7.9-3"/><path d="M5 9.5h11V16a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11h1.4a2.6 2.6 0 0 1 0 5.2H16"/></svg>~/warquahf.github.io &middot; astro, css and vanilla js &middot; deploys on git push &middot; press d to flip the lights</p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
 <svg id="gem" viewBox="-60 -60 120 120" aria-hidden="true"></svg>
 <script is:inline>
 /* All core content and navigation work without JavaScript. */
@@ -470,7 +481,7 @@ document.documentElement.classList.add('js');
  });
  try{
   console.log('%c      ( (\n       ) )\n    ........\n    |      |]\n    \\      /\n     `----`','font-family:monospace');
-  console.log('brewed during coffee breaks. source: https://github.com/WarquahF/warquahf.github.io');
+  console.log('you found the console. source: https://github.com/WarquahF/warquahf.github.io');
  }catch(e){}
 })();
 </script>
