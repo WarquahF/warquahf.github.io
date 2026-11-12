@@ -89,6 +89,8 @@ header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-
 .project{perspective:1400px}
 .specimen{transition:transform .55s cubic-bezier(.16,1,.3,1)}
 .ltr{display:inline-block}
+.caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
+.colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
 body:after{content:'';position:fixed;inset:-2%;z-index:4;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
 @media(prefers-reduced-motion:no-preference){
  html.js .line-in{animation:none}
@@ -147,7 +149,7 @@ html.js .theme-toggle{display:flex}
 <a class="float-btn fb-gh" href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
 <a class="float-btn fb-x" href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
 <a class="float-btn fb-ig" href="https://instagram.com/warquahfaiz" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.</p><p class="aside">Currently working on Blink and Ecoquest. The code is in progress; <a href="#writing">the notes are public.</a></p></div>
+<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.<span class="caret" aria-hidden="true"></span></p><p class="aside">Currently working on Blink and Ecoquest. The code is in progress; <a href="#writing">the notes are public.</a></p></div>
 </section>
 <section id="work" aria-labelledby="work-title">
 <svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
@@ -199,7 +201,7 @@ html.js .theme-toggle{display:flex}
 </section>
 </main>
 </div>
-<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
+<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><p class="colophon">~/warquahf.github.io &middot; hand-written astro, css and vanilla js &middot; deploys on git push &middot; assembled during coffee breaks &middot; press d to flip the lights</p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
 <svg id="gem" viewBox="-60 -60 120 120" aria-hidden="true"></svg>
 <script is:inline>
 /* All core content and navigation work without JavaScript. */
@@ -457,6 +459,19 @@ document.documentElement.classList.add('js');
    card.addEventListener('pointerleave',function(){card.style.transform='';});
   });
  }
+ /* press d to flip the theme - same path as the toggle button */
+ document.addEventListener('keydown',function(e){
+  if(e.key!=='d'&&e.key!=='D')return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  var b=document.getElementById('theme-toggle');
+  if(b)b.click();
+ });
+ try{
+  console.log('%c      ( (\n       ) )\n    ........\n    |      |]\n    \\      /\n     `----`','font-family:monospace');
+  console.log('brewed by hand during coffee breaks. source: https://github.com/WarquahF/warquahf.github.io');
+ }catch(e){}
 })();
 </script>
 </body>
