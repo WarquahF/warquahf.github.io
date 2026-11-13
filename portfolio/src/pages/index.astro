@@ -89,7 +89,7 @@ header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-
 .specimen{transition:transform .55s cubic-bezier(.16,1,.3,1)}
 .ltr{display:inline-block}
 .caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
-#topography{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.topography-container{position:relative;width:100%;height:100%;overflow:hidden}.topography-canvas{display:block;width:100%;height:100%}
+#topography{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#techtext{width:100%;height:clamp(170px,24vw,330px);cursor:default}.topography-container{position:relative;width:100%;height:100%;overflow:hidden}.topography-canvas{display:block;width:100%;height:100%}
 .wrap,.contact{position:relative;z-index:1}
 .colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
 .section-head{flex-wrap:wrap}
@@ -156,7 +156,7 @@ html.js .theme-toggle{display:flex}
 <main id="main">
 <section class="intro" aria-labelledby="name">
 <div class="eyebrow mono"><span>Software / Working notes</span><span>Odisha, India</span></div>
-<h1 id="name"><span class="line"><span class="line-in">Warquah</span></span><span class="name-second line"><span class="line-in"><em>Faiz.</em></span><svg class="star" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="2"><path d="M50 0v100M0 50h100M14.6 14.6l70.8 70.8M14.6 85.4l70.8-70.8M30.9 3.8l38.2 92.4M3.8 30.9l92.4 38.2M3.8 69.1l92.4-38.2M30.9 96.2L69.1 3.8"/></g></svg></span></h1>
+<h1 id="name"><span class="sr-only">Warquah Faiz</span><div id="techtext" aria-hidden="true"></div></h1>
 <svg class="float-icon fi-terminal" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="2"/><path d="M12 16.5l6 4.5-6 4.5M20 25.5h8"/></svg>
 <a class="float-btn fb-gh" href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
 <a class="float-btn fb-x" href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
@@ -546,6 +546,7 @@ document.documentElement.classList.add('js');
 </script>
 <script is:inline>window.__topoLight=true;</script>
 <script is:inline src="/topography.js" defer></script>
+<script is:inline src="/techtext.js" defer></script>
 </body>
 </html>
 
