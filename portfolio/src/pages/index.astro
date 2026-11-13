@@ -65,7 +65,6 @@ try {
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 
 /* Motion layer: load choreography + scroll reveals. Everything below degrades to fully visible without JS or under reduced motion. */
-.progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;z-index:6;will-change:transform;pointer-events:none}
 h1 .line{overflow:hidden;padding:0 .08em .16em 0;margin:0 -.08em -.16em 0}
 h1 .name-second.line{display:flex}
 .line-in{display:block}
@@ -90,6 +89,7 @@ header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-
 .specimen{transition:transform .55s cubic-bezier(.16,1,.3,1)}
 .ltr{display:inline-block}
 .caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
+.spark-layer{position:fixed;inset:0;z-index:8;pointer-events:none}
 .colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
 .section-head{flex-wrap:wrap}
 .dir{flex:0 0 100%;margin-bottom:9px;font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
@@ -149,7 +149,7 @@ html.js .theme-toggle{display:flex}
 </head>
 <body id="top">
 <a class="skip" href="#main">Skip to content</a>
-<div class="progress" aria-hidden="true"></div>
+<canvas class="spark-layer" id="spark-layer" aria-hidden="true"></canvas>
 <div class="wrap">
 <header><a class="signature" href="#top" aria-label="Warquah Faiz, back to top">wf.</a><div class="head-side"><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#activity">Activity</a><a href="#contact">Contact ↗</a></nav><button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.6A8.1 8.1 0 0 1 10.4 4a8.1 8.1 0 1 0 9.6 9.6z"/></svg></button></div></header>
 <main id="main">
@@ -160,20 +160,20 @@ html.js .theme-toggle{display:flex}
 <a class="float-btn fb-gh" href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
 <a class="float-btn fb-x" href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
 <a class="float-btn fb-ig" href="https://instagram.com/warquahfaiz" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.<span class="caret" aria-hidden="true"></span></p><p class="aside">Currently working on Blink and Ecoquest. The code is in progress; <a href="#writing">the notes are public.</a></p></div>
+<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.<span class="caret" aria-hidden="true"></span></p><p class="aside">Currently working on Blink and Ecoquest. <a href="#writing">The notes are public.</a></p></div>
 </section>
 <section id="work" aria-labelledby="work-title">
 <svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
-<div class="section-head reveal"><span class="dir">~/work</span><h2 id="work-title">Selected work</h2><span class="mono">01—02 / In progress</span></div>
+<div class="section-head reveal"><span class="dir">~/work</span><h2 id="work-title">Selected work</h2><span class="mono">In progress</span></div>
 <article class="project reveal">
 <div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / blink.md</span></div>
-<div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local SQLite chat history, multiple providers, and optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter desktop app. Blink supports remote providers, including OpenRouter, as well as local models through Ollama. Remote providers receive the prompts sent to them.</p><p>The source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
+<div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local chat history, multiple providers, optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter app. Blink works with remote providers like OpenRouter and local models via Ollama; remote providers receive the prompts sent to them.</p><p>Source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
 </article>
 <article class="project reveal">
 <div class="specimen zest-art" role="img" aria-label="Typographic illustration of a wildlife photo being matched to a species, not a product screenshot"><div class="code-art" aria-hidden="true">photo<span class="arrow">↓</span>species</div><span class="caption">02 / ecoquest.md</span></div>
-<div class="project-copy"><p class="kicker mono">AI suggests. You confirm.</p><h3>Ecoquest</h3><p>A real-life Pokédex for wildlife. Photograph an animal, and a model suggests up to three species; you confirm one and save the sighting to your collection.</p><div class="tags">Expo / React Native / Android + iOS + Web</div><details><summary>A closer look</summary><p>Species names are checked against iNaturalist, and suggestions are leads, not guaranteed identifications. Photos go through your own OpenRouter key.</p><p>A group project, in progress. Source is currently private.</p></details></div>
+<div class="project-copy"><p class="kicker mono">AI suggests. You confirm.</p><h3>Ecoquest</h3><p>A real-life Pokédex for wildlife. Photograph an animal; a model suggests up to three species. Confirm one to save the sighting.</p><div class="tags">Expo / React Native / Android + iOS + Web</div><details><summary>A closer look</summary><p>Species names are checked against iNaturalist; suggestions are leads, not guaranteed identifications. Photos go through your own OpenRouter key.</p><p>Group project, in progress. Source is private.</p></details></div>
 </article>
-<div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>An Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
+<div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
 </section>
 <section id="writing" aria-labelledby="writing-title">
 <div class="section-head reveal"><span class="dir">~/notes</span><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
@@ -204,7 +204,7 @@ html.js .theme-toggle{display:flex}
     </div>
   </div>
 ) : (
-  <p class="activity-total">The contribution calendar could not be loaded for this build.</p>
+  <p class="activity-total">Contribution calendar unavailable in this build.</p>
 )}
 <p class="activity-foot mono"><a href={`https://github.com/${ghUser}`} target="_blank" rel="noopener noreferrer">github.com/{ghUser} ↗</a></p>
 </div>
@@ -253,7 +253,7 @@ document.documentElement.classList.add('js');
  items.forEach(function(el){io.observe(el);});
 })();
 
-/* Scroll-reactive wireframe gem + progress hairline + icon parallax. Purely decorative; the page never depends on it. */
+/* Scroll-reactive wireframe gem + icon parallax. Purely decorative; the page never depends on it. */
 (function(){
  var gem=document.getElementById('gem');if(!gem)return;
  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -289,11 +289,9 @@ document.documentElement.classList.add('js');
  }
  if(reduce){
   draw(0.9);
-  var pbm=document.querySelector('.progress');if(pbm)pbm.style.display='none';
   return;
  }
  var root=document.documentElement;
- var bar=document.querySelector('.progress');
  var star=document.querySelector('.star');
  var footer=document.getElementById('contact');
  var footbar=footer?footer.querySelector('.contact-footer'):null;
@@ -341,7 +339,6 @@ document.documentElement.classList.add('js');
   if(spin>3)spin=3;else if(spin<-3)spin=-3;
   idle+=dt*0.07;
   draw(0.6+shown*Math.PI*3+spin+idle);
-  if(bar)bar.style.transform='scaleX('+shown.toFixed(4)+')';
   if(star)star.style.rotate=(shown*160).toFixed(1)+'deg';
   var bob=Math.sin(now*0.0011)*4;
   var lift=0,hit=false;
@@ -483,6 +480,117 @@ document.documentElement.classList.add('js');
   console.log('%c      ( (\n       ) )\n    ........\n    |      |]\n    \\      /\n     `----`','font-family:monospace');
   console.log('you found the console. source: https://github.com/WarquahF/warquahf.github.io');
  }catch(e){}
+})();
+</script>
+<script is:inline>
+/* Effects adapted from React Bits (reactbits.dev), vanilla JS, no dependencies:
+   DecryptedText (/text-animations/decrypted-text) scrambles the ~/dir labels in on scroll,
+   TextType (/text-animations/text-type) types the intro line into the existing caret,
+   ClickSpark (/components/click-spark) draws a spark burst on click. Decorative; the page
+   renders fully without them, and all three stand down under reduced motion. */
+(function(){
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce)return;
+
+ /* DecryptedText: sequential scramble reveal, glyph pool from the original. */
+ (function(){
+  var POOL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+';
+  var STEP=40,ITERS=5;
+  function scramble(el){
+   var text=el.dataset.plain,chars=Array.from(text),step=0;
+   var iv=setInterval(function(){
+    var revealed=Math.floor(step/ITERS),out='';
+    for(var i=0;i<chars.length;i++){
+     out+=(i<revealed||/\s/.test(chars[i]))?chars[i]:POOL[(Math.random()*POOL.length)|0];
+    }
+    el.textContent=out;
+    step++;
+    if(revealed>=chars.length){clearInterval(iv);el.textContent=text;}
+   },STEP);
+  }
+  var els=[].slice.call(document.querySelectorAll('.dir'));
+  if(!els.length)return;
+  els.forEach(function(el){el.dataset.plain=el.textContent;el.setAttribute('aria-label',el.textContent);});
+  var io=new IntersectionObserver(function(entries){
+   entries.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);scramble(en.target);}});
+  },{threshold:0.4});
+  els.forEach(function(el){io.observe(el);});
+ })();
+
+ /* TextType: typewriter into the intro line, preserving the line break and caret. */
+ (function(){
+  var p=document.querySelector('.intro-bottom p');
+  if(!p)return;
+  var caret=p.querySelector('.caret');
+  var parts=[];
+  [].slice.call(p.childNodes).forEach(function(n){
+   if(n.nodeType===3)parts.push(n.textContent);
+   else if(n.tagName==='BR')parts.push('\n');
+  });
+  var flat=parts.join('');
+  [].slice.call(p.childNodes).forEach(function(n){if(n!==caret)p.removeChild(n);});
+  var i=0,node=null;
+  setTimeout(function(){
+   var iv=setInterval(function(){
+    if(i>=flat.length){clearInterval(iv);return;}
+    var ch=flat[i++];
+    if(ch==='\n'){p.insertBefore(document.createElement('br'),caret);node=null;}
+    else{
+     if(!node){node=document.createTextNode('');p.insertBefore(node,caret);}
+     node.textContent+=ch;
+    }
+   },55);
+  },650);
+ })();
+
+ /* ClickSpark: default line-shape burst, colour follows the --blue theme variable. */
+ (function(){
+  var cv=document.getElementById('spark-layer');
+  if(!cv)return;
+  var ctx=cv.getContext('2d');
+  if(!ctx)return;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function size(){
+   cv.width=window.innerWidth*dpr;cv.height=window.innerHeight*dpr;
+   cv.style.width=window.innerWidth+'px';cv.style.height=window.innerHeight+'px';
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  size();
+  window.addEventListener('resize',size,{passive:true});
+  var SIZE=10,RADIUS=24,COUNT=8,WIDTH=2,DUR=450;
+  var bursts=[],running=false;
+  function ease(t){return 1-Math.pow(1-t,3);}
+  function smooth(a,b,x){var t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t);}
+  window.addEventListener('pointerdown',function(e){
+   var col=getComputedStyle(document.documentElement).getPropertyValue('--blue').trim()||'#224bea';
+   var sparks=[];
+   for(var i=0;i<COUNT;i++){
+    sparks.push({angle:(Math.PI*2*i)/COUNT+(Math.random()-0.5)*0.4,reach:0.8+Math.random()*0.4});
+   }
+   bursts.push({x:e.clientX,y:e.clientY,t:performance.now(),c:col,sparks:sparks});
+   if(!running){running=true;requestAnimationFrame(frame);}
+  },{passive:true});
+  function frame(now){
+   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+   bursts=bursts.filter(function(b){
+    var p=(now-b.t)/DUR;
+    if(p>=1)return false;
+    var e=ease(p),fade=1-smooth(0.55,1,p);
+    if(fade<=0)return true;
+    ctx.strokeStyle=b.c;ctx.lineCap='round';ctx.globalAlpha=fade;ctx.lineWidth=WIDTH;
+    b.sparks.forEach(function(s){
+     var d=RADIUS*s.reach*e,len=SIZE*Math.pow(1-p,1.6);
+     var x1=b.x+Math.cos(s.angle)*d,y1=b.y+Math.sin(s.angle)*d;
+     ctx.beginPath();ctx.moveTo(x1,y1);
+     ctx.lineTo(b.x+Math.cos(s.angle)*(d+len),b.y+Math.sin(s.angle)*(d+len));
+     ctx.stroke();
+    });
+    return true;
+   });
+   if(bursts.length){requestAnimationFrame(frame);}
+   else{running=false;ctx.clearRect(0,0,window.innerWidth,window.innerHeight);}
+  }
+ })();
 })();
 </script>
 </body>
