@@ -5,12 +5,51 @@ import CommandPalette from '../components/svelte/CommandPalette.svelte';
 interface Props {
   title?: string;
   description?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
 }
 
 const {
   title = 'Warquah Faiz · Software Developer',
   description = 'Warquah Faiz: building local-first desktop software and developer tools. Blink, Zest-TTY, Nugget.',
+  type = 'website',
+  publishedTime,
 } = Astro.props;
+
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : '';
+const person = {
+  '@type': 'Person',
+  '@id': 'https://warquahf.github.io/#person',
+  name: 'Warquah Faiz',
+  url: 'https://warquahf.github.io/',
+  email: 'mailto:warquah.dev@proton.me',
+  sameAs: [
+    'https://github.com/WarquahF',
+    'https://x.com/warquah35',
+    'https://www.instagram.com/warquahfaiz',
+  ],
+};
+const website = {
+  '@type': 'WebSite',
+  '@id': 'https://warquahf.github.io/#site',
+  url: 'https://warquahf.github.io/',
+  name: 'Warquah Faiz / Software & notes',
+  author: { '@id': 'https://warquahf.github.io/#person' },
+};
+const graph: Record<string, unknown>[] = [person, website];
+if (type === 'article') {
+  graph.push({
+    '@type': 'BlogPosting',
+    '@id': `${canonicalUrl}#post`,
+    headline: title.replace(/ · Notes$/, ''),
+    description,
+    url: canonicalUrl,
+    ...(publishedTime ? { datePublished: publishedTime, dateModified: publishedTime } : {}),
+    author: { '@id': 'https://warquahf.github.io/#person' },
+    isPartOf: { '@id': 'https://warquahf.github.io/#site' },
+  });
+}
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 
 // Rail ruler: 19 ticks, the 4 majors double as section links.
 const TICK_COUNT = 19;
@@ -42,14 +81,17 @@ const rail = [
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {Astro.site && (
       <>
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={new URL('/og-image.png', Astro.site)} />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content={type} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={new URL('/og-image.png', Astro.site)} />
+        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
       </>
     )}
   </head>
