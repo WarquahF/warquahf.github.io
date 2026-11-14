@@ -135,6 +135,7 @@ body:after{content:'';position:fixed;inset:-2%;z-index:4;pointer-events:none;opa
 .theme-toggle{display:none;position:relative;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;align-items:center;justify-content:center;transition:border-color .25s}
 html.js .theme-toggle{display:flex}
 .theme-toggle:hover{border-color:var(--ink)}
+.theme-toggle-solo{position:fixed;top:16px;right:20px;z-index:60;background:color-mix(in srgb,var(--paper) 70%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}
 .theme-toggle svg{position:absolute;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:opacity .35s,rotate .5s cubic-bezier(.16,1,.3,1),scale .35s}
 .theme-toggle .i-moon{opacity:0;rotate:-90deg;scale:.5}
 [data-theme='dark'] .theme-toggle .i-sun{opacity:0;rotate:90deg;scale:.5}
@@ -147,11 +148,16 @@ html.js .theme-toggle{display:flex}
 .activity-total strong{display:block;font:normal clamp(44px,6vw,68px)/1 var(--serif);letter-spacing:-.045em;color:var(--ink);margin-bottom:8px}
 .gh-cal{display:flex;gap:3px;overflow-x:auto;padding-bottom:6px}
 .gh-week{display:flex;flex-direction:column;gap:3px}
-.gh-cell{width:10px;height:10px;border-radius:2px;background:color-mix(in srgb,var(--blue) 10%,transparent)}
-.gh-cell.l1{background:color-mix(in srgb,var(--blue) 32%,transparent)}
-.gh-cell.l2{background:color-mix(in srgb,var(--blue) 55%,transparent)}
-.gh-cell.l3{background:color-mix(in srgb,var(--blue) 78%,transparent)}
-.gh-cell.l4{background:var(--blue)}
+.gh-cell{width:10px;height:10px;border-radius:2px;background:#e6e8ee}
+.gh-cell.l1{background:#9be9a8}
+.gh-cell.l2{background:#40c463}
+.gh-cell.l3{background:#30a14e}
+.gh-cell.l4{background:#216e39}
+[data-theme='dark'] .gh-cell{background:#2a2f3a}
+[data-theme='dark'] .gh-cell.l1{background:#0e4429}
+[data-theme='dark'] .gh-cell.l2{background:#006d32}
+[data-theme='dark'] .gh-cell.l3{background:#26a641}
+[data-theme='dark'] .gh-cell.l4{background:#39d353}
 .activity-foot{margin:14px 0 0;font-size:11px}
 .activity-foot a{border-bottom:1px solid var(--muted);color:var(--muted)}
 .activity-foot a:hover{color:var(--blue);border-color:var(--blue)}
@@ -174,7 +180,7 @@ html.js .theme-toggle{display:flex}
 <a class="skip" href="#main">Skip to content</a>
 <div id="gradientascii" aria-hidden="true"></div>
 <div class="wrap">
-<header><a class="signature" href="#top" aria-label="Warquah Faiz, back to top">wf.</a><div class="head-side"><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#activity">Activity</a><a href="#contact">Contact ↗</a></nav><button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.6A8.1 8.1 0 0 1 10.4 4a8.1 8.1 0 1 0 9.6 9.6z"/></svg></button></div></header>
+<button class="theme-toggle theme-toggle-solo" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.6A8.1 8.1 0 0 1 10.4 4a8.1 8.1 0 1 0 9.6 9.6z"/></svg></button>
 <main id="main">
 <section class="intro" aria-labelledby="name">
 <div class="eyebrow mono"><span>Software / Working notes</span><span>Odisha, India</span></div>
