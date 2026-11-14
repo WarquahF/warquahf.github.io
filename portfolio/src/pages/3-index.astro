@@ -1,0 +1,643 @@
+---
+// GitHub contribution calendar: fetched at build time from the public
+// contributions page, no token needed. Real data only - if the fetch or
+// parse fails, the section falls back to a plain profile link.
+const ghUser = 'WarquahF';
+type GhDay = { date: string; count: number; level: number };
+let ghTotal = 0;
+let ghWeeks: GhDay[][] = [];
+try {
+  const res = await fetch(`https://github.com/users/${ghUser}/contributions`);
+  if (!res.ok) throw new Error(`contributions page ${res.status}`);
+  const html = await res.text();
+  const totalMatch = html.match(/js-contribution-activity-description[^>]*>\s*([\d,]+)/);
+  const counts = new Map<string, number>();
+  for (const m of html.matchAll(/for="(contribution-day-component-[^"]+)"[^>]*>\s*(\d+|No) contribution/g)) {
+    counts.set(m[1], m[2] === 'No' ? 0 : parseInt(m[2], 10));
+  }
+  const weeks = new Map<number, { d: number; day: GhDay }[]>();
+  for (const m of html.matchAll(/data-date="(\d{4}-\d{2}-\d{2})"\s+id="(contribution-day-component-(\d+)-(\d+))"\s+data-level="(\d)"/g)) {
+    // component id is <dayOfWeek>-<weekColumn>: group by column, order by row
+    const day: GhDay = { date: m[1], count: counts.get(m[2]) ?? 0, level: parseInt(m[5], 10) };
+    const wk = parseInt(m[4], 10);
+    if (!weeks.has(wk)) weeks.set(wk, []);
+    weeks.get(wk)!.push({ d: parseInt(m[3], 10), day });
+  }
+  ghWeeks = [...weeks.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, days]) => days.sort((a, b) => a.d - b.d).map((x) => x.day));
+  if (ghWeeks.length) {
+    ghTotal = totalMatch
+      ? parseInt(totalMatch[1].replace(/,/g, ''), 10)
+      : ghWeeks.flat().reduce((n, d) => n + d.count, 0);
+  }
+} catch {
+  // offline build or markup change: section renders the fallback link
+}
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="Warquah Faiz. Desktop software, developer tools, and notes from the work. Based in Odisha, India.">
+<link rel="canonical" href="https://warquahf.github.io/">
+<meta property="og:title" content="Warquah Faiz / Software & notes">
+<meta property="og:description" content="Warquah Faiz. Desktop software, developer tools, and notes from the work. Based in Odisha, India.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://warquahf.github.io/">
+<meta property="og:image" content="https://warquahf.github.io/og-image.png">
+<meta property="og:site_name" content="Warquah Faiz / Software & notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Warquah Faiz / Software & notes">
+<meta name="twitter:description" content="Warquah Faiz. Desktop software, developer tools, and notes from the work. Based in Odisha, India.">
+<meta name="twitter:image" content="https://warquahf.github.io/og-image.png">
+<script is:inline type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://warquahf.github.io/#person",
+      "name": "Warquah Faiz",
+      "url": "https://warquahf.github.io/",
+      "email": "mailto:warquah.dev@proton.me",
+      "jobTitle": "Software developer",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Odisha",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://github.com/WarquahF",
+        "https://x.com/warquah35",
+        "https://www.instagram.com/warquahfaiz"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://warquahf.github.io/#site",
+      "url": "https://warquahf.github.io/",
+      "name": "Warquah Faiz / Software & notes",
+      "description": "Desktop software, developer tools, and notes from the work.",
+      "author": {
+        "@id": "https://warquahf.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://warquahf.github.io/#home",
+      "url": "https://warquahf.github.io/",
+      "name": "Warquah Faiz / Software & notes",
+      "isPartOf": {
+        "@id": "https://warquahf.github.io/#site"
+      },
+      "about": {
+        "@id": "https://warquahf.github.io/#person"
+      }
+    }
+  ]
+}
+</script>
+<title>Warquah Faiz / Software & notes</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/folder.css">
+<script is:inline>try{var t=localStorage.getItem('wf-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style is:global>
+:root{color-scheme:light;--paper:#f5f6f8;--ink:#191b20;--muted:#616773;--line:#ccd0d8;--blue:#224bea;--serif:Georgia,'Times New Roman',serif;--sans:Arial,Helvetica,sans-serif;--mono:'Courier New',monospace}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button{font:inherit}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:6px}::selection{background:var(--blue);color:white}[data-theme='dark']{--paper:#101114;--ink:#eceef2;--muted:#9ba1ad;--line:#353945;--blue:#8aa0ff;color-scheme:dark}[data-theme='dark'] ::selection{color:#101114}[data-theme='dark'] .zest-art{background:#1c2340}
+[data-theme='dark'] .zest-art:before,[data-theme='dark'] .zest-art:after{background:#8aa0ff26}.wrap{width:min(1280px,100% - 96px);margin:auto}.mono{font:11px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.09em}.skip{position:absolute;top:-100px;left:24px;padding:12px;background:var(--ink);color:var(--paper);z-index:10}.skip:focus{top:12px}header{display:flex;justify-content:space-between;align-items:center;padding:25px 0;border-bottom:1px solid var(--ink)}.signature{font:italic 24px var(--serif);letter-spacing:-2px}nav{display:flex;gap:32px;font-size:13px}nav a{padding:10px 0;position:relative}nav a:after{content:'';height:1px;position:absolute;background:var(--blue);left:0;right:100%;bottom:6px;transition:right .25s}nav a:hover:after{right:0}.intro{position:relative;padding:58px 0 46px}
+.eyebrow{display:flex;justify-content:space-between;color:var(--muted)}.eyebrow span:last-child{color:var(--blue)}h1{font:normal clamp(80px,11.6vw,166px)/.91 var(--serif);letter-spacing:-.075em;margin:47px 0 48px;position:relative;z-index:1}h1 em{font-weight:normal}h1 .line{display:block}.name-second{display:flex;align-items:center;gap:50px}.star{width:90px;height:90px;flex:0 0 90px;color:var(--blue);animation:rotate 32s linear infinite}.intro-bottom{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding-top:30px;border-top:1px solid var(--line)}.intro-bottom p{margin:0;max-width:390px;font-size:20px;line-height:1.45;letter-spacing:-.025em}.intro-bottom .aside{justify-self:end;max-width:290px;color:var(--muted);font-size:14px;letter-spacing:0}.intro-bottom a{border-bottom:1px solid var(--muted)}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:1px solid var(--ink);padding:22px 0;margin-top:60px}.section-head h2{font:normal 15px var(--sans);margin:0}.section-head span{color:var(--muted)}.project{display:grid;grid-template-columns:1.05fr 1fr;gap:54px;padding:22px 0 48px;border-bottom:1px solid var(--line)}.project+.project{padding-top:48px}.specimen{min-height:340px;display:flex;position:relative;overflow:hidden;align-items:center;justify-content:center;isolation:isolate}.specimen .caption{position:absolute;left:22px;bottom:18px;font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase}.blink-art{background:#1b1d24;color:#f5f6f8}.blink-art:before{content:'';position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse,black,transparent 75%)}
+.blink-word{font:italic 90px var(--serif);letter-spacing:-8px;position:relative;transform:translateY(-10px)}.cursor{display:inline-block;width:5px;height:71px;margin-left:12px;vertical-align:-10px;background:#a8b7ff;animation:blink 2s steps(1) infinite}.orbit{position:absolute;width:270px;height:270px;border:1px solid #ffffff18;border-radius:50%;transform:rotate(-32deg) scaleX(1.7)}.zest-art{background:#e4e9fd;color:var(--blue)}.zest-art:before,.zest-art:after{content:'';position:absolute;height:1px;width:100%;background:#224bea22;transform:rotate(-35deg)}.zest-art:after{transform:rotate(35deg)}.code-art{font:normal clamp(45px,4.5vw,65px)/1.12 var(--mono);letter-spacing:-.09em;position:relative;text-align:left}.code-art .arrow{font:italic 70px/.8 var(--serif);display:block;text-align:center;margin:10px 0 17px}
+.project-copy{padding:10px 0;align-self:center}.project-copy .kicker{color:var(--muted);margin:0 0 15px}.project h3{font:normal 56px/1 var(--serif);letter-spacing:-.05em;margin:0 0 20px}.project-copy>p{max-width:420px;font-size:16px;line-height:1.65;margin:0 0 20px}.tags{color:var(--muted);font:11px/1.8 var(--mono);margin-bottom:24px}details{max-width:440px;border-top:1px solid var(--line)}summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:48px;font-size:13px}summary::-webkit-details-marker{display:none}summary:after{content:'+';font:22px var(--mono);color:var(--blue)}details[open] summary:after{content:'−'}details p{font-size:14px;color:var(--muted);margin:6px 0 18px}details a{color:var(--blue);text-decoration:underline;text-underline-offset:4px}
+.other-work{display:flex;gap:40px;justify-content:space-between;padding:24px 0}.other-work>span{color:var(--muted);flex:0 0 120px}.other-work p{font-size:14px;margin:0;flex:1;max-width:480px}.other-work b{font-weight:normal;border-bottom:1px solid var(--line)}.writing-layout{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px}.writing-intro{font:normal 42px/1.12 var(--serif);letter-spacing:-.045em;margin:20px 0}.note{display:grid;grid-template-columns:1fr 24px;gap:16px;padding:24px 0;border-bottom:1px solid var(--line)}.note:first-child{padding-top:18px}.note h3{font:normal 19px/1.45 var(--sans);letter-spacing:-.03em;margin:7px 0 0}.note .mono{color:var(--muted)}.note .arr{font-size:23px;color:var(--blue);align-self:center;transition:transform .2s}.note:hover .arr{transform:translate(3px,-3px)}
+.note:hover h3{color:var(--blue)}.toolbox{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px;padding:36px 0 0;margin-top:44px;border-top:1px solid var(--line)}.toolbox p{margin:0;font-size:15px;line-height:1.9}.toolbox .mono{color:var(--muted)}.contact{background:#224bea;color:#fff;margin-top:96px;padding:32px 0 26px}.contact-top{display:flex;justify-content:space-between;color:#d6dfff}.contact h2{font:normal clamp(74px,10vw,138px)/1 var(--serif);letter-spacing:-.065em;margin:46px 0 32px}.contact h2 em{font-weight:normal}.email-line{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:65px}.email{font-size:clamp(16px,2.4vw,26px);letter-spacing:-.03em;border-bottom:1px solid #ffffff80;padding-bottom:4px}.copy{background:transparent;border:1px solid #ffffff66;color:white;cursor:pointer;padding:9px 14px;min-height:44px;font:11px var(--mono);transition:background .2s}
+.copy:hover{background:#ffffff1a}.copy[hidden]{display:none}.contact-footer{border-top:1px solid #ffffff55;padding-top:23px;display:flex;justify-content:space-between;gap:28px;align-items:center;font-size:12px}.socials{display:flex;gap:24px}.socials a{padding:10px 0}.contact-footer .back{font:11px var(--mono);padding:10px 0}.status{min-height:24px;color:#fff;font-size:12px;margin:-48px 0 24px}.footer-credit{color:#d6dfff}.fade-in{animation:arrive .85s ease-out both}.intro-bottom{animation-delay:.45s}@keyframes blink{0%,68%{opacity:1}69%,100%{opacity:0}}@keyframes rotate{to{transform:rotate(360deg)}}@keyframes arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.float-icon{position:absolute;fill:none;stroke:var(--blue);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;animation:floaty 7s ease-in-out infinite}
+.hero-socials{display:contents}.float-btn{position:absolute;width:54px;height:54px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);background:var(--paper);animation:floaty 8s ease-in-out infinite,fadein .8s ease-out .95s backwards;transition:border-color .25s,color .25s;z-index:2}
+.float-btn svg{width:22px;height:22px;fill:currentColor}
+.float-btn:hover{border-color:var(--blue);color:var(--blue)}
+.fb-gh{left:4%;top:150px}
+.fb-x{left:auto;right:4%;top:150px;animation-duration:9.5s;animation-delay:-3s}
+.fb-ig{left:9%;top:330px;animation-duration:7.2s;animation-delay:-5.2s}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.fi-terminal{width:40px;top:118px;right:6px;animation-duration:8.5s}
+.fi-db{width:34px;top:46%;right:2px;animation-delay:-2.6s;animation-duration:7.5s}
+.fi-pen{width:34px;left:2px;bottom:6px;animation-delay:-4.1s;animation-duration:9s}
+.fi-mail{width:38px;top:92px;right:8px;stroke:#fff;animation-delay:-1.3s}
+#work,#writing,.contact,.writing-layout{position:relative}
+#gem{position:fixed;right:34px;bottom:34px;width:110px;height:110px;pointer-events:none;z-index:3;color:var(--blue);transition:opacity .3s;will-change:transform}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* Motion layer: load choreography + scroll reveals. Everything below degrades to fully visible without JS or under reduced motion. */
+h1 .line{overflow:hidden;padding:0 .08em .16em 0;margin:0 -.08em -.16em 0}
+h1 .name-second.line{display:flex}
+.line-in{display:block}
+@keyframes rise{from{transform:translateY(118%)}to{transform:translateY(0)}}
+@keyframes star-in{from{opacity:0;scale:.3;rotate:-70deg}to{opacity:1;scale:1;rotate:0deg}}
+@media(prefers-reduced-motion:no-preference){
+ header{animation:arrive .7s ease-out both}
+ .eyebrow{animation:arrive .8s ease-out .05s both}
+ .line-in{animation:rise 1.05s cubic-bezier(.16,1,.3,1) .1s backwards}
+ .name-second .line-in{animation-delay:.26s}
+ .star{animation:rotate 32s linear infinite,star-in 1s cubic-bezier(.16,1,.3,1) .55s backwards}
+ html.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}
+ html.js .reveal.in{opacity:1;transform:none}
+}
+@media(max-width:850px){.hero-socials{display:flex;gap:14px;margin:-10px 0 20px}.hero-socials .float-btn{position:static}.float-btn{width:46px;height:46px}.float-btn svg{width:19px;height:19px}.fb-gh{left:auto;right:8px;top:30%}.fb-x{left:59%;top:57%}.fb-ig{left:auto;right:64px;top:30%;animation-delay:-2s}#gem{width:64px;height:64px;right:16px;bottom:16px}.float-icon{width:28px;height:28px;opacity:.8}.fi-terminal{top:auto;bottom:16px;right:2px}.fi-db{top:auto;bottom:38%;right:2px}.fi-pen{left:auto;right:2px;top:4px;bottom:auto}.fi-mail{top:118px;right:4px}}
+@media(max-width:600px){.fi-terminal{top:auto;bottom:16px;right:2px}.fi-mail{top:118px;right:4px}.fb-gh{top:34%;right:2px}.fb-x{left:59%;top:48%}.fb-ig{top:46%;right:2px}}
+@media(min-width:1500px){.intro{padding-top:75px}}
+/* Delight layer: letter choreography, sticky glass header, tilt, grain. Enhancement only - content never depends on it. */
+html,body{overflow-x:clip}
+header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-mix(in srgb,var(--paper) 80%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+.project{perspective:1400px}
+.specimen{transition:transform .55s cubic-bezier(.16,1,.3,1)}
+.ltr{display:inline-block}
+.caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
+#gradientascii{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#techtext{width:100%;height:clamp(170px,24vw,330px);cursor:default}.gradient-ascii-container{position:relative;width:100%;height:100%;overflow:hidden}.gradient-ascii-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+.wrap,.contact{position:relative;z-index:1}
+#starborder{display:inline-flex}#starborder .star-border{font-size:clamp(16px,2.4vw,26px);letter-spacing:-.03em}
+.colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
+.section-head{flex-wrap:wrap}
+.dir{flex:0 0 100%;margin-bottom:9px;font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.mug{width:16px;height:16px;margin-right:9px;vertical-align:-3px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.steam{animation:steam 2.6s ease-in-out infinite}
+.mug .s2{animation-delay:1.3s}
+@keyframes steam{0%,100%{opacity:.2;transform:translateY(1px)}50%{opacity:1;transform:translateY(-1px)}}
+html{scrollbar-width:thin;scrollbar-color:var(--line) var(--paper)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper)}
+::-webkit-scrollbar-thumb{background:var(--line);border:3px solid var(--paper);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+body:after{content:'';position:fixed;inset:-2%;z-index:4;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
+@media(prefers-reduced-motion:no-preference){
+ html.js .line-in{animation:none}
+ html.js h1 .ltr{animation:ltr-rise 1s cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(.14s + var(--n)*.042s);transition:transform .45s cubic-bezier(.16,1,.3,1) calc(var(--n)*.018s)}
+ html.js .name-second .line-in .ltr{animation-delay:calc(.34s + var(--n)*.042s)}
+ html.js h1:hover .ltr{transform:translateY(-.05em)}
+ html.js .reveal .ltr{opacity:0;transform:translateY(.4em) rotate(3deg);filter:blur(9px);transition:opacity .6s ease calc(var(--n)*.024s),transform .6s cubic-bezier(.16,1,.3,1) calc(var(--n)*.024s),filter .6s ease calc(var(--n)*.024s)}
+ html.js .reveal.in .ltr{opacity:1;transform:none;filter:blur(0)}
+ html.js .gh-cell{opacity:0;transform:scale(.3)}
+ html.js .reveal.in .gh-cell{animation:cellpop .45s cubic-bezier(.16,1,.3,1) calc(.15s + var(--i)*.016s) both}
+}
+@keyframes ltr-rise{from{transform:translateY(118%) rotate(7deg)}to{transform:translateY(0) rotate(0)}}
+@keyframes cellpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@media(max-width:850px){.wrap{width:calc(100% - 48px)}.project{gap:30px;grid-template-columns:1fr 1fr}.specimen{min-height:300px}.blink-word{font-size:72px}.cursor{height:58px}.project h3{font-size:44px}.writing-layout,.toolbox{gap:35px}.writing-intro{font-size:36px}.other-work{gap:20px}.star{width:65px;height:65px;flex-basis:65px}}
+@media(max-width:600px){.wrap{width:calc(100% - 40px)}header{padding:13px 0}.signature{font-size:23px}nav{gap:21px;font-size:12px}nav a{min-height:44px;display:flex;align-items:center}.intro{padding:32px 0 24px}.eyebrow{font-size:9px;letter-spacing:.035em}.eyebrow span:last-child{max-width:115px;text-align:right}h1{font-size:clamp(72px,18vw,108px);margin:45px 0 35px;letter-spacing:-.075em;line-height:.98}.name-second{gap:30px}.star{width:48px;height:48px;flex-basis:48px}.intro-bottom{grid-template-columns:1fr;gap:20px;padding-top:24px}.intro-bottom p{font-size:21px;max-width:290px}.intro-bottom .aside{justify-self:start;max-width:300px;font-size:14px}.section-head{margin-top:38px;padding:17px 0}.section-head span{font-size:9px}.project{grid-template-columns:1fr;gap:24px;padding:12px 0 30px}
+.project+.project{padding-top:30px}.specimen{min-height:280px}.project-copy{padding:0}.project-copy .kicker{font-size:10px;margin:0 0 12px}.project h3{font-size:46px;margin-bottom:18px}.project-copy>p{font-size:16px}.tags{margin-bottom:18px}.blink-word{font-size:88px}.code-art{font-size:53px}.other-work{display:block;padding:22px 0 0}.other-work>span{display:block;margin-bottom:13px}.other-work p+p{margin-top:10px}.writing-layout,.toolbox{grid-template-columns:1fr;gap:10px}.writing-intro{margin:12px 0 15px;font-size:36px;max-width:260px}.note{padding:22px 0}.note h3{font-size:18px}.toolbox{gap:15px;padding-top:24px;margin-top:30px}.toolbox p{font-size:14px}.contact{margin-top:62px;padding-top:25px}.contact-top{font-size:10px}.contact h2{margin:40px 0 27px;font-size:78px}.email-line{gap:17px;margin-bottom:58px}
+.email{font-size:19px}.copy{padding:8px 11px}.contact-footer{display:grid;grid-template-columns:1fr auto;gap:16px;padding-top:12px}.footer-credit{grid-column:1/-1;grid-row:2;font-size:10px}.socials{gap:22px}.status{margin-top:-45px}}
+/* Theme toggle + transition ripple */
+.head-side{display:flex;align-items:center;gap:26px}
+.theme-toggle{display:none;position:relative;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;align-items:center;justify-content:center;transition:border-color .25s}
+html.js .theme-toggle{display:flex}
+.theme-toggle:hover{border-color:var(--ink)}
+.theme-toggle-solo{position:fixed;top:16px;right:20px;z-index:60;background:color-mix(in srgb,var(--paper) 70%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}
+.theme-toggle svg{position:absolute;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:opacity .35s,rotate .5s cubic-bezier(.16,1,.3,1),scale .35s}
+.theme-toggle .i-moon{opacity:0;rotate:-90deg;scale:.5}
+[data-theme='dark'] .theme-toggle .i-sun{opacity:0;rotate:90deg;scale:.5}
+[data-theme='dark'] .theme-toggle .i-moon{opacity:1;rotate:0deg;scale:1}
+.theme-ripple{position:fixed;inset:0;z-index:60;pointer-events:none}
+/* GitHub activity */
+.activity{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px;padding:36px 0 0;margin-top:44px;border-top:1px solid var(--line)}
+.activity .mono{color:var(--muted)}
+.activity-total{margin:0 0 20px;font-size:15px;color:var(--muted)}
+.activity-total strong{display:block;font:normal clamp(44px,6vw,68px)/1 var(--serif);letter-spacing:-.045em;color:var(--ink);margin-bottom:8px}
+.gh-cal{display:flex;gap:3px;overflow-x:auto;padding:6px;background:var(--paper);border-radius:6px}
+.gh-week{display:flex;flex-direction:column;gap:3px}
+.gh-cell{width:10px;height:10px;border-radius:2px;background:#e6e8ee}
+.gh-cell.l1{background:#9be9a8}
+.gh-cell.l2{background:#40c463}
+.gh-cell.l3{background:#30a14e}
+.gh-cell.l4{background:#216e39}
+[data-theme='dark'] .gh-cell{background:#2a2f3a}
+[data-theme='dark'] .gh-cell.l1{background:#0e4429}
+[data-theme='dark'] .gh-cell.l2{background:#006d32}
+[data-theme='dark'] .gh-cell.l3{background:#26a641}
+[data-theme='dark'] .gh-cell.l4{background:#39d353}
+.activity-foot{margin:14px 0 0;font-size:11px}
+.activity-foot a{border-bottom:1px solid var(--muted);color:var(--muted)}
+.activity-foot a:hover{color:var(--blue);border-color:var(--blue)}
+@media(max-width:850px){.activity{gap:35px}}
+@media(max-width:600px){.activity{grid-template-columns:1fr;gap:15px;padding-top:24px;margin-top:30px}.head-side{gap:14px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+/* Folder: editorial overrides to match the site identity */
+#folder{display:flex;justify-content:center;padding:48px 0 72px}
+.folder-doc-title{font:15px/1.3 var(--sans);letter-spacing:-.01em}
+.folder-doc-text{font:10px/1.5 var(--sans)}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<div id="gradientascii" aria-hidden="true"></div>
+<div class="wrap">
+<button class="theme-toggle theme-toggle-solo" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.6A8.1 8.1 0 0 1 10.4 4a8.1 8.1 0 1 0 9.6 9.6z"/></svg></button>
+<main id="main">
+<section class="intro" aria-labelledby="name">
+<div class="eyebrow mono"><span>Software / Working notes</span><span>Odisha, India</span></div>
+<h1 id="name"><span class="sr-only">Warquah Faiz</span><div id="techtext" aria-hidden="true"></div></h1>
+<svg class="float-icon fi-terminal" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="2"/><path d="M12 16.5l6 4.5-6 4.5M20 25.5h8"/></svg>
+<div class="hero-socials"><a class="float-btn fb-gh" href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+<a class="float-btn fb-x" href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+<a class="float-btn fb-ig" href="https://instagram.com/warquahfaiz" target="_blank" rel="noopener noreferrer" aria-label="Warquah Faiz on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a></div>
+<div class="intro-bottom fade-in"><p>I write desktop software<br>and developer tools.<span class="caret" aria-hidden="true"></span></p><p class="aside">Currently working on Blink and Ecoquest. <a href="#writing">The notes are public.</a></p></div>
+</section>
+<section id="work" aria-labelledby="work-title">
+<svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
+<div class="section-head reveal"><span class="dir">~/work</span><h2 id="work-title">Selected work</h2><span class="mono">In progress</span></div>
+<div id="folder" class="reveal"></div>
+<noscript>
+<article class="project reveal">
+<div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / blink.md</span></div>
+<div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local chat history, multiple providers, optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter app. Blink works with remote providers like OpenRouter and local models via Ollama; remote providers receive the prompts sent to them.</p><p>Source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
+</article>
+<article class="project reveal">
+<div class="specimen zest-art" role="img" aria-label="Typographic illustration of a wildlife photo being matched to a species, not a product screenshot"><div class="code-art" aria-hidden="true">photo<span class="arrow">↓</span>species</div><span class="caption">02 / ecoquest.md</span></div>
+<div class="project-copy"><p class="kicker mono">AI suggests. You confirm.</p><h3>Ecoquest</h3><p>A real-life Pokédex for wildlife. Photograph an animal; a model suggests up to three species. Confirm one to save the sighting.</p><div class="tags">Expo / React Native / Android + iOS + Web</div><details><summary>A closer look</summary><p>Species names are checked against iNaturalist; suggestions are leads, not guaranteed identifications. Photos go through your own OpenRouter key.</p><p>Group project, in progress. Source is private.</p></details></div>
+</article>
+<div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
+</noscript>
+</section>
+<section id="writing" aria-labelledby="writing-title">
+<div class="section-head reveal"><span class="dir">~/notes</span><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
+<div class="writing-layout"><svg class="float-icon fi-pen" viewBox="0 0 34 34" aria-hidden="true"><path d="M6 28l2.2-7.6L22 6.6a2.3 2.3 0 013.3 0l2 2a2.3 2.3 0 010 3.3L13.6 25.8 6 28z"/><path d="M20 8.8l5.2 5.2M8.2 20.4l5.4 5.4"/></svg>
+<p class="writing-intro reveal">Decisions,<br>while they're<br><em>still being made.</em></p><div>
+<a class="note reveal" href="/notes/migrating-blink-electron-to-tauri/"><div><span class="mono">18 Aug 2026 / Desktop</span><h3>Starting the Electron → Tauri migration</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+<a class="note reveal" href="/notes/sqlite-encryption-notes/"><div><span class="mono">08 Aug 2026 / Storage</span><h3>Notes on SQLite encryption</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+<a class="note reveal" href="/notes/why-local-first/"><div><span class="mono">28 Jul 2026 / Approach</span><h3>Why local-first</h3></div><span class="arr" aria-hidden="true">↗</span></a>
+</div></div>
+<div class="toolbox reveal"><span class="mono">At the workbench</span><p>Odin, Rust, Python, JavaScript, TypeScript.<br>HTML & CSS. Git & GitHub.<br>Tauri, SQLite, Electron, Ollama & OpenRouter.</p></div>
+</section>
+<section id="activity" aria-labelledby="activity-title">
+<div class="section-head reveal"><span class="dir">~/activity</span><h2 id="activity-title">GitHub activity</h2><span class="mono">Public data, fetched at build</span></div>
+<div class="activity reveal">
+<span class="mono">Last 12 months</span>
+<div>
+{ghWeeks.length > 0 ? (
+  <div>
+    <p class="activity-total"><strong>{ghTotal.toLocaleString('en-US')}</strong> contributions in the last year</p>
+    <div class="gh-cal" role="img" aria-label={`GitHub contribution calendar, ${ghTotal} contributions in the last year`}>
+      {ghWeeks.map((week) => (
+        <div class="gh-week">
+          {week.map((d) => (
+            <span class={`gh-cell l${d.level}`} title={`${d.date}: ${d.count} contribution${d.count === 1 ? '' : 's'}`}></span>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+) : (
+  <p class="activity-total">Contribution calendar unavailable in this build.</p>
+)}
+<p class="activity-foot mono"><a href={`https://github.com/${ghUser}`} target="_blank" rel="noopener noreferrer">github.com/{ghUser} ↗</a></p>
+</div>
+</div>
+</section>
+</main>
+</div>
+<footer id="contact" class="contact"><div class="wrap"><div class="contact-top mono reveal"><span>Open to projects</span><span>Prefer async? Email.</span></div><h2 class="reveal">Say <em>hello.</em></h2><svg class="float-icon fi-mail" viewBox="0 0 38 38" aria-hidden="true"><rect x="4" y="8" width="30" height="22" rx="2"/><path d="M5 10l14 11 14-11"/></svg><div class="email-line reveal"><span id="starborder"><a class="email" href="mailto:warquah.dev@proton.me">warquah.dev@proton.me ↗</a></span><button class="copy" type="button" id="copy" hidden>Copy email</button></div><p class="status" id="copy-status" role="status" aria-live="polite"></p><p class="colophon"><svg class="mug" viewBox="0 0 24 24" aria-hidden="true"><path class="steam" d="M8 6c0-1.3.9-1.7.9-3"/><path class="steam s2" d="M12.2 6c0-1.3.9-1.7.9-3"/><path d="M5 9.5h11V16a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11h1.4a2.6 2.6 0 0 1 0 5.2H16"/></svg>~/warquahf.github.io &middot; astro, css and vanilla js &middot; deploys on git push &middot; press d to flip the lights</p><div class="contact-footer"><span class="footer-credit">Warquah Faiz / Software & notes</span><div class="socials"><a href="https://github.com/WarquahF" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://x.com/warquah35" target="_blank" rel="noopener noreferrer">X ↗</a></div><a class="back" href="#top">Back to top ↑</a></div></div></footer>
+<svg id="gem" viewBox="-60 -60 120 120" aria-hidden="true"></svg>
+<script is:inline>
+/* All core content and navigation work without JavaScript. */
+document.documentElement.classList.add('js');
+(function(){
+ const button=document.getElementById('copy'),status=document.getElementById('copy-status');
+ button.hidden=false;
+ button.addEventListener('click',async function(){
+  const email='warquah.dev@proton.me';let copied=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(email);copied=true;}}catch(e){}
+  if(!copied){const field=document.createElement('textarea');field.value=email;field.style.cssText='position:fixed;left:-9999px;top:0';field.setAttribute('readonly','');document.body.appendChild(field);field.select();try{copied=document.execCommand('copy');}catch(e){}field.remove();button.focus();}
+  status.textContent=copied?'Email copied.':'Copy this address: '+email;
+  button.textContent=copied?'Copied ✓':'Copy email';
+  setTimeout(function(){button.textContent='Copy email';},2500);
+ });
+})();
+
+/* Reveal-on-scroll: entrance polish only. Hidden states apply only with JS + no reduced-motion preference. */
+(function(){
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce||!('IntersectionObserver' in window))return;
+ var items=[].slice.call(document.querySelectorAll('.reveal'));
+ var counts=new Map();
+ items.forEach(function(el){
+  var p=el.parentElement,n=counts.get(p)||0;
+  if(n)el.style.transitionDelay=(n*0.09).toFixed(2)+'s';
+  counts.set(p,n+1);
+ });
+ var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+   if(!en.isIntersecting)return;
+   var el=en.target;
+   el.classList.add('in');
+   io.unobserve(el);
+   setTimeout(function(){el.style.transitionDelay='';},1400);
+  });
+ },{rootMargin:'0px 0px -10% 0px',threshold:0.08});
+ items.forEach(function(el){io.observe(el);});
+})();
+
+/* Scroll-reactive wireframe gem + icon parallax. Purely decorative; the page never depends on it. */
+(function(){
+ var gem=document.getElementById('gem');if(!gem)return;
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ var NS='http://www.w3.org/2000/svg';
+ function octa(r){
+  return {v:[[r,0,0],[-r,0,0],[0,r,0],[0,-r,0],[0,0,r],[0,0,-r]],
+   e:[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]]};
+ }
+ var shapes=[octa(46),octa(24),octa(11)],widths=[1.5,1.5,2.25];
+ shapes.forEach(function(sh,s){
+  sh.lines=sh.e.map(function(){
+   var l=document.createElementNS(NS,'line');
+   l.setAttribute('stroke','currentColor');l.setAttribute('stroke-width',widths[s]);l.setAttribute('stroke-linecap','round');
+   gem.appendChild(l);return l;
+  });
+ });
+ function draw(rot){
+  var params=[[rot,0.35],[-rot*1.35,0.9],[rot*2.1,1.5]];
+  for(var s=0;s<shapes.length;s++){
+   var ry=params[s][0],rx=params[s][1];
+   var cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx);
+   var pts=shapes[s].v.map(function(p){
+    var x=p[0]*cy+p[2]*sy,z=-p[0]*sy+p[2]*cy;
+    var y=p[1]*cx-z*sx;
+    return [x,y];
+   });
+   for(var i=0;i<shapes[s].e.length;i++){
+    var ed=shapes[s].e[i],l=shapes[s].lines[i];
+    l.setAttribute('x1',pts[ed[0]][0].toFixed(1));l.setAttribute('y1',pts[ed[0]][1].toFixed(1));
+    l.setAttribute('x2',pts[ed[1]][0].toFixed(1));l.setAttribute('y2',pts[ed[1]][1].toFixed(1));
+   }
+  }
+ }
+ if(reduce){
+  draw(0.9);
+  return;
+ }
+ var root=document.documentElement;
+ var star=document.querySelector('.star');
+ var footer=document.getElementById('contact');
+ var footbar=footer?footer.querySelector('.contact-footer'):null;
+ var obstacles=footer?[].slice.call(footer.querySelectorAll('h2,.email-line,.status,.contact-footer')):[];
+ var icons=[].slice.call(document.querySelectorAll('.float-icon,.float-btn'));
+ function progress(){var max=root.scrollHeight-root.clientHeight;return max>0?(window.scrollY||root.scrollTop)/max:0;}
+ /* Document-space rect via offset chain: unaffected by reveal/float transforms. */
+ function docRect(el){
+  var t=0,l=0,n=el;
+  while(n){t+=n.offsetTop||0;l+=n.offsetLeft||0;n=n.offsetParent;}
+  return {l:l,t:t,r:l+el.offsetWidth,b:t+el.offsetHeight};
+ }
+ var iw=0,ih=0,cache=null;
+ function measure(){
+  iw=window.innerWidth;ih=window.innerHeight;
+  var cs=getComputedStyle(gem);
+  cache={footTop:null,barTop:null,obs:[],icons:[],
+   gem:{w:gem.clientWidth,h:gem.clientHeight,right:parseFloat(cs.right)||0,bottom:parseFloat(cs.bottom)||0}};
+  if(footer){
+   cache.footTop=docRect(footer).t;
+   cache.obs=obstacles.map(docRect);
+   if(footbar)cache.barTop=docRect(footbar).t;
+  }
+  cache.icons=icons.map(function(ic){
+   var r=docRect(ic);
+   return {el:ic,cy:r.t+(r.b-r.t)/2};
+  });
+ }
+ measure();
+ window.addEventListener('resize',measure,{passive:true});
+ window.addEventListener('orientationchange',measure,{passive:true});
+ window.addEventListener('load',measure);
+ document.querySelectorAll('details').forEach(function(d){d.addEventListener('toggle',function(){setTimeout(measure,80);});});
+ if(document.fonts&&document.fonts.ready){document.fonts.ready.then(measure);}
+ var shown=progress(),idle=0,spin=0,last=performance.now(),lastScroll=window.scrollY||0;
+ function frame(now){
+  var dt=(now-last)/1000;last=now;
+  if(dt>0.08)dt=0.08;if(dt<=0)dt=0.001;
+  var target=progress();
+  shown+=(target-shown)*(1-Math.exp(-dt*7.5));
+  var sc=window.scrollY||0;
+  var vel=(sc-lastScroll)/dt;lastScroll=sc;
+  spin+=vel*dt*0.0016;
+  spin*=Math.exp(-dt*2.4);
+  if(spin>3)spin=3;else if(spin<-3)spin=-3;
+  idle+=dt*0.07;
+  draw(0.6+shown*Math.PI*3+spin+idle);
+  if(star)star.style.rotate=(shown*160).toFixed(1)+'deg';
+  var bob=Math.sin(now*0.0011)*4;
+  var lift=0,hit=false;
+  if(cache.footTop!=null){
+   var ft=cache.footTop-sc;
+   gem.style.color=(ft<ih*0.72)?'#ffffff':'';
+   if(iw<850){
+    var gl=iw-cache.gem.right-cache.gem.w,gt=ih-cache.gem.bottom-cache.gem.h,gr=gl+cache.gem.w,gb=gt+cache.gem.h;
+    for(var i=0;i<cache.obs.length;i++){
+     var o=cache.obs[i],ot=o.t-sc,ob=o.b-sc;
+     if(!(gr<o.l||gl>o.r||gb<ot||gt>ob)){hit=true;break;}
+    }
+   }else if(cache.barTop!=null){
+    lift=Math.max(0,ih-(cache.barTop-sc)+18);
+   }
+  }
+  gem.style.opacity=hit?'0':'1';
+  gem.style.transform='translateY('+(-(lift+bob)).toFixed(1)+'px)';
+  for(var j=0;j<cache.icons.length;j++){
+   var it=cache.icons[j];
+   it.el.style.translate='0 '+(((it.cy-sc-ih*0.5)*0.045)).toFixed(1)+'px';
+  }
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+})();
+</script>
+<script is:inline>
+/* Theme toggle with a ripple reveal from the button. Choice persists in
+   localStorage under the same key the notes pages use; default is light. */
+(function(){
+ var btn=document.getElementById('theme-toggle');if(!btn)return;
+ var root=document.documentElement;
+ var meta=document.querySelector('meta[name="theme-color"]');
+ var colors={light:'#f5f6f8',dark:'#101114'};
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function apply(t){
+  root.dataset.theme=t;
+  try{localStorage.setItem('wf-theme',t);}catch(e){}
+  if(meta)meta.setAttribute('content',colors[t]);
+  var dark=t==='dark';
+  btn.setAttribute('aria-pressed',dark?'true':'false');
+  btn.setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme');
+ }
+ apply(root.dataset.theme==='dark'?'dark':'light');
+ btn.addEventListener('click',function(){
+  var next=root.dataset.theme==='dark'?'light':'dark';
+  if(reduce){apply(next);return;}
+  var r=btn.getBoundingClientRect();
+  var x=Math.round(r.left+r.width/2),y=Math.round(r.top+r.height/2);
+  var maxR=Math.ceil(Math.hypot(Math.max(x,window.innerWidth-x),Math.max(y,window.innerHeight-y)));
+  var rip=document.createElement('div');
+  rip.className='theme-ripple';
+  rip.style.background=colors[next];
+  rip.style.clipPath='circle(0px at '+x+'px '+y+'px)';
+  document.body.appendChild(rip);
+  var anim=rip.animate(
+   [{clipPath:'circle(0px at '+x+'px '+y+'px)'},{clipPath:'circle('+maxR+'px at '+x+'px '+y+'px)'}],
+   {duration:650,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+  anim.onfinish=function(){
+   apply(next);
+   var fade=rip.animate([{opacity:1},{opacity:0}],{duration:280,easing:'ease-out',fill:'forwards'});
+   fade.onfinish=function(){rip.remove();};
+  };
+ });
+})();
+</script>
+<script is:inline>
+/* Delight layer: letter splitting for choreography, magnetic hero buttons,
+   specimen tilt, calendar cascade index. Enhancement only: skipped under
+   reduced-motion, and the page renders fully without it. */
+(function(){
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce)return;
+ function split(el){
+  var n=0;
+  function walk(node){
+   [].slice.call(node.childNodes).forEach(function(k){
+    if(k.nodeType===3){
+     var frag=document.createDocumentFragment(),text=k.textContent;
+     for(var i=0;i<text.length;i++){
+      var ch=text[i];
+      if(ch===' '){frag.appendChild(document.createTextNode(' '));continue;}
+      var sp=document.createElement('span');
+      sp.className='ltr';sp.style.setProperty('--n',n++);sp.textContent=ch;
+      frag.appendChild(sp);
+     }
+     node.replaceChild(frag,k);
+    }else if(k.nodeType===1&&k.tagName!=='BR'){walk(k);}
+   });
+  }
+  walk(el);
+ }
+ var name=document.getElementById('name');
+ if(name){
+  name.setAttribute('aria-label',name.textContent.replace(/\s+/g,' ').trim());
+  [].slice.call(name.querySelectorAll('.line-in')).forEach(function(l){l.setAttribute('aria-hidden','true');split(l);});
+ }
+ [].slice.call(document.querySelectorAll('.project h3,.writing-intro,.contact h2')).forEach(split);
+ [].slice.call(document.querySelectorAll('.gh-week')).forEach(function(w,i){w.style.setProperty('--i',i);});
+ if(window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  var magnets=[].slice.call(document.querySelectorAll('.float-btn svg'));
+  if(magnets.length){
+   magnets.forEach(function(svg){svg.style.transition='transform .35s cubic-bezier(.16,1,.3,1)';});
+   var raf=null;
+   document.addEventListener('pointermove',function(e){
+    if(raf)return;
+    raf=requestAnimationFrame(function(){
+     raf=null;
+     magnets.forEach(function(svg){
+      var b=svg.getBoundingClientRect();
+      var dx=e.clientX-(b.left+b.width/2),dy=e.clientY-(b.top+b.height/2);
+      var d=Math.hypot(dx,dy);
+      if(d<110&&d>0.01){var f=(1-d/110)*9;svg.style.transform='translate('+(dx/d*f).toFixed(1)+'px,'+(dy/d*f).toFixed(1)+'px)';}
+      else{svg.style.transform='';}
+     });
+    });
+   },{passive:true});
+  }
+  [].slice.call(document.querySelectorAll('.specimen')).forEach(function(card){
+   card.addEventListener('pointermove',function(e){
+    var r=card.getBoundingClientRect();
+    var px=(e.clientX-r.left)/r.width-0.5,py=(e.clientY-r.top)/r.height-0.5;
+    card.style.transform='rotateY('+(px*6).toFixed(2)+'deg) rotateX('+(-py*6).toFixed(2)+'deg)';
+   });
+   card.addEventListener('pointerleave',function(){card.style.transform='';});
+  });
+ }
+ /* press d to flip the theme - same path as the toggle button */
+ document.addEventListener('keydown',function(e){
+  if(e.key!=='d'&&e.key!=='D')return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  var b=document.getElementById('theme-toggle');
+  if(b)b.click();
+ });
+ try{
+  console.log('%c      ( (\n       ) )\n    ........\n    |      |]\n    \\      /\n     `----`','font-family:monospace');
+  console.log('you found the console. source: https://github.com/WarquahF/warquahf.github.io');
+ }catch(e){}
+})();
+</script>
+<script is:inline>
+/* Effects adapted from React Bits (reactbits.dev), vanilla JS, no dependencies:
+   DecryptedText (/text-animations/decrypted-text) scrambles the ~/dir labels in on scroll,
+   TextType (/text-animations/text-type) types the intro line into the existing caret.
+   Decorative; the page renders fully without them, and both stand down under reduced motion. */
+(function(){
+ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce)return;
+
+ /* DecryptedText: sequential scramble reveal, glyph pool from the original. */
+ (function(){
+  var POOL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+';
+  var STEP=40,ITERS=5;
+  function scramble(el){
+   var text=el.dataset.plain,chars=Array.from(text),step=0;
+   var iv=setInterval(function(){
+    var revealed=Math.floor(step/ITERS),out='';
+    for(var i=0;i<chars.length;i++){
+     out+=(i<revealed||/\s/.test(chars[i]))?chars[i]:POOL[(Math.random()*POOL.length)|0];
+    }
+    el.textContent=out;
+    step++;
+    if(revealed>=chars.length){clearInterval(iv);el.textContent=text;}
+   },STEP);
+  }
+  var els=[].slice.call(document.querySelectorAll('.dir'));
+  if(!els.length)return;
+  els.forEach(function(el){el.dataset.plain=el.textContent;el.setAttribute('aria-label',el.textContent);});
+  var io=new IntersectionObserver(function(entries){
+   entries.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);scramble(en.target);}});
+  },{threshold:0.4});
+  els.forEach(function(el){io.observe(el);});
+ })();
+
+ /* TextType: typewriter into the intro line, preserving the line break and caret. */
+ (function(){
+  var p=document.querySelector('.intro-bottom p');
+  if(!p)return;
+  var caret=p.querySelector('.caret');
+  var parts=[];
+  [].slice.call(p.childNodes).forEach(function(n){
+   if(n.nodeType===3)parts.push(n.textContent);
+   else if(n.tagName==='BR')parts.push('\n');
+  });
+  var flat=parts.join('');
+  [].slice.call(p.childNodes).forEach(function(n){if(n!==caret)p.removeChild(n);});
+  var i=0,node=null;
+  setTimeout(function(){
+   var iv=setInterval(function(){
+    if(i>=flat.length){clearInterval(iv);return;}
+    var ch=flat[i++];
+    if(ch==='\n'){p.insertBefore(document.createElement('br'),caret);node=null;}
+    else{
+     if(!node){node=document.createTextNode('');p.insertBefore(node,caret);}
+     node.textContent+=ch;
+    }
+   },55);
+  },650);
+ })();
+})();
+</script>
+<script define:vars={{ ghTotal }}>
+window.__gaLight = true;
+window.__folderItems = [
+ { title: 'Blink', description: 'An AI assistant for the desktop. Local chat history, multiple providers, optional local inference with Ollama.', href: '/notes/migrating-blink-electron-to-tauri/', image: '/projects/blink.webp', alt: 'Blink artwork: the word blink in italic serif with a cursor, on a dark grid' },
+ { title: 'Ecoquest', description: 'A real-life Pokédex for wildlife. Photograph an animal; a model suggests up to three species.', image: '/projects/ecoquest.webp', alt: 'Ecoquest artwork: the words photo and species with an arrow between them, on light blue' },
+ { title: 'Working notes', description: 'The Electron to Tauri migration log, SQLite encryption, and why local-first.', href: '/notes/', image: '/projects/notes.webp', alt: 'Working notes artwork: a paper card listing dev log entries' }
+];
+</script>
+<script is:inline src="/naturebg.js?v=1" defer></script>
+<script is:inline src="/techtext.js" defer></script>
+<script is:inline src="/starborder.js" defer></script>
+<script is:inline src="/folder.js?v=2" defer></script>
+</body>
+</html>
