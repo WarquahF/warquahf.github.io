@@ -44,6 +44,7 @@ try {
 <meta name="description" content="Warquah Faiz. Desktop software, developer tools, and notes from the work. Based in Odisha, India.">
 <title>Warquah Faiz / Software & notes</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/magicbento.css">
 <script is:inline>try{var t=localStorage.getItem('wf-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style is:global>
 :root{color-scheme:light;--paper:#f5f6f8;--ink:#191b20;--muted:#616773;--line:#ccd0d8;--blue:#224bea;--serif:Georgia,'Times New Roman',serif;--sans:Arial,Helvetica,sans-serif;--mono:'Courier New',monospace}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button{font:inherit}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:6px}::selection{background:var(--blue);color:white}[data-theme='dark']{--paper:#101114;--ink:#eceef2;--muted:#9ba1ad;--line:#353945;--blue:#8aa0ff;color-scheme:dark}[data-theme='dark'] ::selection{color:#101114}[data-theme='dark'] .zest-art{background:#1c2340}
@@ -88,7 +89,7 @@ h1 .name-second.line{display:flex}
  html.js .reveal.in{opacity:1;transform:none}
 }
 @media(max-width:850px){.hero-socials{display:flex;gap:14px;margin:-10px 0 20px}.hero-socials .float-btn{position:static}.float-btn{width:46px;height:46px}.float-btn svg{width:19px;height:19px}.fb-gh{left:auto;right:8px;top:30%}.fb-x{left:59%;top:57%}.fb-ig{left:auto;right:64px;top:30%;animation-delay:-2s}#gem{width:64px;height:64px;right:16px;bottom:16px}.float-icon{width:28px;height:28px;opacity:.8}.fi-terminal{top:auto;bottom:16px;right:2px}.fi-db{top:auto;bottom:38%;right:2px}.fi-pen{left:auto;right:2px;top:4px;bottom:auto}.fi-mail{top:118px;right:4px}}
-@media(max-width:600px){.fi-terminal{top:auto;bottom:16px;right:2px}.fi-mail{top:186px;right:4px}.fb-gh{top:34%;right:2px}.fb-x{left:59%;top:48%}.fb-ig{top:46%;right:2px}}
+@media(max-width:600px){.fi-terminal{top:auto;bottom:16px;right:2px}.fi-mail{top:118px;right:4px}.fb-gh{top:34%;right:2px}.fb-x{left:59%;top:48%}.fb-ig{top:46%;right:2px}}
 @media(min-width:1500px){.intro{padding-top:75px}}
 /* Delight layer: letter choreography, sticky glass header, tilt, grain. Enhancement only - content never depends on it. */
 html,body{overflow-x:clip}
@@ -97,7 +98,7 @@ header{position:sticky;top:0;z-index:5;background:var(--paper);background:color-
 .specimen{transition:transform .55s cubic-bezier(.16,1,.3,1)}
 .ltr{display:inline-block}
 .caret{display:inline-block;width:.55em;height:.9em;margin-left:.3em;background:var(--blue);vertical-align:-.12em;animation:blink 2s steps(1) infinite}
-#topography{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#techtext{width:100%;height:clamp(170px,24vw,330px);cursor:default}.topography-container{position:relative;width:100%;height:100%;overflow:hidden}.topography-canvas{display:block;width:100%;height:100%}
+#gradientascii{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#techtext{width:100%;height:clamp(170px,24vw,330px);cursor:default}.gradient-ascii-container{position:relative;width:100%;height:100%;overflow:hidden}.gradient-ascii-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 .wrap,.contact{position:relative;z-index:1}
 #starborder{display:inline-flex}#starborder .star-border{font-size:clamp(16px,2.4vw,26px);letter-spacing:-.03em}
 .colophon{margin:0 0 22px;padding-top:20px;border-top:1px solid #ffffff55;font:11px/1.8 var(--mono);letter-spacing:.05em;text-transform:none;color:#d6dfff}
@@ -157,11 +158,21 @@ html.js .theme-toggle{display:flex}
 @media(max-width:850px){.activity{gap:35px}}
 @media(max-width:600px){.activity{grid-template-columns:1fr;gap:15px;padding-top:24px;margin-top:30px}.head-side{gap:14px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+/* MagicBento: editorial overrides to match the site identity */
+#magicbento{padding:22px 0 48px}
+.magic-bento__title{font:normal 19px/1.25 var(--serif);letter-spacing:-.02em}
+.magic-bento__label{font:10px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.09em}
+.magic-bento__header{font-weight:400}
+.mb-blink-art{flex:1;display:flex;align-items:center;justify-content:center}
+.mb-blink-word{font:italic 46px var(--serif);letter-spacing:-3px;color:var(--mb-ink)}
+.mb-blink-cursor{display:inline-block;width:3px;height:36px;margin-left:8px;vertical-align:-5px;background:#a8b7ff;animation:blink 2s steps(1) infinite}
+.mb-eco-art{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;font:normal 19px var(--mono);letter-spacing:-.05em;color:var(--mb-ink)}
+.mb-eco-arrow{font:italic 28px var(--serif)}
 </style>
 </head>
 <body id="top">
 <a class="skip" href="#main">Skip to content</a>
-<div id="topography" aria-hidden="true"></div>
+<div id="gradientascii" aria-hidden="true"></div>
 <div class="wrap">
 <header><a class="signature" href="#top" aria-label="Warquah Faiz, back to top">wf.</a><div class="head-side"><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#writing">Writing</a><a href="#activity">Activity</a><a href="#contact">Contact ↗</a></nav><button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.6A8.1 8.1 0 0 1 10.4 4a8.1 8.1 0 1 0 9.6 9.6z"/></svg></button></div></header>
 <main id="main">
@@ -177,6 +188,8 @@ html.js .theme-toggle{display:flex}
 <section id="work" aria-labelledby="work-title">
 <svg class="float-icon fi-db" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="7.5" rx="11" ry="4"/><path d="M6 7.5v19c0 2.2 4.9 4 11 4s11-1.8 11-4v-19M6 17c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
 <div class="section-head reveal"><span class="dir">~/work</span><h2 id="work-title">Selected work</h2><span class="mono">In progress</span></div>
+<div id="magicbento" class="reveal"></div>
+<noscript>
 <article class="project reveal">
 <div class="specimen blink-art" role="img" aria-label="Typographic artwork for Blink, not an application screenshot"><div class="orbit"></div><div class="blink-word" aria-hidden="true">blink<span class="cursor"></span></div><span class="caption">01 / blink.md</span></div>
 <div class="project-copy"><p class="kicker mono">Local history. A choice of models.</p><h3>Blink</h3><p>An AI assistant for the desktop. Local chat history, multiple providers, optional local inference with Ollama.</p><div class="tags">Tauri / Rust / TypeScript / SQLite</div><details><summary>A closer look</summary><p>Moving from Electron to Tauri for a lighter app. Blink works with remote providers like OpenRouter and local models via Ollama; remote providers receive the prompts sent to them.</p><p>Source is private while development continues. <a href="/notes/migrating-blink-electron-to-tauri/">Read the migration log ↗</a></p></details></div>
@@ -186,6 +199,7 @@ html.js .theme-toggle{display:flex}
 <div class="project-copy"><p class="kicker mono">AI suggests. You confirm.</p><h3>Ecoquest</h3><p>A real-life Pokédex for wildlife. Photograph an animal; a model suggests up to three species. Confirm one to save the sighting.</p><div class="tags">Expo / React Native / Android + iOS + Web</div><details><summary>A closer look</summary><p>Species names are checked against iNaturalist; suggestions are leads, not guaranteed identifications. Photos go through your own OpenRouter key.</p><p>Group project, in progress. Source is private.</p></details></div>
 </article>
 <div class="other-work reveal"><span class="mono">Earlier work</span><p><b>Nugget</b><br>Electron + voice assistant, before Blink.</p><p><b>QuickBlink</b><br>From the project index.</p></div>
+</noscript>
 </section>
 <section id="writing" aria-labelledby="writing-title">
 <div class="section-head reveal"><span class="dir">~/notes</span><h2 id="writing-title">Working notes</h2><span class="mono">From the dev log</span></div>
@@ -555,9 +569,21 @@ document.documentElement.classList.add('js');
  })();
 })();
 </script>
-<script is:inline>window.__topoLight=true;</script>
-<script is:inline src="/topography.js" defer></script>
+<script define:vars={{ ghTotal }}>
+window.__gaLight = true;
+window.__magicBentoItems = [
+ { id: 'blink', visualKey: 'blink', label: 'Local history. A choice of models.', title: 'Blink', description: 'An AI assistant for the desktop. Local chat history, multiple providers, optional local inference with Ollama. Tauri / Rust / TypeScript / SQLite.', colSpan: 2, rowSpan: 2, href: '/notes/migrating-blink-electron-to-tauri/' },
+ { id: 'ecoquest', visualKey: 'eco', label: 'AI suggests. You confirm.', title: 'Ecoquest', description: 'A real-life Pokédex for wildlife. Photograph an animal; a model suggests up to three species. Expo / React Native / Android + iOS + Web.', colSpan: 2 },
+ { id: 'nugget', label: 'Earlier work', title: 'Nugget', description: 'Electron + voice assistant, before Blink.' },
+ { id: 'quickblink', label: 'Earlier work', title: 'QuickBlink', description: 'From the project index.' },
+ { id: 'notes', label: '~/notes', title: 'Working notes', description: 'The Electron to Tauri migration log, SQLite encryption, and why local-first.', colSpan: 2, href: '#writing' },
+ { id: 'github', label: '~/activity', title: 'GitHub', description: ghTotal.toLocaleString('en-US') + ' contributions in the last year.', href: 'https://github.com/WarquahF', target: '_blank', rel: 'noopener noreferrer' },
+ { id: 'workbench', label: '~/workbench', title: 'At the workbench', description: 'Odin, Rust, Python, JavaScript, TypeScript. Tauri, SQLite, Electron, Ollama & OpenRouter.' }
+];
+</script>
+<script is:inline src="/gradientascii.js" defer></script>
 <script is:inline src="/techtext.js" defer></script>
 <script is:inline src="/starborder.js" defer></script>
+<script is:inline src="/magicbento.js" defer></script>
 </body>
 </html>
