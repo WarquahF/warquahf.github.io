@@ -1,0 +1,289 @@
+---
+import { sections, social } from '../data/nav';
+
+const isHome = Astro.url.pathname === '/';
+const onNotes = Astro.url.pathname.startsWith('/notes');
+const linkFor = (href: string) =>
+  !isHome && href.startsWith('#') ? `/${href}` : href;
+---
+
+<header class="nav">
+  <a class="nav-mark" href={linkFor('#home')} aria-label="Home">
+    <span class="nav-mark-name">Warquah Faiz</span>
+  </a>
+
+  <nav class="nav-links mono" aria-label="Primary">
+    {sections.slice(1).map((s) => (
+      <a
+        href={linkFor(s.href)}
+        data-spy={s.href.startsWith('#') ? s.href.slice(1) : undefined}
+        aria-current={onNotes && s.href === '/notes' ? 'page' : undefined}
+      >
+        {s.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="nav-right">
+    <a class="nav-github mono" href={social.github} target="_blank" rel="noreferrer">
+      github.com/WarquahF
+    </a>
+    <button class="nav-kbd mono" type="button" data-command-trigger aria-label="Open command palette">
+      <span>⌘</span>K
+    </button>
+    <button class="nav-theme" type="button" data-theme-toggle aria-label="Toggle color theme">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+    </button>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const paintMeta = () => {
+    meta?.setAttribute('content', root.dataset.theme === 'dark' ? '#101114' : '#f4f5f1');
+  };
+  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('wf-theme', next);
+      } catch {
+        /* private mode: theme just won't persist */
+      }
+      paintMeta();
+    });
+  });
+  paintMeta();
+
+  // Scrollspy: one IntersectionObserver marks the in-view section's link.
+  // Restrained by design — ink text + quiet highlight, no bright colors.
+  const spyLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav-links a[data-spy]'));
+  const spyTargets = spyLinks
+    .map((link) => {
+      const el = link.dataset.spy ? document.getElementById(link.dataset.spy) : null;
+      return el ? { link, el } : null;
+    })
+    .filter((v): v is { link: HTMLAnchorElement; el: HTMLElement } => v !== null);
+
+  if (spyTargets.length && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const match = spyTargets.find((t) => t.el === entry.target);
+          if (!match || !entry.isIntersecting) return;
+          spyTargets.forEach((t) => {
+            if (t === match) {
+              t.link.setAttribute('aria-current', 'true');
+            } else {
+              t.link.removeAttribute('aria-current');
+            }
+          });
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+    );
+    spyTargets.forEach((t) => spy.observe(t.el));
+  }
+</script>
+
+<style>
+  /* Editorial top bar: a slim rule-bound strip that matches the home page's
+     header language — hairline bottom edge, translucent over the shared
+     Grainient background, no pill, no shadow. */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem clamp(1.25rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    transition:
+      background-color 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .nav-links a,
+  .nav-mark-name,
+  .nav-github,
+  .nav-kbd,
+  .nav-theme {
+    transition:
+      color 0.35s ease,
+      opacity 0.35s ease,
+      border-color 0.35s ease;
+  }
+  .nav { color: var(--ink); }
+  .nav-links a { color: var(--ink-dim); }
+  .nav-links a[data-active='true'] { color: var(--ink); }
+
+  .nav.is-solid {
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+  }
+
+  /* Brand: the same italic serif signature as the home page header. */
+  .nav-mark {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--ink);
+    transition: opacity 0.2s var(--ease-out);
+    flex: none;
+  }
+
+  .nav-mark:hover {
+    opacity: 0.75;
+  }
+
+  .nav-mark-name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.69rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--ink-faint);
+    padding: 0.35rem 0;
+    position: relative;
+    transition: color 0.2s var(--ease-out);
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 2px;
+    height: 1px;
+    background: var(--signal);
+    transition: right 0.25s var(--ease-out);
+  }
+
+  .nav-links a:hover {
+    color: var(--ink);
+  }
+
+  .nav-links a:hover::after {
+    right: 0;
+  }
+
+  /* Active section: ink text + cobalt underline. */
+  .nav-links a[aria-current='true'],
+  .nav-links a[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  .nav-links a[aria-current='true']::after,
+  .nav-links a[aria-current='page']::after {
+    right: 0;
+  }
+
+  @media (min-width: 780px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: none;
+  }
+
+  .nav-github {
+    display: none;
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 0.2s var(--ease-out);
+  }
+
+  .nav-github:hover {
+    color: var(--ink);
+  }
+
+  @media (min-width: 960px) {
+    .nav-github {
+      display: inline;
+    }
+  }
+
+  .nav-kbd {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    width: 2.1rem;
+    height: 2.1rem;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  }
+
+  .nav-kbd:hover {
+    color: var(--ink);
+    border-color: var(--ink-faint);
+  }
+
+  /* Theme toggle: the same small circle the home page uses. */
+  .nav-theme {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  }
+
+  .nav-theme:hover {
+    border-color: var(--ink);
+  }
+
+  .nav-theme .icon-sun {
+    display: none;
+  }
+
+  [data-theme='dark'] .nav-theme .icon-sun {
+    display: block;
+  }
+
+  [data-theme='dark'] .nav-theme .icon-moon {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav { transition: none; }
+  }
+
+  @media print {
+    .nav { display: none; }
+  }
+</style>
